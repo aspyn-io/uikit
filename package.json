@@ -2,7 +2,6 @@
   "name": "@aspyn-io/uikit",
   "version": "0.0.1",
   "description": "Aspyn UI Kit - Shared UI components for React using Flowbite",
-  "private": true,
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",

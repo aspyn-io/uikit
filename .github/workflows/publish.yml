@@ -1,0 +1,59 @@
+name: Publish @aspyn-io/uikit
+
+on:
+  push:
+    branches:
+      - main # Trigger unstable releases on main
+  release:
+    types: [published] # Trigger stable releases on tagged releases
+  workflow_dispatch: # Allows manual triggering if needed
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+concurrency:
+  group: "publish"
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish Package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@aspyn-io"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Extract version from release tag (if available)
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          else
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            echo "VERSION=0.0.0-unstable.$TIMESTAMP" >> $GITHUB_ENV
+          fi
+
+      - name: Update package.json version
+        run: npm version $VERSION --no-git-tag-version
+
+      - name: Build the package
+        run: npm run build
+
+      - name: Publish to GitHub Packages
+        run: npm publish --tag unstable
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

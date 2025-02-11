@@ -1,0 +1,55 @@
+{
+  "name": "@aspyn-io/uikit",
+  "version": "0.0.1",
+  "description": "Aspyn UI Kit - Shared UI components for React using Flowbite",
+  "private": true,
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test",
+    "test": "echo \"No tests yet\"",
+    "publish:github": "npm publish",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aspyn-io/uikit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aspyn-io/uikit/issues"
+  },
+  "homepage": "https://github.com/aspyn-io/uikit#readme",
+  "license": "MIT",
+  "dependencies": {
+    "flowbite-react": "^0.10.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/",
+    "access": "restricted"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.4",
+    "@storybook/addon-essentials": "^8.5.3",
+    "@storybook/addon-interactions": "^8.5.3",
+    "@storybook/addon-onboarding": "^8.5.3",
+    "@storybook/blocks": "^8.5.3",
+    "@storybook/react": "^8.5.3",
+    "@storybook/react-vite": "^8.5.3",
+    "@storybook/test": "^8.5.3",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "storybook": "^8.5.3",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}

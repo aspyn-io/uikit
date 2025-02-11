@@ -27,6 +27,7 @@
   "homepage": "https://github.com/aspyn-io/uikit#readme",
   "license": "MIT",
   "dependencies": {
+    "flowbite": "^3.1.2",
     "flowbite-react": "^0.10.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -36,19 +37,22 @@
     "access": "restricted"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^3.2.4",
+    "@chromatic-com/storybook": "^3.2.3",
     "@storybook/addon-essentials": "^8.5.3",
     "@storybook/addon-interactions": "^8.5.3",
-    "@storybook/addon-onboarding": "^8.5.3",
-    "@storybook/blocks": "^8.5.3",
+    "@storybook/addon-links": "^8.5.1",
+    "@storybook/addon-onboarding": "^8.5.0",
+    "@storybook/blocks": "^8.5.0",
     "@storybook/react": "^8.5.3",
     "@storybook/react-vite": "^8.5.3",
     "@storybook/test": "^8.5.3",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "storybook": "^8.5.3",
+    "postcss": "^8.5.1",
+    "storybook": "^8.5.1",
+    "tailwindcss": "^3.4.16",
     "tsup": "^8.3.6",
     "typescript": "^5.7.3",
-    "vite-tsconfig-paths": "^5.1.4"
+    "typescript-eslint": "^8.22.0"
   }
 }

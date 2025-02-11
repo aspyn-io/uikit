@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "moduleResolution": "bundler",
+    "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
-    "target": "ES6",
-    "declaration": true,
-    "declarationMap": true,
-    "declarationDir": "dist",
-    "esModuleInterop": true,
     "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", ".storybook"],
+  "exclude": ["node_modules"]
 }

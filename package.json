@@ -1,58 +1,48 @@
 {
-  "name": "@aspyn-io/uikit",
-  "version": "0.0.1",
-  "description": "Aspyn UI Kit - Shared UI components for React using Flowbite",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "name": "uikit",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm test",
-    "test": "echo \"No tests yet\"",
-    "publish:github": "npm publish",
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aspyn-io/uikit.git"
-  },
-  "bugs": {
-    "url": "https://github.com/aspyn-io/uikit/issues"
-  },
-  "homepage": "https://github.com/aspyn-io/uikit#readme",
-  "license": "MIT",
   "dependencies": {
-    "flowbite": "^3.1.2",
-    "flowbite-react": "^0.10.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/",
-    "access": "restricted"
+    "react": "^19.0.0"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^3.2.3",
-    "@storybook/addon-essentials": "^8.5.3",
-    "@storybook/addon-interactions": "^8.5.3",
-    "@storybook/addon-links": "^8.5.1",
-    "@storybook/addon-onboarding": "^8.5.0",
-    "@storybook/blocks": "^8.5.0",
-    "@storybook/react": "^8.5.3",
-    "@storybook/react-vite": "^8.5.3",
-    "@storybook/test": "^8.5.3",
+    "@chromatic-com/storybook": "^3.2.4",
+    "@eslint/js": "^9.19.0",
+    "@storybook/addon-essentials": "^8.5.4",
+    "@storybook/addon-interactions": "^8.5.4",
+    "@storybook/addon-onboarding": "^8.5.4",
+    "@storybook/blocks": "^8.5.4",
+    "@storybook/react": "^8.5.4",
+    "@storybook/react-vite": "^8.5.4",
+    "@storybook/test": "^8.5.4",
+    "@types/node": "^22.13.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "postcss": "^8.5.1",
-    "storybook": "^8.5.1",
-    "tailwindcss": "^3.4.16",
-    "tsup": "^8.3.6",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "eslint-plugin-storybook": "^0.11.2",
+    "globals": "^15.14.0",
+    "prop-types": "^15.8.1",
+    "storybook": "^8.5.4",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.22.0"
+    "vite": "^6.1.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended",
+      "plugin:storybook/recommended"
+    ]
   }
 }

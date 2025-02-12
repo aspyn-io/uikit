@@ -16,7 +16,8 @@
   "dependencies": {
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.10.2",
-    "react": "^19.0.0"
+    "react": "^19.0.0",
+    "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",

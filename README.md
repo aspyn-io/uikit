@@ -33,6 +33,11 @@ Pull Request using [GitHub Flow](https://docs.github.com/en/get-started/using-gi
 
 ### Local Development Setup
 
+- Ensure you have [Nodejs](https://nodejs.org/en/download) >= v22 installed
+  - Ensure you have npm package manager installed (usually comes with nodejs)
+- Run `npm install` to install dependancies
+- Run Storybook locally with `npm run storybook`
+
 ## TODO
 
 - [ ] Actually move some components in..

@@ -1,8 +1,13 @@
 import type { FC } from "react";
 import { Dropdown } from "flowbite-react";
-import { HiViewGrid, HiShoppingBag, HiUsers, HiInbox, HiUserCircle, HiCog, HiArchive, HiCurrencyDollar, HiOutlineTicket, HiLogout } from "react-icons/hi";
+import { HiViewGrid } from "react-icons/hi";
+import AppButton from "./AppButton";
 
-const AppDrawerDropdown: FC = function () {
+interface AppDrawerDropdownProps {
+  appButtons: { icon: React.ReactNode; title: string; onClick?: () => void }[];
+}
+
+const AppDrawerDropdown: FC<AppDrawerDropdownProps> = ({ appButtons }) => {
   return (
     <Dropdown
       arrowIcon={false}
@@ -18,87 +23,14 @@ const AppDrawerDropdown: FC = function () {
         Apps
       </div>
       <div className="grid grid-cols-3 gap-4 p-4">
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiShoppingBag className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Sales
-          </div>
-        </a>
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiUsers className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Users
-          </div>
-        </a>
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiInbox className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Inbox
-          </div>
-        </a>
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiUserCircle className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Profile
-          </div>
-        </a>
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiCog className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Settings
-          </div>
-        </a>
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiArchive className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Products
-          </div>
-        </a>
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiCurrencyDollar className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Pricing
-          </div>
-        </a>
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiOutlineTicket className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Billing
-          </div>
-        </a>
-        <a
-          href="#"
-          className="block rounded-lg p-4 text-center hover:bg-gray-100 dark:hover:bg-gray-600"
-        >
-          <HiLogout className="mx-auto mb-1 h-7 w-7 text-gray-500 dark:text-white" />
-          <div className="text-sm font-medium text-gray-900 dark:text-white">
-            Logout
-          </div>
-        </a>
+        {appButtons.map((appButton, index) => (
+          <AppButton
+            key={index}
+            icon={appButton.icon}
+            title={appButton.title}
+            onClick={appButton.onClick}
+          />
+        ))}
       </div>
     </Dropdown>
   );

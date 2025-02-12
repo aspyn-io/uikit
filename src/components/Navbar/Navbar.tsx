@@ -9,12 +9,18 @@ import NotificationBellDropdown from "./NotificationBellDropdown";
 import AppDrawerDropdown from "./AppDrawerDropdown";
 import UserDropdown from "./UserDropdown";
 import icon from "../../images/icon.svg";
+import { NotificationItem } from "./NotificationItem";
 
 interface NavbarProps {
   title: string;
+  onSearch?: (value: string) => void;
+  notifications?: NotificationItem[];
+  onViewAllNotifications?: () => void;
+  appButtons?: { icon: React.ReactNode; title: string }[];
+  avatar: string;
 }
 
-const Navbar: FC<NavbarProps> = function ({ title }) {
+const Navbar: FC<NavbarProps> = function ({ title, onSearch, notifications = [], onViewAllNotifications, appButtons = [], avatar }) {
   const { isOpenOnSmallScreens, isPageWithSidebar, setOpenOnSmallScreens } =
     useSidebarContext();
 
@@ -51,6 +57,7 @@ const Navbar: FC<NavbarProps> = function ({ title }) {
                 required
                 size={32}
                 type="search"
+                onChange={(e) => onSearch && onSearch(e.target.value)}
               />
             </form>
           </div>
@@ -63,12 +70,15 @@ const Navbar: FC<NavbarProps> = function ({ title }) {
                 <span className="sr-only">Search</span>
                 <HiSearch className="h-6 w-6" />
               </button>
-              <NotificationBellDropdown />
-              <AppDrawerDropdown />
+              <NotificationBellDropdown
+                notifications={notifications}
+                onViewAll={onViewAllNotifications}
+              />
+              <AppDrawerDropdown appButtons={appButtons} />
               <DarkThemeToggle />
             </div>
             <div className="hidden lg:block">
-              <UserDropdown />
+              <UserDropdown avatar={avatar} />
             </div>
           </div>
         </div>

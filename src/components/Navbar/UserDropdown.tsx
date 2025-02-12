@@ -1,7 +1,11 @@
 import type { FC } from "react";
 import { Avatar, Dropdown } from "flowbite-react";
 
-const UserDropdown: FC = function () {
+interface UserDropdownProps {
+  avatar: string;
+}
+
+const UserDropdown: FC<UserDropdownProps> = ({ avatar }) => {
   return (
     <Dropdown
       arrowIcon={false}
@@ -11,7 +15,7 @@ const UserDropdown: FC = function () {
           <span className="sr-only">User menu</span>
           <Avatar
             alt=""
-            img="../images/users/neil-sims.png"
+            img={avatar}
             rounded
             size="sm"
           />

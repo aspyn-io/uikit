@@ -1,24 +1,19 @@
 import { Meta, StoryObj } from '@storybook/react';
 import Sidebar from '../components/Sidebar';
 import { SidebarProvider } from '../context/SidebarContext';
-import { Sidebar as FlowbiteSidebar } from 'flowbite-react';
 import {
   HiChartPie,
   HiViewGrid,
   HiInboxIn,
   HiShoppingBag,
   HiUsers,
-  HiChartSquareBar,
-  HiLockClosed,
   HiClipboard,
   HiCollection,
   HiInformationCircle,
 } from 'react-icons/hi';
 
 /**
- * The `Sidebar` component is a versatile and customizable sidebar for navigation.
- * It supports multiple levels of navigation items, collapsible sections, and integrates
- * with `flowbite-react` components.
+ * The `Sidebar` component is an extension of the flowbite react sidebar component
  *
  * ```tsx
  * import Sidebar from './Sidebar';
@@ -26,11 +21,11 @@ import {
  * const MySidebar = () => (
  *   <SidebarProvider>
  *     <Sidebar>
- *       <FlowbiteSidebar.ItemGroup>
- *         <FlowbiteSidebar.Item href="/" icon={HiChartPie}>Dashboard</FlowbiteSidebar.Item>
- *         <FlowbiteSidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</FlowbiteSidebar.Item>
- *         <FlowbiteSidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</FlowbiteSidebar.Item>
- *       </FlowbiteSidebar.ItemGroup>
+ *       <Sidebar.ItemGroup>
+ *         <Sidebar.Item href="/" icon={HiChartPie}>Dashboard</Sidebar.Item>
+ *         <Sidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</Sidebar.Item>
+ *         <Sidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
+ *       </Sidebar.ItemGroup>
  *     </Sidebar>
  *   </SidebarProvider>
  * );
@@ -57,11 +52,11 @@ export const Default: Story = {
   render: () => (
     <SidebarProvider>
       <Sidebar>
-        <FlowbiteSidebar.ItemGroup>
-          <FlowbiteSidebar.Item href="/" icon={HiChartPie}>Dashboard</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</FlowbiteSidebar.Item>
-        </FlowbiteSidebar.ItemGroup>
+        <Sidebar.ItemGroup>
+          <Sidebar.Item href="/" icon={HiChartPie}>Dashboard</Sidebar.Item>
+          <Sidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</Sidebar.Item>
+          <Sidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
+        </Sidebar.ItemGroup>
       </Sidebar>
     </SidebarProvider>
   ),
@@ -74,22 +69,22 @@ export const ItemCollapse: Story = {
   render: () => (
     <SidebarProvider>
       <Sidebar>
-        <FlowbiteSidebar.ItemGroup>
-          <FlowbiteSidebar.Item href="/" icon={HiChartPie}>Dashboard</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Collapse icon={HiShoppingBag} label="E-commerce">
-            <FlowbiteSidebar.Item href="/e-commerce/products">Products</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/e-commerce/billing">Billing</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/e-commerce/invoice">Invoice</FlowbiteSidebar.Item>
-          </FlowbiteSidebar.Collapse>
-          <FlowbiteSidebar.Collapse icon={HiUsers} label="Users">
-            <FlowbiteSidebar.Item href="/users/list">Users list</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/users/profile">Profile</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/users/feed">Feed</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/users/settings">Settings</FlowbiteSidebar.Item>
-          </FlowbiteSidebar.Collapse>
-        </FlowbiteSidebar.ItemGroup>
+        <Sidebar.ItemGroup>
+          <Sidebar.Item href="/" icon={HiChartPie}>Dashboard</Sidebar.Item>
+          <Sidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</Sidebar.Item>
+          <Sidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
+          <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
+            <Sidebar.Item href="/e-commerce/products">Products</Sidebar.Item>
+            <Sidebar.Item href="/e-commerce/billing">Billing</Sidebar.Item>
+            <Sidebar.Item href="/e-commerce/invoice">Invoice</Sidebar.Item>
+          </Sidebar.Collapse>
+          <Sidebar.Collapse icon={HiUsers} label="Users">
+            <Sidebar.Item href="/users/list">Users list</Sidebar.Item>
+            <Sidebar.Item href="/users/profile">Profile</Sidebar.Item>
+            <Sidebar.Item href="/users/feed">Feed</Sidebar.Item>
+            <Sidebar.Item href="/users/settings">Settings</Sidebar.Item>
+          </Sidebar.Collapse>
+        </Sidebar.ItemGroup>
       </Sidebar>
     </SidebarProvider>
   ),
@@ -112,29 +107,29 @@ export const ItemGroups: Story = {
   render: () => (
     <SidebarProvider>
       <Sidebar>
-        <FlowbiteSidebar.ItemGroup>
-          <FlowbiteSidebar.Item href="/" icon={HiChartPie}>Dashboard</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</FlowbiteSidebar.Item>
-        </FlowbiteSidebar.ItemGroup>
-        <FlowbiteSidebar.ItemGroup>
-          <FlowbiteSidebar.Collapse icon={HiShoppingBag} label="E-commerce">
-            <FlowbiteSidebar.Item href="/e-commerce/products">Products</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/e-commerce/billing">Billing</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/e-commerce/invoice">Invoice</FlowbiteSidebar.Item>
-          </FlowbiteSidebar.Collapse>
-          <FlowbiteSidebar.Collapse icon={HiUsers} label="Users">
-            <FlowbiteSidebar.Item href="/users/list">Users list</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/users/profile">Profile</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/users/feed">Feed</FlowbiteSidebar.Item>
-            <FlowbiteSidebar.Item href="/users/settings">Settings</FlowbiteSidebar.Item>
-          </FlowbiteSidebar.Collapse>
-        </FlowbiteSidebar.ItemGroup>
-        <FlowbiteSidebar.ItemGroup>
-          <FlowbiteSidebar.Item href="https://github.com/themesberg/flowbite-react/" icon={HiClipboard}>Docs</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item href="https://flowbite-react.com/" icon={HiCollection}>Components</FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item href="https://github.com/themesberg/flowbite-react/issues" icon={HiInformationCircle}>Help</FlowbiteSidebar.Item>
-        </FlowbiteSidebar.ItemGroup>
+        <Sidebar.ItemGroup>
+          <Sidebar.Item href="/" icon={HiChartPie}>Dashboard</Sidebar.Item>
+          <Sidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</Sidebar.Item>
+          <Sidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
+        </Sidebar.ItemGroup>
+        <Sidebar.ItemGroup>
+          <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
+            <Sidebar.Item href="/e-commerce/products">Products</Sidebar.Item>
+            <Sidebar.Item href="/e-commerce/billing">Billing</Sidebar.Item>
+            <Sidebar.Item href="/e-commerce/invoice">Invoice</Sidebar.Item>
+          </Sidebar.Collapse>
+          <Sidebar.Collapse icon={HiUsers} label="Users">
+            <Sidebar.Item href="/users/list">Users list</Sidebar.Item>
+            <Sidebar.Item href="/users/profile">Profile</Sidebar.Item>
+            <Sidebar.Item href="/users/feed">Feed</Sidebar.Item>
+            <Sidebar.Item href="/users/settings">Settings</Sidebar.Item>
+          </Sidebar.Collapse>
+        </Sidebar.ItemGroup>
+        <Sidebar.ItemGroup>
+          <Sidebar.Item href="https://github.com/themesberg/flowbite-react/" icon={HiClipboard}>Docs</Sidebar.Item>
+          <Sidebar.Item href="https://flowbite-react.com/" icon={HiCollection}>Components</Sidebar.Item>
+          <Sidebar.Item href="https://github.com/themesberg/flowbite-react/issues" icon={HiInformationCircle}>Help</Sidebar.Item>
+        </Sidebar.ItemGroup>
       </Sidebar>
     </SidebarProvider>
   ),

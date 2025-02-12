@@ -73,17 +73,19 @@ const notifications = [
   },
 ];
 
+// TODO: Fix sizing of icons in the app button component
 const appButtons = [
-  { icon: <HiShoppingBag />, title: "Sales", onClick: () => console.log("Sales clicked") },
-  { icon: <HiUsers />, title: "Users", onClick: () => console.log("Users clicked") },
-  { icon: <HiInbox />, title: "Inbox", onClick: () => console.log("Inbox clicked") },
-  { icon: <HiUserCircle />, title: "Profile", onClick: () => console.log("Profile clicked") },
-  { icon: <HiCog />, title: "Settings", onClick: () => console.log("Settings clicked") },
-  { icon: <HiArchive />, title: "Products", onClick: () => console.log("Products clicked") },
-  { icon: <HiCurrencyDollar />, title: "Pricing", onClick: () => console.log("Pricing clicked") },
-  { icon: <HiOutlineTicket />, title: "Billing", onClick: () => console.log("Billing clicked") },
-  { icon: <HiLogout />, title: "Logout", onClick: () => console.log("Logout clicked") },
+  { icon: <HiShoppingBag className="h-8 w-8" />, title: "Sales", onClick: () => console.log("Sales clicked") },
+  { icon: <HiUsers className="h-8 w-8" />, title: "Users", onClick: () => console.log("Users clicked") },
+  { icon: <HiInbox className="h-8 w-8" />, title: "Inbox", onClick: () => console.log("Inbox clicked") },
+  { icon: <HiUserCircle className="h-8 w-8" />, title: "Profile", onClick: () => console.log("Profile clicked") },
+  { icon: <HiCog className="h-8 w-8" />, title: "Settings", onClick: () => console.log("Settings clicked") },
+  { icon: <HiArchive className="h-8 w-8" />, title: "Products", onClick: () => console.log("Products clicked") },
+  { icon: <HiCurrencyDollar className="h-8 w-8" />, title: "Pricing", onClick: () => console.log("Pricing clicked") },
+  { icon: <HiOutlineTicket className="h-8 w-8" />, title: "Billing", onClick: () => console.log("Billing clicked") },
+  { icon: <HiLogout className="h-8 w-8" />, title: "Logout", onClick: () => console.log("Logout clicked") },
 ];
+
 
 const userDropdownItems = [
   { title: "Dashboard", onClick: () => console.log("Dashboard clicked") },

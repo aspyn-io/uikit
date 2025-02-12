@@ -85,6 +85,13 @@ const appButtons = [
   { icon: <HiLogout />, title: "Logout", onClick: () => console.log("Logout clicked") },
 ];
 
+const userDropdownItems = [
+  { title: "Dashboard", onClick: () => console.log("Dashboard clicked") },
+  { title: "Settings", onClick: () => console.log("Settings clicked") },
+  { title: "Earnings", onClick: () => console.log("Earnings clicked") },
+  { title: "Sign out", onClick: () => console.log("Sign out clicked") },
+];
+
 export const Default: Story = {
   render: () => (
     <SidebarProvider>
@@ -95,6 +102,9 @@ export const Default: Story = {
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
         avatar="https://i.pravatar.cc/300?img=6"
+        username="Neil Sims"
+        email="neil.sims@flowbite.com"
+        userDropdownItems={userDropdownItems}
       />
     </SidebarProvider>
   ),

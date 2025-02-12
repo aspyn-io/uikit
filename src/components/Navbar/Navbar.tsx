@@ -18,9 +18,12 @@ interface NavbarProps {
   onViewAllNotifications?: () => void;
   appButtons?: { icon: React.ReactNode; title: string }[];
   avatar: string;
+  username: string;
+  email: string;
+  userDropdownItems: { title: string; onClick?: () => void }[];
 }
 
-const Navbar: FC<NavbarProps> = function ({ title, onSearch, notifications = [], onViewAllNotifications, appButtons = [], avatar }) {
+export const Navbar: FC<NavbarProps> = function ({ title, onSearch, notifications = [], onViewAllNotifications, appButtons = [], avatar, username, email, userDropdownItems }) {
   const { isOpenOnSmallScreens, isPageWithSidebar, setOpenOnSmallScreens } =
     useSidebarContext();
 
@@ -78,7 +81,7 @@ const Navbar: FC<NavbarProps> = function ({ title, onSearch, notifications = [],
               <DarkThemeToggle />
             </div>
             <div className="hidden lg:block">
-              <UserDropdown avatar={avatar} />
+              <UserDropdown avatar={avatar} username={username} email={email} items={userDropdownItems} />
             </div>
           </div>
         </div>

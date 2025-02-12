@@ -1,11 +1,19 @@
 import type { FC } from "react";
 import { Avatar, Dropdown } from "flowbite-react";
 
-interface UserDropdownProps {
-  avatar: string;
+interface UserDropdownItem {
+  title: string;
+  onClick?: () => void;
 }
 
-const UserDropdown: FC<UserDropdownProps> = ({ avatar }) => {
+interface UserDropdownProps {
+  avatar: string;
+  username: string;
+  email: string;
+  items: UserDropdownItem[];
+}
+
+const UserDropdown: FC<UserDropdownProps> = ({ avatar, username, email, items }) => {
   return (
     <Dropdown
       arrowIcon={false}
@@ -23,16 +31,16 @@ const UserDropdown: FC<UserDropdownProps> = ({ avatar }) => {
       }
     >
       <Dropdown.Header>
-        <span className="block text-sm">Neil Sims</span>
+        <span className="block text-sm">{username}</span>
         <span className="block truncate text-sm font-medium">
-          neil.sims@flowbite.com
+          {email}
         </span>
       </Dropdown.Header>
-      <Dropdown.Item>Dashboard</Dropdown.Item>
-      <Dropdown.Item>Settings</Dropdown.Item>
-      <Dropdown.Item>Earnings</Dropdown.Item>
-      <Dropdown.Divider />
-      <Dropdown.Item>Sign out</Dropdown.Item>
+      {items.map((item, index) => (
+        <Dropdown.Item key={index} onClick={item.onClick}>
+          {item.title}
+        </Dropdown.Item>
+      ))}
     </Dropdown>
   );
 };

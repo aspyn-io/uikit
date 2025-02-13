@@ -20,7 +20,7 @@ import {
  *
  * const MySidebar = () => (
  *   <SidebarProvider>
- *     <Sidebar className="h-screen max-h-screen">
+ *     <Sidebar>
  *       <Sidebar.ItemGroup>
  *         <Sidebar.Item href="#" icon={HiChartPie}>Dashboard</Sidebar.Item>
  *         <Sidebar.Item href="#" icon={HiViewGrid}>Kanban</Sidebar.Item>
@@ -57,7 +57,7 @@ type Story = StoryObj<typeof Sidebar>;
  */
 export const Default: Story = {
   render: () => (
-    <Sidebar className="h-screen max-h-screen">
+    <Sidebar>
       <Sidebar.ItemGroup>
         <Sidebar.Item href="#" icon={HiChartPie}>
           Dashboard
@@ -78,7 +78,7 @@ export const Default: Story = {
  */
 export const ItemCollapse: Story = {
   render: () => (
-    <Sidebar className="h-screen max-h-screen">
+    <Sidebar>
       <Sidebar.ItemGroup>
         <Sidebar.Item href="#" icon={HiChartPie}>
           Dashboard
@@ -120,7 +120,7 @@ export const ItemCollapse: Story = {
  */
 export const ItemGroups: Story = {
   render: () => (
-    <Sidebar className="h-screen max-h-screen">
+    <Sidebar>
       <Sidebar.ItemGroup>
         <Sidebar.Item href="#" icon={HiChartPie}>
           Dashboard

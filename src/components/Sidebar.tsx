@@ -1,8 +1,18 @@
 import { Sidebar as FlowbiteSidebar } from "flowbite-react";
+import { ReactNode } from "react";
 
-// Alias FlowbiteSidebar as Sidebar for now
-// This allows us to import Sidebar from uikit and change as needed easily in the future
-export const Sidebar = FlowbiteSidebar;
+interface SidebarProps {
+  children: ReactNode;
+  className?: string;
+}
+
+const Sidebar = ({ children, className, ...props }: SidebarProps) => {
+  return (
+    <FlowbiteSidebar className={`h-screen max-h-screen ${className}`} {...props}>
+      {children}
+    </FlowbiteSidebar>
+  );
+};
 
 // Re-export sidebar components to make them accessible from uikit
 Sidebar.Item = FlowbiteSidebar.Item;

@@ -1,6 +1,6 @@
-import { Meta, StoryObj } from '@storybook/react';
-import Sidebar from '../components/Sidebar';
-import { SidebarProvider } from '../context/SidebarContext';
+import { Meta, StoryObj } from "@storybook/react";
+import Sidebar from "../components/Sidebar";
+import { SidebarProvider } from "../context/SidebarContext";
 import {
   HiChartPie,
   HiViewGrid,
@@ -10,7 +10,7 @@ import {
   HiClipboard,
   HiCollection,
   HiInformationCircle,
-} from 'react-icons/hi';
+} from "react-icons/hi";
 
 /**
  * The `Sidebar` component is an extension of the flowbite react sidebar component
@@ -22,9 +22,9 @@ import {
  *   <SidebarProvider>
  *     <Sidebar>
  *       <Sidebar.ItemGroup>
- *         <Sidebar.Item href="/" icon={HiChartPie}>Dashboard</Sidebar.Item>
- *         <Sidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</Sidebar.Item>
- *         <Sidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
+ *         <Sidebar.Item href="#" icon={HiChartPie}>Dashboard</Sidebar.Item>
+ *         <Sidebar.Item href="#" icon={HiViewGrid}>Kanban</Sidebar.Item>
+ *         <Sidebar.Item href="#" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
  *       </Sidebar.ItemGroup>
  *     </Sidebar>
  *   </SidebarProvider>
@@ -33,12 +33,19 @@ import {
  */
 
 const meta: Meta<typeof Sidebar> = {
-  title: 'components/Sidebar',
+  title: "components/Sidebar",
   component: Sidebar,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
+  decorators: [
+    (Story) => (
+      <SidebarProvider>
+        <Story />
+      </SidebarProvider>
+    ),
+  ],
 };
 
 export default meta;
@@ -50,15 +57,19 @@ type Story = StoryObj<typeof Sidebar>;
  */
 export const Default: Story = {
   render: () => (
-    <SidebarProvider>
-      <Sidebar>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="/" icon={HiChartPie}>Dashboard</Sidebar.Item>
-          <Sidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</Sidebar.Item>
-          <Sidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar>
-    </SidebarProvider>
+    <Sidebar>
+      <Sidebar.ItemGroup>
+        <Sidebar.Item href="#" icon={HiChartPie}>
+          Dashboard
+        </Sidebar.Item>
+        <Sidebar.Item href="#" icon={HiViewGrid}>
+          Kanban
+        </Sidebar.Item>
+        <Sidebar.Item href="#" icon={HiInboxIn} label="3">
+          Inbox
+        </Sidebar.Item>
+      </Sidebar.ItemGroup>
+    </Sidebar>
   ),
 };
 
@@ -67,29 +78,33 @@ export const Default: Story = {
  */
 export const ItemCollapse: Story = {
   render: () => (
-    <SidebarProvider>
-      <Sidebar>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="/" icon={HiChartPie}>Dashboard</Sidebar.Item>
-          <Sidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</Sidebar.Item>
-          <Sidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
-          <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
-            <Sidebar.Item href="/e-commerce/products">Products</Sidebar.Item>
-            <Sidebar.Item href="/e-commerce/billing">Billing</Sidebar.Item>
-            <Sidebar.Item href="/e-commerce/invoice">Invoice</Sidebar.Item>
-          </Sidebar.Collapse>
-          <Sidebar.Collapse icon={HiUsers} label="Users">
-            <Sidebar.Item href="/users/list">Users list</Sidebar.Item>
-            <Sidebar.Item href="/users/profile">Profile</Sidebar.Item>
-            <Sidebar.Item href="/users/feed">Feed</Sidebar.Item>
-            <Sidebar.Item href="/users/settings">Settings</Sidebar.Item>
-          </Sidebar.Collapse>
-        </Sidebar.ItemGroup>
-      </Sidebar>
-    </SidebarProvider>
+    <Sidebar>
+      <Sidebar.ItemGroup>
+        <Sidebar.Item href="#" icon={HiChartPie}>
+          Dashboard
+        </Sidebar.Item>
+        <Sidebar.Item href="#" icon={HiViewGrid}>
+          Kanban
+        </Sidebar.Item>
+        <Sidebar.Item href="#" icon={HiInboxIn} label="3">
+          Inbox
+        </Sidebar.Item>
+        <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
+          <Sidebar.Item href="#">Products</Sidebar.Item>
+          <Sidebar.Item href="#">Billing</Sidebar.Item>
+          <Sidebar.Item href="#">Invoice</Sidebar.Item>
+        </Sidebar.Collapse>
+        <Sidebar.Collapse icon={HiUsers} label="Users">
+          <Sidebar.Item href="#">Users list</Sidebar.Item>
+          <Sidebar.Item href="#">Profile</Sidebar.Item>
+          <Sidebar.Item href="#">Feed</Sidebar.Item>
+          <Sidebar.Item href="#">Settings</Sidebar.Item>
+        </Sidebar.Collapse>
+      </Sidebar.ItemGroup>
+    </Sidebar>
   ),
   parameters: {
-    backgrounds: { default: 'dark' },
+    backgrounds: { default: "dark" },
   },
   decorators: [
     (Story) => (
@@ -105,36 +120,46 @@ export const ItemCollapse: Story = {
  */
 export const ItemGroups: Story = {
   render: () => (
-    <SidebarProvider>
-      <Sidebar>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="/" icon={HiChartPie}>Dashboard</Sidebar.Item>
-          <Sidebar.Item href="/kanban" icon={HiViewGrid}>Kanban</Sidebar.Item>
-          <Sidebar.Item href="/mailing/inbox" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
-        </Sidebar.ItemGroup>
-        <Sidebar.ItemGroup>
-          <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
-            <Sidebar.Item href="/e-commerce/products">Products</Sidebar.Item>
-            <Sidebar.Item href="/e-commerce/billing">Billing</Sidebar.Item>
-            <Sidebar.Item href="/e-commerce/invoice">Invoice</Sidebar.Item>
-          </Sidebar.Collapse>
-          <Sidebar.Collapse icon={HiUsers} label="Users">
-            <Sidebar.Item href="/users/list">Users list</Sidebar.Item>
-            <Sidebar.Item href="/users/profile">Profile</Sidebar.Item>
-            <Sidebar.Item href="/users/feed">Feed</Sidebar.Item>
-            <Sidebar.Item href="/users/settings">Settings</Sidebar.Item>
-          </Sidebar.Collapse>
-        </Sidebar.ItemGroup>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="https://github.com/themesberg/flowbite-react/" icon={HiClipboard}>Docs</Sidebar.Item>
-          <Sidebar.Item href="https://flowbite-react.com/" icon={HiCollection}>Components</Sidebar.Item>
-          <Sidebar.Item href="https://github.com/themesberg/flowbite-react/issues" icon={HiInformationCircle}>Help</Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar>
-    </SidebarProvider>
+    <Sidebar>
+      <Sidebar.ItemGroup>
+        <Sidebar.Item href="#" icon={HiChartPie}>
+          Dashboard
+        </Sidebar.Item>
+        <Sidebar.Item href="#" icon={HiViewGrid}>
+          Kanban
+        </Sidebar.Item>
+        <Sidebar.Item href="#" icon={HiInboxIn} label="3">
+          Inbox
+        </Sidebar.Item>
+      </Sidebar.ItemGroup>
+      <Sidebar.ItemGroup>
+        <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
+          <Sidebar.Item href="#">Products</Sidebar.Item>
+          <Sidebar.Item href="#">Billing</Sidebar.Item>
+          <Sidebar.Item href="#">Invoice</Sidebar.Item>
+        </Sidebar.Collapse>
+        <Sidebar.Collapse icon={HiUsers} label="Users">
+          <Sidebar.Item href="#">Users list</Sidebar.Item>
+          <Sidebar.Item href="#">Profile</Sidebar.Item>
+          <Sidebar.Item href="#">Feed</Sidebar.Item>
+          <Sidebar.Item href="#">Settings</Sidebar.Item>
+        </Sidebar.Collapse>
+      </Sidebar.ItemGroup>
+      <Sidebar.ItemGroup>
+        <Sidebar.Item href="#" icon={HiClipboard}>
+          Docs
+        </Sidebar.Item>
+        <Sidebar.Item href="#" icon={HiCollection}>
+          Components
+        </Sidebar.Item>
+        <Sidebar.Item href="#" icon={HiInformationCircle}>
+          Help
+        </Sidebar.Item>
+      </Sidebar.ItemGroup>
+    </Sidebar>
   ),
   parameters: {
-    backgrounds: { default: 'light' },
+    backgrounds: { default: "light" },
   },
   decorators: [
     (Story) => (
@@ -143,4 +168,33 @@ export const ItemGroups: Story = {
       </div>
     ),
   ],
+};
+
+export const FullHeight: Story = {
+  render: () => (
+    <div className="flex min-h-screen">
+      <Sidebar className="flex flex-col h-screen border-r border-gray-200">
+        <Sidebar.ItemGroup>
+          <Sidebar.Item href="#" icon={HiChartPie}>
+            Dashboard
+          </Sidebar.Item>
+          <Sidebar.Item href="#" icon={HiViewGrid}>
+            Kanban
+          </Sidebar.Item>
+          <Sidebar.Item href="#" icon={HiInboxIn} label="3">
+            Inbox
+          </Sidebar.Item>
+        </Sidebar.ItemGroup>
+      </Sidebar>
+      <div className="flex-1 p-6">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+          Main Content
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          This is the main content area. The sidebar should fit properly next to
+          it.
+        </p>
+      </div>
+    </div>
+  ),
 };

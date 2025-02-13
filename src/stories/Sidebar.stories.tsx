@@ -20,7 +20,7 @@ import {
  *
  * const MySidebar = () => (
  *   <SidebarProvider>
- *     <Sidebar>
+ *     <Sidebar className="h-screen max-h-screen">
  *       <Sidebar.ItemGroup>
  *         <Sidebar.Item href="#" icon={HiChartPie}>Dashboard</Sidebar.Item>
  *         <Sidebar.Item href="#" icon={HiViewGrid}>Kanban</Sidebar.Item>
@@ -57,7 +57,7 @@ type Story = StoryObj<typeof Sidebar>;
  */
 export const Default: Story = {
   render: () => (
-    <Sidebar>
+    <Sidebar className="h-screen max-h-screen">
       <Sidebar.ItemGroup>
         <Sidebar.Item href="#" icon={HiChartPie}>
           Dashboard
@@ -78,7 +78,7 @@ export const Default: Story = {
  */
 export const ItemCollapse: Story = {
   render: () => (
-    <Sidebar>
+    <Sidebar className="h-screen max-h-screen">
       <Sidebar.ItemGroup>
         <Sidebar.Item href="#" icon={HiChartPie}>
           Dashboard
@@ -120,7 +120,7 @@ export const ItemCollapse: Story = {
  */
 export const ItemGroups: Story = {
   render: () => (
-    <Sidebar>
+    <Sidebar className="h-screen max-h-screen">
       <Sidebar.ItemGroup>
         <Sidebar.Item href="#" icon={HiChartPie}>
           Dashboard
@@ -168,33 +168,4 @@ export const ItemGroups: Story = {
       </div>
     ),
   ],
-};
-
-export const FullHeight: Story = {
-  render: () => (
-    <div className="flex min-h-screen">
-      <Sidebar className="flex flex-col h-screen border-r border-gray-200">
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
-            Dashboard
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewGrid}>
-            Kanban
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiInboxIn} label="3">
-            Inbox
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar>
-      <div className="flex-1 p-6">
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-          Main Content
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300">
-          This is the main content area. The sidebar should fit properly next to
-          it.
-        </p>
-      </div>
-    </div>
-  ),
 };

@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import NoteCard from "../components/NoteCard";
 
 const meta: Meta<typeof NoteCard> = {
-  title: "components/NoteCard",
+  title: "Cards/NoteCard",
   component: NoteCard,
   tags: ["autodocs"],
 };

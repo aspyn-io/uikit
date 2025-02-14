@@ -1,7 +1,7 @@
 import React from "react";
 
 interface NoteCardProps {
-  tags: { label: string; color: string }[];
+  tags?: { label: string; color: string }[];
   title: string;
   content: string;
   author: string;
@@ -24,16 +24,18 @@ export const NoteCard: React.FC<NoteCardProps> = ({
       className={`bg-white dark:bg-gray-800 rounded-md shadow-sm border border-gray-300 dark:border-gray-700 ${className}`}
     >
       <div className="p-4">
-        <div className="flex flex-wrap gap-1 mb-2">
-          {tags.map((tag, index) => (
-            <span
-              key={index}
-              className={`text-xs font-semibold px-2 py-1 rounded-full bg-${tag.color}-100 text-${tag.color}-700 dark:bg-${tag.color}-700 dark:text-${tag.color}-100`}
-            >
-              {tag.label}
-            </span>
-          ))}
-        </div>
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-2">
+            {tags.map((tag, index) => (
+              <span
+                key={index}
+                className={`text-xs font-semibold px-2 py-1 rounded-full bg-${tag.color}-100 text-${tag.color}-700 dark:bg-${tag.color}-700 dark:text-${tag.color}-100`}
+              >
+                {tag.label}
+              </span>
+            ))}
+          </div>
+        )}
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           {title}
         </h3>

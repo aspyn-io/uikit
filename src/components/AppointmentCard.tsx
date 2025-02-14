@@ -32,6 +32,7 @@ interface AppointmentCardProps {
   showSelectButton?: boolean;
   editable?: boolean;
   workOrders?: WorkOrder[];
+  showIcons?: boolean;
 }
 
 export const AppointmentCard = ({
@@ -49,6 +50,7 @@ export const AppointmentCard = ({
   showSelectButton = true,
   editable = false,
   workOrders = [],
+  showIcons = true,
 }: AppointmentCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -97,33 +99,37 @@ export const AppointmentCard = ({
             {daysLabel}
           </Badge>
           <div className="flex items-center gap-3">
-            <div
-              className={`p-2 rounded-full ${
-                calendarActive
-                  ? "bg-blue-100 text-blue-600"
-                  : "bg-gray-200 text-gray-400"
-              }`}
-            >
-              <HiOutlineCalendar size={20} />
-            </div>
-            <div
-              className={`p-2 rounded-full ${
-                timeActive
-                  ? "bg-blue-100 text-blue-600"
-                  : "bg-gray-200 text-gray-400"
-              }`}
-            >
-              <HiOutlineClock size={20} />
-            </div>
-            <div
-              className={`p-2 rounded-full ${
-                userActive
-                  ? "bg-blue-100 text-blue-600"
-                  : "bg-gray-200 text-gray-400"
-              }`}
-            >
-              <HiOutlineUser size={20} />
-            </div>
+            {showIcons && (
+              <>
+                <div
+                  className={`p-2 rounded-full ${
+                    calendarActive
+                      ? "bg-blue-100 text-blue-600"
+                      : "bg-gray-200 text-gray-400"
+                  }`}
+                >
+                  <HiOutlineCalendar size={20} />
+                </div>
+                <div
+                  className={`p-2 rounded-full ${
+                    timeActive
+                      ? "bg-blue-100 text-blue-600"
+                      : "bg-gray-200 text-gray-400"
+                  }`}
+                >
+                  <HiOutlineClock size={20} />
+                </div>
+                <div
+                  className={`p-2 rounded-full ${
+                    userActive
+                      ? "bg-blue-100 text-blue-600"
+                      : "bg-gray-200 text-gray-400"
+                  }`}
+                >
+                  <HiOutlineUser size={20} />
+                </div>
+              </>
+            )}
           </div>
         </div>
         <div className="flex items-center justify-end gap-3">

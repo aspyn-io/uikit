@@ -39,6 +39,7 @@ export const Default: Story = {
     calendarActive: true,
     timeActive: true,
     userActive: true,
+    showIcons: true,
   },
 };
 
@@ -62,6 +63,7 @@ export const EditState: Story = {
       console.log("Rescheduled Work Order:", id),
     onRescheduleAppointment: () => console.log("Rescheduled Appointment"),
     onCancelAppointment: () => console.log("Canceled Appointment"),
+    showIcons: true,
   },
 };
 
@@ -78,6 +80,7 @@ export const WithoutSelectButton: Story = {
     timeActive: true,
     userActive: true,
     onSelect: () => console.log("Appointment Selected"),
+    showIcons: true,
   },
 };
 
@@ -96,5 +99,22 @@ export const SelectedWithStatus: Story = {
     userActive: true,
     isSelected: true,
     onSelect: () => console.log("Appointment Selected"),
+    showIcons: true,
+  },
+};
+
+// Story without Icons
+export const WithoutIcons: Story = {
+  render: (args) => (
+    <Wrapper>
+      <AppointmentCard {...args} />
+    </Wrapper>
+  ),
+  args: {
+    datetime: today,
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: false,
   },
 };

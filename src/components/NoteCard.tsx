@@ -41,7 +41,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           {content}
         </p>
       </div>
-      <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 p-4 border-t">
+      <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 p-4 border-t dark:border-gray-700">
         <div className="flex items-center">
           {avatar && (
             <img

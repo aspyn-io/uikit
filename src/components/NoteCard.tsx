@@ -21,7 +21,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-md shadow-sm border border-gray-300 ${className}`}
+      className={`bg-white dark:bg-gray-800 rounded-md shadow-sm border border-gray-300 dark:border-gray-800 ${className}`}
     >
       <div className="p-4">
         <div className="flex flex-wrap gap-1 mb-2">

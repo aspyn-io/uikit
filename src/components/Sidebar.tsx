@@ -6,9 +6,12 @@ interface SidebarProps {
   className?: string;
 }
 
-const Sidebar = ({ children, className, ...props }: SidebarProps) => {
+export const Sidebar = ({ children, className, ...props }: SidebarProps) => {
   return (
-    <FlowbiteSidebar className={`h-screen max-h-screen ${className}`} {...props}>
+    <FlowbiteSidebar
+      className={`h-screen max-h-screen ${className}`}
+      {...props}
+    >
       {children}
     </FlowbiteSidebar>
   );

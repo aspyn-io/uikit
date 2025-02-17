@@ -5,13 +5,15 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/index.es.js",
+  "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "exports": {
-    "types": "./dist/index.d.ts",
-    "import": "./dist/index.js",
-    "require": "./dist/index.js"
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./types": "./dist/index.d.ts"
   },
   "files": [
     "dist"

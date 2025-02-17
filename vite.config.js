@@ -15,7 +15,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/index.tsx"), // Ensures correct entry point
       name: "AspynUIKit",
       fileName: (format) => `index.${format}.js`,
-      formats: ["es", "cjs", "umd"], // Builds in multiple formats
+      formats: ["es", "cjs"], // Builds in ES and CommonJS formats
     },
     rollupOptions: {
       external: ["react", "react-dom"], // Excludes React from bundle

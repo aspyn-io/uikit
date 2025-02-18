@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
+import dts from "vite-plugin-dts";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -9,16 +10,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [
+    react(),
+    svgr(),
+    dts({
+      insertTypesEntry: true, // Ensures "types" entry in package.json
+      outputDir: "dist", // Saves .d.ts files in dist/
+      copyDtsFiles: true, // Copies external .d.ts files from src
+    }),
+  ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/index.tsx"), // Ensures correct entry point
+      entry: path.resolve(__dirname, "src/index.tsx"), // Entry point
       name: "AspynUIKit",
       fileName: (format) => `index.${format}.js`,
-      formats: ["es", "cjs", "umd"], // Builds in multiple formats
+      formats: ["es", "cjs", "umd"], // Generates ES, CommonJS, and UMD builds
     },
     rollupOptions: {
-      external: ["react", "react-dom"], // Excludes React from bundle
+      external: ["react", "react-dom"], // Avoid bundling React
       output: {
         globals: {
           react: "React",

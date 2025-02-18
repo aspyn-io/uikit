@@ -9,18 +9,24 @@
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "exports": {
-    "import": "./dist/index.es.js",
-    "require": "./dist/index.cjs.js",
-    "types": "./dist/index.d.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.es.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "package.json",
+    "README.md"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "storybook dev -p 6006",
+    "build": "tsup",
+    "prepublishOnly": "npm run build",
     "lint": "eslint .",
-    "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -28,8 +34,7 @@
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.10.2",
     "react": "^19.0.0",
-    "react-router-dom": "^7.1.5",
-    "vite-plugin-svgr": "^4.3.0"
+    "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
@@ -58,9 +63,11 @@
     "prop-types": "^15.8.1",
     "storybook": "^8.5.4",
     "tailwindcss": "^3.4.16",
+    "tsup": "^8.3.6",
     "typescript": "^5.7.3",
     "vite": "^6.1.0",
-    "vite-plugin-dts": "^4.5.0"
+    "vite-plugin-dts": "^4.5.0",
+    "vite-plugin-svgr": "^4.3.0"
   },
   "eslintConfig": {
     "extends": [

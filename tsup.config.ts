@@ -1,8 +1,7 @@
 import { defineConfig } from "tsup";
-import fs from "fs-extra";
 
 export default defineConfig({
-  entry: ["src/index.tsx"], // ✅ Define your main entry file here!
+  entry: ["./src/index.tsx"], // ✅ Define your main entry file here!
   format: ["esm", "cjs"],    // ✅ Build both ESM & CJS
   outExtension: ({ format }) => ({
     js: format === "esm" ? ".es.js" : ".cjs.js"  // ✅ Ensure correct file extensions

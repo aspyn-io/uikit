@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import Sidebar from "../components/Sidebar";
-import { SidebarProvider } from "../context/SidebarContext";
+import { useEffect } from "react";
+import { NavbarProvider, useNavbarContext } from "../context/NavbarContext";
 import {
   HiChartPie,
   HiViewGrid,
@@ -41,9 +42,13 @@ const meta: Meta<typeof Sidebar> = {
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <SidebarProvider>
-        <Story />
-      </SidebarProvider>
+      <NavbarProvider>
+        <SetSidebarCollapsed>
+          <div className="flex">
+            <Story />
+          </div>
+        </SetSidebarCollapsed>
+      </NavbarProvider>
     ),
   ],
 };
@@ -51,6 +56,16 @@ const meta: Meta<typeof Sidebar> = {
 export default meta;
 
 type Story = StoryObj<typeof Sidebar>;
+
+const SetSidebarCollapsed = ({ children }: { children: React.ReactNode }) => {
+  const { setIsSidebarCollapsed } = useNavbarContext();
+
+  useEffect(() => {
+    setIsSidebarCollapsed(false);
+  }, [setIsSidebarCollapsed]);
+
+  return <>{children}</>;
+};
 
 /**
  * Default Example
@@ -108,7 +123,7 @@ export const ItemCollapse: Story = {
   },
   decorators: [
     (Story) => (
-      <div className="w-16">
+      <div className="w-64">
         <Story />
       </div>
     ),

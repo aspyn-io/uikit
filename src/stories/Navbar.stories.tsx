@@ -1,5 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import Navbar from "../components/Navbar/Navbar";
+import Sidebar from "../components/Sidebar";
+import { useEffect } from "react";
 import {
   HiMenuAlt1,
   HiSearch,
@@ -12,8 +14,10 @@ import {
   HiCurrencyDollar,
   HiOutlineTicket,
   HiLogout,
+  HiChartPie,
+  HiViewGrid,
 } from "react-icons/hi";
-import { SidebarProvider } from "../context/SidebarContext";
+import { NavbarProvider, useNavbarContext } from "../context/NavbarContext";
 import { TextInput, DarkThemeToggle, Avatar, Dropdown } from "flowbite-react";
 
 /**
@@ -100,19 +104,78 @@ const userDropdownItems = [
   { title: "Sign out", onClick: () => console.log("Sign out clicked") },
 ];
 
-export const Default: Story = {
-  render: () => (
-    <SidebarProvider>
+const NavbarWithSidebarMenu = () => {
+  const { setIsSidebarCollapsed, setShowSearch } = useNavbarContext();
+
+  useEffect(() => {
+    setIsSidebarCollapsed(false);
+    setShowSearch(true);
+  }, [setIsSidebarCollapsed, setShowSearch]); // Ensure this effect runs only once
+
+  return (
+    <>
       <Navbar
-        title="Aspyn"
-        onSearch={(value) => console.log(value)}
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
         avatar="https://i.pravatar.cc/300?img=6"
         username="Neil Sims"
         email="neil.sims@flowbite.com"
         userDropdownItems={userDropdownItems}
+        onClickExploreProducts={() => console.log("Explore Products clicked")} // Add console log for Explore Products click
       />
-    </SidebarProvider>
+      <Sidebar>
+        <Sidebar.ItemGroup>
+          <Sidebar.Item href="#" icon={HiChartPie}>
+            Dashboard
+          </Sidebar.Item>
+          <Sidebar.Item href="#" icon={HiViewGrid}>
+            Kanban
+          </Sidebar.Item>
+          <Sidebar.Item href="#" icon={HiInbox} label="3">
+            Inbox
+          </Sidebar.Item>
+        </Sidebar.ItemGroup>
+      </Sidebar>
+    </>
+  );
+};
+
+export const Default: Story = {
+  render: () => (
+    <NavbarProvider>
+      <Navbar
+        onViewAllNotifications={() => console.log("View all notifications")}
+        appButtons={appButtons}
+        avatar="https://i.pravatar.cc/300?img=6"
+        username="Neil Sims"
+        email="neil.sims@flowbite.com"
+        userDropdownItems={userDropdownItems}
+        onClickExploreProducts={() => console.log("Explore Products clicked")} // Add console log for Explore Products click
+      />
+    </NavbarProvider>
+  ),
+};
+
+export const WithSidebar: Story = {
+  render: () => (
+    <NavbarProvider>
+      <NavbarWithSidebarMenu />
+    </NavbarProvider>
+  ),
+};
+
+export const NoSearch: Story = {
+  render: () => (
+    <NavbarProvider>
+      <Navbar
+        onViewAllNotifications={() => console.log("View all notifications")}
+        appButtons={appButtons}
+        avatar="https://i.pravatar.cc/300?img=6"
+        username="Neil Sims"
+        email="neil.sims@flowbite.com"
+        userDropdownItems={userDropdownItems}
+        onClickExploreProducts={() => console.log("Explore Products clicked")} // Add console log for Explore Products click
+      />
+    </NavbarProvider>
   ),
 };

@@ -1,5 +1,6 @@
 import { Sidebar as FlowbiteSidebar } from "flowbite-react";
 import { ReactNode } from "react";
+import { useNavbarContext } from "../context/NavbarContext";
 
 interface SidebarProps {
   children: ReactNode;
@@ -7,9 +8,11 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ children, className, ...props }: SidebarProps) => {
+  const { isSidebarCollapsed } = useNavbarContext();
+
   return (
     <FlowbiteSidebar
-      className={`h-screen max-h-screen ${className}`}
+      className={`h-screen max-h-screen !rounded-none ${className} ${isSidebarCollapsed ? "w-16" : "w-64"}`}
       {...props}
     >
       {children}

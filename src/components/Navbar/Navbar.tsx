@@ -6,7 +6,6 @@ import { Navbar as FlowbiteNavbar } from "flowbite-react";
 import NotificationBellDropdown from "./NotificationBellDropdown";
 import AppDrawerDropdown from "./AppDrawerDropdown";
 import UserDropdown from "./UserDropdown";
-import icon from "../../images/icon.svg";
 import { NotificationItem } from "./NotificationItem";
 import { useNavbarContext } from "../../context/NavbarContext";
 
@@ -14,11 +13,12 @@ interface NavbarProps {
   notifications?: NotificationItem[];
   onViewAllNotifications?: () => void;
   appButtons?: { icon: React.ReactNode; title: string }[];
-  avatar: string;
+  avatar?: string; // Make avatar optional
   username: string;
   email: string;
   userDropdownItems: { title: string; onClick?: () => void }[];
   onClickExploreProducts?: () => void; // Add this prop to handle Explore Products click
+  icon?: string; // Add this prop to set the navbar icon
 }
 
 export const Navbar: FC<NavbarProps> = function ({
@@ -30,6 +30,7 @@ export const Navbar: FC<NavbarProps> = function ({
   email,
   userDropdownItems,
   onClickExploreProducts, // Add this prop to handle Explore Products click
+  icon = "../../images/icon.svg", // Default icon
 }) {
   const {
     title: contextTitle,
@@ -52,7 +53,7 @@ export const Navbar: FC<NavbarProps> = function ({
               <HiMenuAlt1 className="h-6 w-6" />
             </button>
             <FlowbiteNavbar.Brand href="/">
-              <img alt="" src={icon} className="mr-2 h-6 sm:h-8" /> {/* Adjust spacing */}
+              <img alt="" src={icon} className="mr-2 h-6 sm:h-8" /> {/* Use the icon prop */}
               <div className="border-l border-gray-500 h-8 mx-2"></div> {/* Light grey, more muted */}
               <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
                 {contextTitle}

@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import { Avatar, Dropdown } from "flowbite-react";
+import { HiUserCircle } from "react-icons/hi";
 
 interface UserDropdownItem {
   title: string;
@@ -7,7 +8,7 @@ interface UserDropdownItem {
 }
 
 interface UserDropdownProps {
-  avatar: string;
+  avatar?: string; // Make avatar optional
   username: string;
   email: string;
   items: UserDropdownItem[];
@@ -21,12 +22,11 @@ const UserDropdown: FC<UserDropdownProps> = ({ avatar, username, email, items })
       label={
         <span>
           <span className="sr-only">User menu</span>
-          <Avatar
-            alt=""
-            img={avatar}
-            rounded
-            size="sm"
-          />
+          {avatar ? (
+            <Avatar alt="" img={avatar} rounded size="sm" />
+          ) : (
+            <HiUserCircle className="h-8 w-8 text-gray-600 dark:text-gray-400" />
+          )}
         </span>
       }
     >

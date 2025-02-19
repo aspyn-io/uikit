@@ -1,10 +1,9 @@
 import { Meta, StoryObj } from "@storybook/react";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar";
+import icon from "../images/icon.svg";
 import { useEffect } from "react";
 import {
-  HiMenuAlt1,
-  HiSearch,
   HiShoppingBag,
   HiUsers,
   HiInbox,
@@ -18,7 +17,6 @@ import {
   HiViewGrid,
 } from "react-icons/hi";
 import { NavbarProvider, useNavbarContext } from "../context/NavbarContext";
-import { TextInput, DarkThemeToggle, Avatar, Dropdown } from "flowbite-react";
 
 /**
  * The `Navbar` component is an extension of the flowbite react navbar component.
@@ -115,9 +113,10 @@ const NavbarWithSidebarMenu = () => {
   return (
     <>
       <Navbar
+        icon={icon} // Pass the icon prop
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
-        avatar="https://i.pravatar.cc/300?img=6"
+        avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
         username="Neil Sims"
         email="neil.sims@flowbite.com"
         userDropdownItems={userDropdownItems}
@@ -144,9 +143,10 @@ export const Default: Story = {
   render: () => (
     <NavbarProvider>
       <Navbar
+        icon={icon} // Pass the icon prop
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
-        avatar="https://i.pravatar.cc/300?img=6"
+        avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
         username="Neil Sims"
         email="neil.sims@flowbite.com"
         userDropdownItems={userDropdownItems}
@@ -168,9 +168,26 @@ export const NoSearch: Story = {
   render: () => (
     <NavbarProvider>
       <Navbar
+        icon={icon} // Pass the icon prop
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
-        avatar="https://i.pravatar.cc/300?img=6"
+        avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
+        username="Neil Sims"
+        email="neil.sims@flowbite.com"
+        userDropdownItems={userDropdownItems}
+        onClickExploreProducts={() => console.log("Explore Products clicked")} // Add console log for Explore Products click
+      />
+    </NavbarProvider>
+  ),
+};
+
+export const NoAvatar: Story = {
+  render: () => (
+    <NavbarProvider>
+      <Navbar
+        icon={icon} // Pass the icon prop
+        onViewAllNotifications={() => console.log("View all notifications")}
+        appButtons={appButtons}
         username="Neil Sims"
         email="neil.sims@flowbite.com"
         userDropdownItems={userDropdownItems}

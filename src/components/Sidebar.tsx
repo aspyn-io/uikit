@@ -7,7 +7,7 @@ interface SidebarProps {
   className?: string;
 }
 
-export const Sidebar = ({ children, ...props }: SidebarProps) => {
+export const Sidebar = ({ children, className, ...props }: SidebarProps) => {
   const { isSidebarCollapsed } = useNavbarContext();
 
   return (
@@ -18,7 +18,7 @@ export const Sidebar = ({ children, ...props }: SidebarProps) => {
           inner: "h-full overflow-y-auto overflow-x-hidden bg-inherit py-4 px-3",
         },
       }}
-      className={`h-screen max-h-screen`}
+      className={`${className}`}
       collapsed={isSidebarCollapsed}
       {...props}
     >

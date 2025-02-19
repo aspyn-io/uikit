@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import type { FC } from "react";
 import { DarkThemeToggle, TextInput } from "flowbite-react";
-import { HiMenuAlt1, HiSearch } from "react-icons/hi";
+import { HiMenuAlt1, HiSearch, HiOutlinePhotograph } from "react-icons/hi"; // Import placeholder icon
 import { Navbar as FlowbiteNavbar } from "flowbite-react";
 import NotificationBellDropdown from "./NotificationBellDropdown";
 import AppDrawerDropdown from "./AppDrawerDropdown";
@@ -18,7 +18,7 @@ interface NavbarProps {
   email: string;
   userDropdownItems: { title: string; onClick?: () => void }[];
   onClickExploreProducts?: () => void; // Add this prop to handle Explore Products click
-  icon?: string; // Add this prop to set the navbar icon
+  logo?: string; // Rename icon to logo
 }
 
 export const Navbar: FC<NavbarProps> = function ({
@@ -30,7 +30,7 @@ export const Navbar: FC<NavbarProps> = function ({
   email,
   userDropdownItems,
   onClickExploreProducts, // Add this prop to handle Explore Products click
-  icon = "../../images/icon.svg", // Default icon
+  logo, // Rename icon to logo
 }) {
   const {
     title: contextTitle,
@@ -53,7 +53,11 @@ export const Navbar: FC<NavbarProps> = function ({
               <HiMenuAlt1 className="h-6 w-6" />
             </button>
             <FlowbiteNavbar.Brand href="/">
-              <img alt="" src={icon} className="mr-2 h-6 sm:h-8" /> {/* Use the icon prop */}
+              {logo ? (
+                <img alt="" src={logo} className="mr-2 h-6 sm:h-8" /> // Use the logo prop
+              ) : (
+                <HiOutlinePhotograph className="mr-2 h-6 w-6 sm:h-8 sm:w-8 text-gray-600 dark:text-gray-400" /> // Use placeholder icon with dark mode support
+              )}
               <div className="border-l border-gray-500 h-8 mx-2"></div> {/* Light grey, more muted */}
               <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
                 {contextTitle}

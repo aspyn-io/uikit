@@ -7,12 +7,19 @@ interface SidebarProps {
   className?: string;
 }
 
-export const Sidebar = ({ children, className, ...props }: SidebarProps) => {
+export const Sidebar = ({ children, ...props }: SidebarProps) => {
   const { isSidebarCollapsed } = useNavbarContext();
 
   return (
     <FlowbiteSidebar
-      className={`h-screen max-h-screen !rounded-none ${className} ${isSidebarCollapsed ? "w-16" : "w-64"}`}
+      theme={{
+        root: {
+          base: "h-full bg-white text-gray-900 dark:bg-gray-800 dark:text-white border-r border-gray-200 dark:border-gray-700 shadow-none rounded-none", // ✅ Removed rounded edges
+          inner: "h-full overflow-y-auto overflow-x-hidden bg-inherit py-4 px-3",
+        },
+      }}
+      className={`h-screen max-h-screen`}
+      collapsed={isSidebarCollapsed}
       {...props}
     >
       {children}

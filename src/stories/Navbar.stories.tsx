@@ -15,6 +15,7 @@ import {
   HiLogout,
   HiChartPie,
   HiViewGrid,
+  HiOutlinePhotograph, // Import placeholder icon
 } from "react-icons/hi";
 import { NavbarProvider, useNavbarContext } from "../context/NavbarContext";
 
@@ -113,7 +114,7 @@ const NavbarWithSidebarMenu = () => {
   return (
     <>
       <Navbar
-        icon={icon} // Pass the icon prop
+        logo={icon} // Rename icon to logo
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
         avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
@@ -143,7 +144,7 @@ export const Default: Story = {
   render: () => (
     <NavbarProvider>
       <Navbar
-        icon={icon} // Pass the icon prop
+        logo={icon} // Rename icon to logo
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
         avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
@@ -168,7 +169,7 @@ export const NoSearch: Story = {
   render: () => (
     <NavbarProvider>
       <Navbar
-        icon={icon} // Pass the icon prop
+        logo={icon} // Rename icon to logo
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
         avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
@@ -185,9 +186,25 @@ export const NoAvatar: Story = {
   render: () => (
     <NavbarProvider>
       <Navbar
-        icon={icon} // Pass the icon prop
+        logo={icon} // Rename icon to logo
         onViewAllNotifications={() => console.log("View all notifications")}
         appButtons={appButtons}
+        username="Neil Sims"
+        email="neil.sims@flowbite.com"
+        userDropdownItems={userDropdownItems}
+        onClickExploreProducts={() => console.log("Explore Products clicked")} // Add console log for Explore Products click
+      />
+    </NavbarProvider>
+  ),
+};
+
+export const NoLogo: Story = {
+  render: () => (
+    <NavbarProvider>
+      <Navbar
+        onViewAllNotifications={() => console.log("View all notifications")}
+        appButtons={appButtons}
+        avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
         username="Neil Sims"
         email="neil.sims@flowbite.com"
         userDropdownItems={userDropdownItems}

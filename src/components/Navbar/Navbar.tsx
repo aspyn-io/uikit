@@ -20,6 +20,7 @@ interface NavbarProps {
   userDropdownItems: { title: string; onClick?: () => void }[];
   onClickExploreProducts?: () => void; // Add this prop to handle Explore Products click
   logo?: string; // Rename icon to logo
+  logoLink?: string; // Add logoLink prop
 }
 
 export const Navbar: FC<NavbarProps> = function ({
@@ -32,6 +33,7 @@ export const Navbar: FC<NavbarProps> = function ({
   userDropdownItems,
   onClickExploreProducts, // Add this prop to handle Explore Products click
   logo, // Rename icon to logo
+  logoLink = "/", // Default value for logoLink
 }) {
   const {
     title: contextTitle,
@@ -39,7 +41,7 @@ export const Navbar: FC<NavbarProps> = function ({
     onSearch: contextOnSearch,
     isSidebarCollapsed,
     setIsSidebarCollapsed,
-    logoLink,
+    titleLink: contextTitleLink, // Add titleLink from context
   } = useNavbarContext();
 
   return (
@@ -54,12 +56,12 @@ export const Navbar: FC<NavbarProps> = function ({
               <span className="sr-only">Toggle sidebar</span>
               <HiMenuAlt1 className="h-6 w-6" />
             </button>
-            <Link to="/">
+            <Link to={logoLink}>
               <Tooltip content="Return to Home">
                 <img alt="Aspyn" src={logo} className="mr-3 h-6 sm:h-8" />
               </Tooltip>
             </Link>
-            <FlowbiteNavbar.Brand as={Link} href={logoLink}>
+            <FlowbiteNavbar.Brand as={Link} to={contextTitleLink}> {/* Update href to use titleLink */}
               <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white border-l pl-3 border-gray-200 dark:border-gray-600 dark:border-">
                 {contextTitle}
               </span>

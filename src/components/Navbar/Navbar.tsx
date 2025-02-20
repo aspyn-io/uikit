@@ -87,9 +87,9 @@ export const Navbar: FC<NavbarProps> = function ({
               />
               <DarkThemeToggle />
               <AppDrawerDropdown appButtons={appButtons} onClickExploreProducts={onClickExploreProducts} />
-            </div>
-            <div className="hidden lg:block">
-              <UserDropdown avatar={avatar} username={username} email={email} items={userDropdownItems} />
+              <div className="ml-3">
+                <UserDropdown avatar={avatar} username={username} email={email} items={userDropdownItems} />
+              </div>
             </div>
           </div>
         </div>

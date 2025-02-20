@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { BrowserRouter } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar";
 import icon from "../images/icon.svg";
@@ -41,6 +42,13 @@ const meta: Meta<typeof Navbar> = {
     layout: "fullscreen",
   },
   tags: ["autodocs"],
+  decorators: [
+    (Story) => (
+      <BrowserRouter>
+        <Story />
+      </BrowserRouter>
+    ),
+  ],
 };
 
 export default meta;

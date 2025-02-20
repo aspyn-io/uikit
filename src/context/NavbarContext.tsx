@@ -4,10 +4,12 @@ interface NavbarContextProps {
   title: string;
   showSearch: boolean;
   isSidebarCollapsed: boolean;
+  logoLink: string;
   setIsSidebarCollapsed: (isCollapsed: boolean) => void;
   setTitle: (title: string) => void;
   setShowSearch: (show: boolean) => void;
   setOnSearch: React.Dispatch<React.SetStateAction<(event: React.ChangeEvent<HTMLInputElement>) => void>>;
+  setLogoLink: (link: string) => void;
   onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -21,6 +23,7 @@ export function NavbarProvider({ children }: PropsWithChildren) {
     return (event) => console.log(event.target.value);
   });
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [logoLink, setLogoLink] = useState("/");
 
   return (
     <NavbarContext.Provider
@@ -28,10 +31,12 @@ export function NavbarProvider({ children }: PropsWithChildren) {
         title,
         showSearch,
         isSidebarCollapsed,
+        logoLink,
         setIsSidebarCollapsed,
         setTitle,
         setShowSearch,
         setOnSearch,
+        setLogoLink,
         onSearch,
       }}
     >

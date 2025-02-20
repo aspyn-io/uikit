@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import type { FC } from "react";
-import { DarkThemeToggle, TextInput } from "flowbite-react";
+import { Link } from "react-router-dom";
+import { DarkThemeToggle, TextInput, Tooltip } from "flowbite-react";
 import { HiMenuAlt1, HiSearch, HiOutlinePhotograph } from "react-icons/hi"; // Import placeholder icon
 import { Navbar as FlowbiteNavbar } from "flowbite-react";
 import NotificationBellDropdown from "./NotificationBellDropdown";
@@ -38,6 +39,7 @@ export const Navbar: FC<NavbarProps> = function ({
     onSearch: contextOnSearch,
     isSidebarCollapsed,
     setIsSidebarCollapsed,
+    logoLink,
   } = useNavbarContext();
 
   return (
@@ -52,14 +54,13 @@ export const Navbar: FC<NavbarProps> = function ({
               <span className="sr-only">Toggle sidebar</span>
               <HiMenuAlt1 className="h-6 w-6" />
             </button>
-            <FlowbiteNavbar.Brand href="/">
-              {logo ? (
-                <img alt="" src={logo} className="mr-2 h-6 sm:h-8" /> // Use the logo prop
-              ) : (
-                <HiOutlinePhotograph className="mr-2 h-6 w-6 sm:h-8 sm:w-8 text-gray-600 dark:text-gray-400" /> // Use placeholder icon with dark mode support
-              )}
-              <div className="border-l border-gray-500 h-8 mx-2"></div> {/* Light grey, more muted */}
-              <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
+            <Link to="/">
+              <Tooltip content="Return to Home">
+                <img alt="Aspyn" src={logo} className="mr-3 h-6 sm:h-8" />
+              </Tooltip>
+            </Link>
+            <FlowbiteNavbar.Brand as={Link} href={logoLink}>
+              <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white border-l pl-3 border-gray-200 dark:border-gray-600 dark:border-">
                 {contextTitle}
               </span>
             </FlowbiteNavbar.Brand>

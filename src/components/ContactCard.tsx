@@ -1,15 +1,11 @@
 import React from "react";
-import {
-  Avatar,
-  Button,
-  Dropdown,
-} from 'flowbite-react';
+import { Card, Avatar, Button, Dropdown } from "flowbite-react";
 import {
   HiDotsVertical,
   HiMail,
   HiPhone,
-  HiLocationMarker
-} from 'react-icons/hi';
+  HiLocationMarker,
+} from "react-icons/hi";
 
 interface ContactCardProps {
   avatar?: string;
@@ -18,7 +14,7 @@ interface ContactCardProps {
   actions?: { label: string; onClick: () => void }[];
   email: string;
   phone: string;
-  className?: string;
+  showActionButtons?: boolean;
 }
 
 export const ContactCard: React.FC<ContactCardProps> = ({
@@ -28,17 +24,23 @@ export const ContactCard: React.FC<ContactCardProps> = ({
   actions,
   email,
   phone,
-  className,
+  showActionButtons = true,
 }) => {
+  const getInitials = (name: string) => {
+    const [firstName, lastName] = name.split(" ");
+    return `${firstName[0]}${lastName[0]}`;
+  };
+
   return (
-    <div className={`bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 ${className}`}>
+    <Card>
       <div className="flex justify-between items-start">
         <div className="flex items-center space-x-4">
           <Avatar
-            img={avatar || 'https://placehold.co/500x500?text=?'}
+            img={avatar}
             rounded
             size="lg"
             alt={`${name}'s avatar`}
+            placeholderInitials={avatar ? undefined : getInitials(name)}
           />
           <div className="flex flex-col gap-1">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -68,7 +70,6 @@ export const ContactCard: React.FC<ContactCardProps> = ({
             ))}
           </Dropdown>
         )}
-        
       </div>
       <div className="mt-4">
         <div className="flex items-center space-x-2">
@@ -84,28 +85,21 @@ export const ContactCard: React.FC<ContactCardProps> = ({
           </span>
         </div>
       </div>
-      <div className="mt-4 flex space-x-2">
-        <a
-          href={`tel:${phone}`}
-          className="w-1/2"
-        >
-          <Button
-            color="gray"
-            className="w-full"
-          >
-            <HiPhone className="mr-2 h-5 w-5" /> Call
-          </Button>
-        </a>
-        <a href={`mailto:${email}`} className="w-1/2">
-          <Button
-            color="gray"
-            className="w-full"
-          >
-            <HiMail className="mr-2 h-5 w-5" /> Mail
-          </Button>
-        </a>
-      </div>
-    </div>
+      {showActionButtons && (
+        <div className="mt-4 flex space-x-2">
+          <a href={`tel:${phone}`} className="w-1/2">
+            <Button color="gray" className="w-full">
+              <HiPhone className="mr-2 h-5 w-5" /> Call
+            </Button>
+          </a>
+          <a href={`mailto:${email}`} className="w-1/2">
+            <Button color="gray" className="w-full">
+              <HiMail className="mr-2 h-5 w-5" /> Mail
+            </Button>
+          </a>
+        </div>
+      )}
+    </Card>
   );
 };
 

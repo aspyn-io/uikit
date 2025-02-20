@@ -66,3 +66,41 @@ export const WithoutActions: Story = {
     phone: "555-555-5555",
   },
 };
+
+export const WithoutAvatar: Story = {
+  render: (args) => (
+    <Wrapper>
+      <ContactCard {...args} />
+    </Wrapper>
+  ),
+  args: {
+    name: "John Doe",
+    address: "Austin",
+    actions: [
+      { label: "Edit", onClick: () => console.log("Edit") },
+      { label: "Delete", onClick: () => console.log("Delete") },
+    ],
+    email: "john.doe@example.com",
+    phone: "555-555-5555",
+  },
+};
+
+export const WithoutActionButtons: Story = {
+  render: (args) => (
+    <Wrapper>
+      <ContactCard {...args} />
+    </Wrapper>
+  ),
+  args: {
+    avatar: "https://i.pravatar.cc/300",
+    name: "John Doe",
+    address: "Austin",
+    actions: [
+      { label: "Edit", onClick: () => console.log("Edit") },
+      { label: "Delete", onClick: () => console.log("Delete") },
+    ],
+    email: "john.doe@example.com",
+    phone: "555-555-5555",
+    showActionButtons: false,
+  },
+};

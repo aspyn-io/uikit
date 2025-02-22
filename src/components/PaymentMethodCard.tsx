@@ -38,15 +38,15 @@ export const PaymentMethodCard = ({
   children,
 }: PaymentMethodCard) => {
   return (
-    <div className="rounded-md bg-gray-50 px-6 py-5 sm:flex sm:items-center sm:justify-between">
+    <div className="border dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 px-6 py-5 sm:flex sm:items-center sm:justify-between">
       <h4 className="sr-only">{cardType}</h4>
       <div className="sm:flex sm:items-start">
         {cardIcon}
         <div className="mt-3 sm:mt-0 sm:ml-4">
-          <div className="text-sm font-medium text-gray-900">
+          <div className="text-sm font-medium text-gray-900 dark:text-white">
             Ending with {cardNumber}
           </div>
-          <div className="mt-1 text-sm text-gray-600 sm:flex sm:items-center">
+          <div className="mt-1 text-sm text-gray-600 dark:text-gray-300 sm:flex sm:items-center">
             <div>Expires {expiryDate}</div>
             <span className="hidden sm:mx-2 sm:inline" aria-hidden="true">
               &middot;
@@ -61,7 +61,7 @@ export const PaymentMethodCard = ({
           <button
             type="button"
             onClick={onEdit}
-            className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50"
+            className="inline-flex items-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white ring-1 shadow-xs ring-gray-300 dark:ring-gray-600 ring-inset hover:bg-gray-50 dark:hover:bg-gray-600"
           >
             {buttonText}
           </button>

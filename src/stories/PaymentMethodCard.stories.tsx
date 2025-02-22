@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { Dropdown } from "flowbite-react";
 import PaymentMethodCard from "../components/PaymentMethodCard";
 
 const meta: Meta<typeof PaymentMethodCard> = {
@@ -17,41 +18,56 @@ export const Default: Story = {
     cardNumber: "4242",
     expiryDate: "12/20",
     lastUpdated: "22 Aug 2017",
-    onEdit: () => console.log("Edit clicked"),
   },
 };
 
-export const WithoutEditButton: Story = {
+export const Clickable: Story = {
   args: {
-    cardType: "Visa",
-    cardNumber: "9876",
-    expiryDate: "03/24",
-    lastUpdated: "10 Jan 2024",
+    ...Default.args,
+    onClick: () => console.log("Card clicked"),
   },
 };
 
-export const WithAdditionalContent: Story = {
+export const WithDrawer: Story = {
   args: {
-    cardType: "Visa",
-    cardNumber: "1234",
-    expiryDate: "06/25",
-    lastUpdated: "1 Mar 2024",
-    onEdit: () => console.log("Edit clicked"),
-    children: (
-      <div className="mt-2 text-sm text-gray-500">
-        Primary payment method • Used for all subscriptions
-      </div>
+    ...Default.args,
+    drawerContent: (
+      <>
+        <Dropdown.Item onClick={() => console.log("Edit")}>
+          Edit payment method
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => console.log("Delete")}>
+          Delete payment method
+        </Dropdown.Item>
+      </>
     ),
   },
 };
 
-export const WithCustomButtonText: Story = {
+export const ClickableWithDrawer: Story = {
   args: {
-    cardType: "Visa",
-    cardNumber: "3456",
-    expiryDate: "12/26",
-    lastUpdated: "5 Mar 2024",
-    onEdit: () => console.log("Edit clicked"),
-    buttonText: "Update Card",
+    ...Default.args,
+    onClick: () => console.log("Card clicked"),
+    drawerContent: (
+      <>
+        <Dropdown.Item onClick={() => console.log("Make default")}>
+          Set as default
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => console.log("Delete")}>
+          Delete payment method
+        </Dropdown.Item>
+      </>
+    ),
+  },
+};
+
+export const WithMetadata: Story = {
+  args: {
+    ...Default.args,
+    children: (
+      <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        Default payment method
+      </div>
+    ),
   },
 };

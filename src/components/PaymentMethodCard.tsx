@@ -1,4 +1,6 @@
 import React, { ReactNode } from "react";
+import { HiDotsVertical } from "react-icons/hi";
+import { Dropdown } from "flowbite-react";
 
 interface PaymentMethodCard {
   cardType?: string;
@@ -6,9 +8,9 @@ interface PaymentMethodCard {
   cardNumber?: string;
   expiryDate?: string;
   lastUpdated?: string;
-  onEdit?: () => void;
-  buttonText?: string;
   children?: ReactNode;
+  onClick?: () => void;
+  drawerContent?: ReactNode;
 }
 
 const UnknownCardIcon = () => (
@@ -33,13 +35,12 @@ export const PaymentMethodCard = ({
   cardNumber = "4242",
   expiryDate = "12/20",
   lastUpdated = "22 Aug 2017",
-  onEdit,
-  buttonText = "Edit",
   children,
+  onClick,
+  drawerContent,
 }: PaymentMethodCard) => {
-  return (
-    <div className="border dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 px-6 py-5 sm:flex sm:items-center sm:justify-between">
-      <h4 className="sr-only">{cardType}</h4>
+  const CardContent = (
+    <>
       <div className="sm:flex sm:items-start">
         {cardIcon}
         <div className="mt-3 sm:mt-0 sm:ml-4">
@@ -56,17 +57,34 @@ export const PaymentMethodCard = ({
           {children}
         </div>
       </div>
-      {onEdit && (
-        <div className="mt-4 sm:mt-0 sm:flex-shrink-0">
-          <button
-            type="button"
-            onClick={onEdit}
-            className="inline-flex items-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white ring-1 shadow-xs ring-gray-300 dark:ring-gray-600 ring-inset hover:bg-gray-50 dark:hover:bg-gray-600"
+      {drawerContent && (
+        <div
+          className="mt-4 sm:mt-0 sm:flex-shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Dropdown
+            inline
+            arrowIcon={false}
+            label={
+              <HiDotsVertical className="h-6 w-6 text-gray-400 hover:text-gray-600" />
+            }
           >
-            {buttonText}
-          </button>
+            {drawerContent}
+          </Dropdown>
         </div>
       )}
+    </>
+  );
+
+  const className = `border dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 px-6 py-5 sm:flex sm:items-center sm:justify-between${
+    onClick
+      ? " cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      : ""
+  }`;
+
+  return (
+    <div className={className} onClick={onClick}>
+      {CardContent}
     </div>
   );
 };

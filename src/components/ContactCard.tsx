@@ -58,7 +58,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
         </div>
         {actions?.length && (
           <Dropdown
-            label={<HiDotsVertical />}
+            label={<HiDotsVertical className="dark:text-white" />}
             inline
             arrowIcon={false}
             placement="left-start"

@@ -17,10 +17,6 @@ type Story = StoryObj<typeof AppointmentCard>;
 
 const today = new Date();
 
-const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="w-full max-w-4xl mx-auto p-4">{children}</div>
-);
-
 const workOrders = [
   { id: "WO123", orderId: "ORDER456", status: "Active" },
   { id: "WO124", orderId: "ORDER457", status: "Pending" },
@@ -29,11 +25,6 @@ const workOrders = [
 
 // Default Story
 export const Default: Story = {
-  render: (args) => (
-    <Wrapper>
-      <AppointmentCard {...args} />
-    </Wrapper>
-  ),
   args: {
     datetime: today,
     calendarActive: true,
@@ -45,11 +36,6 @@ export const Default: Story = {
 
 // Edit State with Work Orders
 export const EditState: Story = {
-  render: (args) => (
-    <Wrapper>
-      <AppointmentCard {...args} />
-    </Wrapper>
-  ),
   args: {
     datetime: today,
     status: "Scheduled",
@@ -69,11 +55,6 @@ export const EditState: Story = {
 
 // With Select Button
 export const WithoutSelectButton: Story = {
-  render: (args) => (
-    <Wrapper>
-      <AppointmentCard {...args} />
-    </Wrapper>
-  ),
   args: {
     datetime: today,
     calendarActive: true,
@@ -86,11 +67,6 @@ export const WithoutSelectButton: Story = {
 
 // Selected Appointment Story
 export const SelectedWithStatus: Story = {
-  render: (args) => (
-    <Wrapper>
-      <AppointmentCard {...args} />
-    </Wrapper>
-  ),
   args: {
     datetime: today,
     status: "Scheduled",
@@ -105,11 +81,6 @@ export const SelectedWithStatus: Story = {
 
 // Story without Icons
 export const WithoutIcons: Story = {
-  render: (args) => (
-    <Wrapper>
-      <AppointmentCard {...args} />
-    </Wrapper>
-  ),
   args: {
     datetime: today,
     calendarActive: true,

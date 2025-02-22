@@ -11,16 +11,7 @@ export default meta;
 
 type Story = StoryObj<typeof ContactCard>;
 
-const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="w-full max-w-80 mx-auto p-4">{children}</div>
-);
-
 export const Default: Story = {
-  render: (args) => (
-    <Wrapper>
-      <ContactCard {...args} />
-    </Wrapper>
-  ),
   args: {
     avatar: "https://i.pravatar.cc/300",
     name: "John Doe",
@@ -35,11 +26,6 @@ export const Default: Story = {
 };
 
 export const WithoutAddress: Story = {
-  render: (args) => (
-    <Wrapper>
-      <ContactCard {...args} />
-    </Wrapper>
-  ),
   args: {
     avatar: "https://i.pravatar.cc/300",
     name: "John Doe",
@@ -53,11 +39,6 @@ export const WithoutAddress: Story = {
 };
 
 export const WithoutActions: Story = {
-  render: (args) => (
-    <Wrapper>
-      <ContactCard {...args} />
-    </Wrapper>
-  ),
   args: {
     avatar: "https://i.pravatar.cc/300",
     name: "John Doe",
@@ -68,11 +49,6 @@ export const WithoutActions: Story = {
 };
 
 export const WithoutAvatar: Story = {
-  render: (args) => (
-    <Wrapper>
-      <ContactCard {...args} />
-    </Wrapper>
-  ),
   args: {
     name: "John Doe",
     address: "Austin",
@@ -86,11 +62,6 @@ export const WithoutAvatar: Story = {
 };
 
 export const WithoutActionButtons: Story = {
-  render: (args) => (
-    <Wrapper>
-      <ContactCard {...args} />
-    </Wrapper>
-  ),
   args: {
     avatar: "https://i.pravatar.cc/300",
     name: "John Doe",

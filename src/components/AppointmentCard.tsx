@@ -81,19 +81,27 @@ export const AppointmentCard = ({
   };
 
   return (
-    <div className="border rounded-lg shadow-sm bg-white overflow-hidden transition-all duration-300">
+    <div className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300">
       <div className="grid grid-cols-[60%_40%] items-center p-4">
         <div className="flex items-center gap-6">
-          <div className="p-3 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+          <div className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center">
             <HiOutlineCalendar size={20} />
           </div>
           <div className="flex flex-col items-center">
-            <div className="text-2xl font-bold text-gray-900">{dayNumber}</div>
-            <div className="text-xs uppercase text-gray-500">{monthName}</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              {dayNumber}
+            </div>
+            <div className="text-xs uppercase text-gray-500 dark:text-gray-400">
+              {monthName}
+            </div>
           </div>
           <div>
-            <div className="text-gray-800 font-semibold">{dayName}</div>
-            <div className="text-gray-500 text-sm">{amOrPm} Appointment</div>
+            <div className="text-gray-800 dark:text-gray-200 font-semibold">
+              {dayName}
+            </div>
+            <div className="text-gray-500 dark:text-gray-400 text-sm">
+              {amOrPm} Appointment
+            </div>
           </div>
           <Badge color="success" className="truncate max-w-[120px]">
             {daysLabel}
@@ -104,8 +112,8 @@ export const AppointmentCard = ({
                 <div
                   className={`p-2 rounded-full ${
                     calendarActive
-                      ? "bg-blue-100 text-blue-600"
-                      : "bg-gray-200 text-gray-400"
+                      ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
+                      : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                   }`}
                 >
                   <HiOutlineCalendar size={20} />
@@ -113,8 +121,8 @@ export const AppointmentCard = ({
                 <div
                   className={`p-2 rounded-full ${
                     timeActive
-                      ? "bg-blue-100 text-blue-600"
-                      : "bg-gray-200 text-gray-400"
+                      ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
+                      : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                   }`}
                 >
                   <HiOutlineClock size={20} />
@@ -122,8 +130,8 @@ export const AppointmentCard = ({
                 <div
                   className={`p-2 rounded-full ${
                     userActive
-                      ? "bg-blue-100 text-blue-600"
-                      : "bg-gray-200 text-gray-400"
+                      ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
+                      : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                   }`}
                 >
                   <HiOutlineUser size={20} />
@@ -142,16 +150,19 @@ export const AppointmentCard = ({
             <Button color="gray" onClick={toggleExpanded}>
               <div className="flex items-center gap-2">
                 <HiOutlineClipboardList size={16} className="text-gray-600" />
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
                   {workOrders.length}
                 </span>
               </div>
               {isExpanded ? (
-                <HiOutlineChevronUp size={16} className="ml-2 text-gray-500" />
+                <HiOutlineChevronUp
+                  size={16}
+                  className="ml-2 text-gray-500 dark:text-gray-400"
+                />
               ) : (
                 <HiOutlineChevronDown
                   size={16}
-                  className="ml-2 text-gray-500"
+                  className="ml-2 text-gray-500 dark:text-gray-400"
                 />
               )}
             </Button>
@@ -176,6 +187,7 @@ export const AppointmentCard = ({
               color={isSelected ? "primary" : "light"}
               disabled={isSelected}
               onClick={onSelect}
+              className="dark:text-white"
             >
               {isSelected ? "Selected" : "Select"}
             </Button>
@@ -187,7 +199,7 @@ export const AppointmentCard = ({
         style={{ maxHeight: `${maxHeight}px` }}
         ref={contentRef}
       >
-        <div className="border-t">
+        <div className="border-t dark:border-gray-700">
           <Table>
             <Table.Head>
               <Table.HeadCell>Work Order ID</Table.HeadCell>

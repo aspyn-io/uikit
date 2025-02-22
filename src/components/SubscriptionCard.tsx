@@ -48,33 +48,35 @@ export const SubscriptionCard = ({
       : "";
 
   const CardContent = (
-    <div className="border rounded-lg shadow-md bg-white p-6 flex items-center justify-between cursor-pointer">
+    <div className="border rounded-lg shadow-md bg-white dark:bg-gray-800 dark:border-gray-700 p-6 flex items-center justify-between cursor-pointer">
       <div className="flex items-center gap-4">
-        <div className="p-4 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+        <div className="p-4 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center">
           {icon}
         </div>
         <div className="flex-1">
           {showCustomerInfo && (
-            <div className="text-lg font-semibold text-gray-900">
+            <div className="text-lg font-semibold text-gray-900 dark:text-white">
               {customerName}
             </div>
           )}
           {showCustomerInfo && (
-            <div className="text-sm text-gray-500">{customerEmail}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              {customerEmail}
+            </div>
           )}
-          <div className="text-gray-700 font-medium text-md mt-1">
+          <div className="text-gray-700 dark:text-gray-200 font-medium text-md mt-1">
             {product}
           </div>
-          <div className="text-sm text-gray-500 mt-1">
+          <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Created: {formattedDate}
           </div>
         </div>
       </div>
       <div className="flex items-center gap-4">
         <div className="text-right">
-          <div className="text-2xl font-bold">
+          <div className="text-2xl font-bold dark:text-white">
             {totalAmount}{" "}
-            <span className="text-lg text-gray-500">
+            <span className="text-lg text-gray-500 dark:text-gray-400">
               {formattedBillingType}
             </span>
           </div>

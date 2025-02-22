@@ -1,9 +1,8 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { HiDotsVertical } from "react-icons/hi";
 import { Dropdown } from "flowbite-react";
 
 interface PaymentMethodCard {
-  cardType?: string;
   cardIcon?: ReactNode;
   cardNumber?: string;
   expiryDate?: string;
@@ -30,7 +29,6 @@ const UnknownCardIcon = () => (
 );
 
 export const PaymentMethodCard = ({
-  cardType = "Card",
   cardIcon = <UnknownCardIcon />,
   cardNumber = "4242",
   expiryDate = "12/20",

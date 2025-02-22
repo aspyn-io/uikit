@@ -13,7 +13,6 @@ type Story = StoryObj<typeof PaymentMethodCard>;
 
 export const Default: Story = {
   args: {
-    title: "Payment method",
     cardType: "Visa",
     cardNumber: "4242",
     expiryDate: "12/20",
@@ -22,20 +21,8 @@ export const Default: Story = {
   },
 };
 
-export const WithCustomTitle: Story = {
-  args: {
-    title: "Corporate Credit Card",
-    cardType: "Visa",
-    cardNumber: "5678",
-    expiryDate: "01/25",
-    lastUpdated: "15 Feb 2024",
-    onEdit: () => console.log("Edit clicked"),
-  },
-};
-
 export const WithoutEditButton: Story = {
   args: {
-    title: "Payment method",
     cardType: "Visa",
     cardNumber: "9876",
     expiryDate: "03/24",
@@ -45,7 +32,6 @@ export const WithoutEditButton: Story = {
 
 export const WithAdditionalContent: Story = {
   args: {
-    title: "Payment method",
     cardType: "Visa",
     cardNumber: "1234",
     expiryDate: "06/25",
@@ -61,7 +47,6 @@ export const WithAdditionalContent: Story = {
 
 export const WithCustomButtonText: Story = {
   args: {
-    title: "Payment method",
     cardType: "Visa",
     cardNumber: "3456",
     expiryDate: "12/26",

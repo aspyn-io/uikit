@@ -9,6 +9,7 @@ type PaginationControlsProps = {
   prevPage: string | null;
   pageSize: number;
   setPageSize: (size: number) => void;
+  pageSizes?: number[];
 };
 
 const PaginationControls: FC<PaginationControlsProps> = ({
@@ -16,8 +17,9 @@ const PaginationControls: FC<PaginationControlsProps> = ({
   handlePrevPage,
   nextPage,
   prevPage,
-  pageSize,
+  pageSize = 25,
   setPageSize,
+  pageSizes = [5, 10, 25, 50],
 }) => (
   <div className="flex items-center justify-between">
     <div className="flex items-center">
@@ -27,7 +29,7 @@ const PaginationControls: FC<PaginationControlsProps> = ({
         onChange={(e) => setPageSize(Number(e.target.value))}
         className="ml-2 w-20"
       >
-        {[5, 10, 25, 50].map((size) => (
+        {pageSizes.map((size) => (
           <option key={size} value={size}>
             {size}
           </option>

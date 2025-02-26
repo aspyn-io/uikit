@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Avatar, Button, Dropdown } from "flowbite-react";
+import { Card, Avatar, Button, Dropdown, Badge } from "flowbite-react";
 import {
   HiDotsVertical,
   HiMail,
@@ -15,6 +15,8 @@ interface ContactCardProps {
   email: string;
   phone: string;
   showActionButtons?: boolean;
+  role?: { label: string; color: string };
+  status?: { label: string; color: string; icon?: React.ReactNode };
 }
 
 export const ContactCard: React.FC<ContactCardProps> = ({
@@ -25,6 +27,8 @@ export const ContactCard: React.FC<ContactCardProps> = ({
   email,
   phone,
   showActionButtons = true,
+  role,
+  status,
 }) => {
   const getInitials = (name: string) => {
     const [firstName, lastName] = name.split(" ");
@@ -54,22 +58,40 @@ export const ContactCard: React.FC<ContactCardProps> = ({
                 </span>
               </div>
             )}
+            {role && (
+              <Badge color={role.color} className="rounded-sm">
+                {role.label}
+              </Badge>
+            )}
           </div>
         </div>
-        {actions?.length && (
-          <Dropdown
-            label={<HiDotsVertical className="dark:text-white" />}
-            inline
-            arrowIcon={false}
-            placement="left-start"
-          >
-            {actions.map((action, index) => (
-              <Dropdown.Item key={index} onClick={action.onClick}>
-                {action.label}
-              </Dropdown.Item>
-            ))}
-          </Dropdown>
-        )}
+        <div className="flex flex-col items-end gap-2">
+          {actions?.length && (
+            <Dropdown
+              label={<HiDotsVertical className="dark:text-white" />}
+              inline
+              arrowIcon={false}
+              placement="left-start"
+            >
+              {actions.map((action, index) => (
+                <Dropdown.Item key={index} onClick={action.onClick}>
+                  {action.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown>
+          )}
+          {status && (
+            <div className="flex items-center gap-2">
+              {status.icon}
+              <Badge
+                color={status.color}
+                className="rounded-sm flex items-center gap-1"
+              >
+                {status.label}
+              </Badge>
+            </div>
+          )}
+        </div>
       </div>
       <div className="mt-4">
         <div className="flex items-center space-x-2">

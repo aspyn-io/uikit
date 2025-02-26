@@ -37,13 +37,13 @@ const PaginationControls: FC<PaginationControlsProps> = ({
       </Select>
     </div>
     <div className="flex items-center space-x-2">
-      <Button color="gray" onClick={handlePrevPage} disabled={!prevPage}>
-        <HiChevronLeft className="mr-1" />
-        Previous
+      <Button color="gray" onClick={handlePrevPage} disabled={!prevPage} className="flex items-center">
+        <HiChevronLeft className="mr-1 self-center" />
+        <span>Previous</span>
       </Button>
-      <Button color="gray" onClick={handleNextPage} disabled={!nextPage}>
-        Next
-        <HiChevronRight className="ml-1" />
+      <Button color="gray" onClick={handleNextPage} disabled={!nextPage} className="flex items-center">
+        <span>Next</span>
+        <HiChevronRight className="ml-1 self-center" />
       </Button>
     </div>
   </div>

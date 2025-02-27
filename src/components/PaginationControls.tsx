@@ -12,7 +12,7 @@ type PaginationControlsProps = {
   pageSizes?: number[];
 };
 
-const PaginationControls: FC<PaginationControlsProps> = ({
+export const PaginationControls: FC<PaginationControlsProps> = ({
   handleNextPage,
   handlePrevPage,
   nextPage,

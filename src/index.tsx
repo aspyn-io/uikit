@@ -1,6 +1,8 @@
 export { Navbar } from "./components/Navbar/Navbar";
 export { Sidebar } from "./components/Sidebar";
 
+export { PaginationControls } from "./components/PaginationControls";
+
 export { Modal } from "./components/Modal";
 export { EmptyState } from "./components/EmptyState";
 

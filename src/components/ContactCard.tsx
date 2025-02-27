@@ -17,6 +17,7 @@ interface ContactCardProps {
   showActionButtons?: boolean;
   role?: { label: string; color: string };
   status?: { label: string; color: string; icon?: React.ReactNode };
+  linkTo?: string;
 }
 
 export const ContactCard: React.FC<ContactCardProps> = ({
@@ -29,6 +30,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
   showActionButtons = true,
   role,
   status,
+  linkTo,
 }) => {
   const getInitials = (name: string) => {
     const [firstName, lastName] = name.split(" ");
@@ -36,7 +38,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({
   };
 
   return (
-    <Card>
+    <Card href={linkTo ?? '#'} className="cursor-pointer">
       <div className="flex justify-between items-start">
         <div className="flex items-center space-x-4">
           <Avatar

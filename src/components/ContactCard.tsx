@@ -24,6 +24,7 @@ interface ContactCardProps {
   to?: string;
   customButtons?: React.ReactNode;
   tags?: { label: string; color: string }[] | { label: string; color: string };
+  className?: string;
 }
 
 export const ContactCard: React.FC<ContactCardProps> & {
@@ -40,6 +41,7 @@ export const ContactCard: React.FC<ContactCardProps> & {
   to,
   customButtons,
   tags,
+  className = "",
 }) => {
   const getInitials = (name: string) => {
     const [firstName, lastName] = name.split(" ");
@@ -69,7 +71,9 @@ export const ContactCard: React.FC<ContactCardProps> & {
   };
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div
+      className={`border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800 ${className}`}
+    >
       <div
         className={`p-4 ${
           to ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" : ""

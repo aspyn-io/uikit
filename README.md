@@ -48,7 +48,6 @@ Pull Request using [GitHub Flow](https://docs.github.com/en/get-started/using-gi
 - [ ] `ReportLayout`? -- Legacy?
 - [ ] `SearchDropdown`? -- Maybe? There's some good flowbite options
 - [x] `Sidebar`
-- [ ] `SymbolInput`? -- This component isn't that good
 - [ ] `TaxInput`? -- This component isn't that good
 - [ ] `TruncatedId`? -- Maybe?
 - [ ] `UnscopedFeaturePlaceholder`? -- We can do this one better

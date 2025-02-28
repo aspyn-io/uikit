@@ -69,7 +69,7 @@ export const ContactCard: React.FC<ContactCardProps> & {
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
       <div
         className={`p-4 ${
           to ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" : ""
@@ -150,7 +150,7 @@ export const ContactCard: React.FC<ContactCardProps> & {
         </div>
       </div>
       {showActionButtons && (
-        <div className="flex border-t">
+        <div className="flex border-t border-gray-200 dark:border-gray-700">
           {customButtons ? (
             customButtons
           ) : (
@@ -174,10 +174,13 @@ export const ContactCard: React.FC<ContactCardProps> & {
 };
 
 ContactCard.Button = ({ to, icon, label }) => (
-  <Link to={to} className="w-1/2 border-r last:border-r-0">
+  <Link
+    to={to}
+    className="w-1/2 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
+  >
     <Button
       color="gray"
-      className="w-full h-full flex items-center justify-center border-none rounded-none"
+      className="w-full h-full flex items-center justify-center border-none rounded-none py-3"
     >
       {icon} {label}
     </Button>

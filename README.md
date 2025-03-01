@@ -43,7 +43,7 @@ Pull Request using [GitHub Flow](https://docs.github.com/en/get-started/using-gi
 - [x] `Modal`
 - [x] `Navbar`
 - [ ] `NotFound`? -- Maybe not needed
-- [ ] `PhoneNumberInput`? -- This component isn't that good
+- [x] `PhoneNumberInput`
 - [ ] `QuickActions`? -- Eh
 - [ ] `ReportLayout`? -- Legacy?
 - [ ] `SearchDropdown`? -- Maybe? There's some good flowbite options

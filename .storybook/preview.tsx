@@ -19,6 +19,7 @@ const preview: Preview = {
       },
     },
   },
+
   decorators: [
     (Story, context) => {
       const isDark = context.globals.backgrounds?.value === "#1e1e1e";
@@ -31,6 +32,8 @@ const preview: Preview = {
       );
     },
   ],
+
+  tags: ["autodocs"]
 };
 
 export default preview;

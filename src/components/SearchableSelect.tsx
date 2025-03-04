@@ -12,44 +12,27 @@ import React, {
 import { Label, Checkbox } from 'flowbite-react';
 import { HiSearch, HiOutlineChevronDown, HiX } from 'react-icons/hi';
 
-// ---------- Types and Interfaces ---------- //
-
-/** Structure for an option’s value and label.
- *  You can extend this with extra fields as needed. */
 export interface SearchableOption {
   value: string | number;
   label?: string | number;
 }
 
 export interface SearchableSelectProps {
-  /** The unique ID for the main button/input. */
   id?: string;
-  /** The name attribute for the underlying form input (if applicable). */
   name?: string;
-  /** Label text shown above the select. */
   label?: string;
-  /** Placeholder text shown when nothing is selected. */
   placeholder?: string;
-  /** Whether the field is required (affects label styling). */
   required?: boolean;
-  /** Whether the entire component is disabled. */
   disabled?: boolean;
-  /** Single select (false) or multi-select (true). */
   multiple?: boolean;
-  /** Child elements: <SearchableSelect.Search/>, <SearchableSelect.Option/>, etc. */
   children?: ReactNode;
-  /** Callback when selection changes. */
   onChange?: (value: SearchableOption | SearchableOption[] | null) => void;
-  /** Controlled value from parent. */
   value?: SearchableOption | SearchableOption[] | null;
-  /** Extra classes for outer container. */
   className?: string;
-  /** Size variant for text: 'sm', 'md', or 'lg'. */
   size?: 'sm' | 'md' | 'lg';
-  /** Helper text or hint below the select. */
   helperText?: string;
-  /** Whether this field is in an error state (affects styling). */
   error?: boolean;
+  wrap?: boolean;
 }
 
 interface SearchableSelectContextValue {
@@ -61,8 +44,6 @@ interface SearchableSelectContextValue {
   handleSelectionChange: (newValue: SearchableOption) => void;
   multiple: boolean;
 }
-
-// ---------- Context Setup ---------- //
 
 const SearchableSelectContext =
   createContext<SearchableSelectContextValue | null>(null);
@@ -77,21 +58,22 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   Loading: FC<LoadingProps>;
   Pagination: FC<PaginationProps>;
 } = ({
-  id,
-  name,
-  label,
-  placeholder = 'Select an option',
-  required = false,
-  disabled = false,
-  multiple = false,
-  children,
-  onChange,
-  value,
-  className = '',
-  size = 'md',
-  helperText,
-  error = false,
-}) => {
+       id,
+       name,
+       label,
+       placeholder = 'Select an option',
+       required = false,
+       disabled = false,
+       multiple = false,
+       children,
+       onChange,
+       value,
+       className = '',
+       size = 'md',
+       helperText,
+       error = false,
+       wrap = true,
+     }) => {
   // State
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState<
@@ -100,14 +82,12 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   const [searchTerm, setSearchTerm] = useState('');
   const selectRef = useRef<HTMLDivElement>(null);
 
-  // Update internal state when external value changes
   useEffect(() => {
     if (typeof value !== 'undefined') {
       setSelectedValues(value);
     }
   }, [value]);
 
-  // Handle clicks outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | globalThis.MouseEvent) => {
       if (
@@ -123,32 +103,26 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
     };
   }, []);
 
-  // Handle selection changes
   const handleSelectionChange = (newValue: SearchableOption) => {
     if (multiple) {
-      // Multi-select: toggle the value in the array
       const current = (selectedValues || []) as SearchableOption[];
       const exists = current.some((v) => v.value === newValue.value);
       let updatedValues: SearchableOption[];
 
       if (exists) {
-        // Remove if it already exists
         updatedValues = current.filter((v) => v.value !== newValue.value);
       } else {
-        // Add if it doesn't exist
         updatedValues = [...current, newValue];
       }
       setSelectedValues(updatedValues);
       onChange?.(updatedValues);
     } else {
-      // Single select: replace the value
       setSelectedValues(newValue);
       onChange?.(newValue);
       setIsOpen(false);
     }
   };
 
-  // Handle removing a tag in multi-select mode
   const handleRemoveTag = (valToRemove: SearchableOption) => {
     const current = (selectedValues || []) as SearchableOption[];
     const updatedValues = current.filter((v) => v.value !== valToRemove.value);
@@ -156,7 +130,6 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
     onChange?.(updatedValues);
   };
 
-  // Sizing classes
   const sizeClasses: Record<string, string> = {
     sm: 'text-xs',
     md: 'text-sm',
@@ -209,25 +182,27 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
             aria-expanded={isOpen}
             aria-labelledby={label ? id : undefined}
             className={`
-              block w-full rounded-lg border bg-white p-2.5 text-left ${sizeClasses[size]}
+              block w-full rounded-lg border bg-white p-2.5 pr-8 text-left ${sizeClasses[size]}
               dark:bg-gray-700 dark:text-white
               ${
-                error
-                  ? 'border-red-500 text-red-900 focus:border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'
-              }
+              error
+                ? 'border-red-500 text-red-900 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'
+            }
               ${disabled ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-600' : 'cursor-pointer'}
             `}
           >
             {/* Multi-select with tags */}
             {multiple ? (
-              <div className="flex flex-wrap gap-1">
+              <div className={`flex ${wrap ? 'flex-wrap' : 'overflow-hidden truncate'} gap-1`}>
                 {(selectedValues as SearchableOption[])?.map((val) => (
                   <span
                     key={val.value}
                     className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-200 dark:text-blue-800"
                   >
-        {val.label || val.value}
+                    <span className="overflow-hidden whitespace-nowrap">
+                      {val.label || val.value}
+                    </span>
                     <span
                       role="button"
                       tabIndex={0}
@@ -237,14 +212,14 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
                         handleRemoveTag(val);
                       }}
                     >
-          <HiX className="h-3 w-3" />
-        </span>
-      </span>
+                      <HiX className="h-3 w-3"/>
+                    </span>
+                  </span>
                 ))}
                 {(selectedValues as SearchableOption[]).length === 0 && (
                   <span className="text-gray-400 dark:text-gray-400">
-        {placeholder}
-      </span>
+                    {placeholder}
+                  </span>
                 )}
               </div>
             ) : (
@@ -304,11 +279,11 @@ interface SearchProps {
 }
 
 const Search: FC<SearchProps> = ({
-  placeholder = 'Search...',
-  onChange,
-  className = '',
-  disabled,
-}) => {
+                                   placeholder = 'Search...',
+                                   onChange,
+                                   className = '',
+                                   disabled,
+                                 }) => {
   const ctx = useContext(SearchableSelectContext);
   if (!ctx) return null;
 
@@ -375,12 +350,12 @@ interface OptionProps {
 }
 
 const Option: FC<OptionProps> = ({
-  value,
-  label,
-  disabled = false,
-  className = '',
-  children,
-}) => {
+                                   value,
+                                   label,
+                                   disabled = false,
+                                   className = '',
+                                   children,
+                                 }) => {
   const ctx = useContext(SearchableSelectContext);
   if (!ctx) return null;
 
@@ -395,7 +370,7 @@ const Option: FC<OptionProps> = ({
   // Determine if this option is selected
   const isSelected = multiple
     ? Array.isArray(selectedValues) &&
-      selectedValues.some((v) => v.value === value)
+    selectedValues.some((v) => v.value === value)
     : (selectedValues as SearchableOption)?.value === value;
 
   const handleClick = () => {
@@ -441,10 +416,10 @@ interface OptionGroupProps {
 }
 
 const OptionGroup: FC<OptionGroupProps> = ({
-  label,
-  className = '',
-  children,
-}) => {
+                                             label,
+                                             className = '',
+                                             children,
+                                           }) => {
   return (
     <div className={`py-1 ${className}`}>
       <div className="bg-gray-50 px-4 py-2 text-xs font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-400">
@@ -463,9 +438,9 @@ interface NoResultsProps {
 }
 
 const NoResults: FC<NoResultsProps> = ({
-  children = 'No results found',
-  className = '',
-}) => {
+                                         children = 'No results found',
+                                         className = '',
+                                       }) => {
   return (
     <div
       className={`px-4 py-3 text-center text-sm text-gray-500 dark:text-gray-400 ${className}`}
@@ -499,13 +474,13 @@ interface PaginationProps {
 }
 
 const Pagination: FC<PaginationProps> = ({
-  hasPreviousPage,
-  hasNextPage,
-  onPreviousPage,
-  onNextPage,
-  currentPage,
-  totalPages,
-}) => {
+                                           hasPreviousPage,
+                                           hasNextPage,
+                                           onPreviousPage,
+                                           onNextPage,
+                                           currentPage,
+                                           totalPages,
+                                         }) => {
   // Detect if we're using cursor-based pagination (prev/next flags) or page-based (currentPage/totalPages)
   const isCursorPagination =
     onPreviousPage &&

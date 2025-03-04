@@ -9,7 +9,7 @@ import React, {
   MouseEvent,
   ChangeEvent,
 } from 'react';
-import { Label } from 'flowbite-react';
+import { Label, Checkbox } from 'flowbite-react';
 import { HiSearch, HiOutlineChevronDown, HiX } from 'react-icons/hi';
 
 // ---------- Types and Interfaces ---------- //
@@ -419,12 +419,10 @@ const Option: FC<OptionProps> = ({
     >
       <div className="flex items-center">
         {multiple && (
-          <input
-            type="checkbox"
-            readOnly
+          <Checkbox
             checked={isSelected}
             disabled={disabled}
-            className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-500"
+            className="mr-2"
             onClick={(e) => e.stopPropagation()}
           />
         )}

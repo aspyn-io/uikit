@@ -33,12 +33,6 @@ const AppDrawerDropdown: FC<AppDrawerDropdownProps> = ({ appButtons, onClickExpl
             onClick={appButton.onClick}
           />
         ))}
-        <AppButton
-          icon={<span className="text-2xl">+</span>}
-          title="Explore Products"
-          onClick={onClickExploreProducts}
-          className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-        />
       </div>
     </Dropdown>
   );

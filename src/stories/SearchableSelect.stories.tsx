@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import SearchableSelect from "../components/SearchableSelect"; // adjust path as needed
 
 const meta: Meta<typeof SearchableSelect> = {
-  title: "components/SearchableSelect",
+  title: "forms/SearchableSelect",
   component: SearchableSelect,
   parameters: {
     layout: "centered",

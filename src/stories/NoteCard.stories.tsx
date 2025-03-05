@@ -56,3 +56,15 @@ export const WithMultipleTags: Story = {
     avatar: "https://i.pravatar.cc/300",
   },
 };
+
+export const WithoutTags: Story = {
+  args: {
+    title: "Building a Responsive Website",
+    content:
+      "Responsive web design is an approach to web design that makes web pages render well on a variety of devices and window or screen sizes...",
+    author: "Alice Johnson",
+    time: "3 days ago",
+    avatar: "https://i.pravatar.cc/300",
+  },
+};
+

@@ -58,22 +58,22 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   Loading: FC<LoadingProps>;
   Pagination: FC<PaginationProps>;
 } = ({
-       id,
-       name,
-       label,
-       placeholder = 'Select an option',
-       required = false,
-       disabled = false,
-       multiple = false,
-       children,
-       onChange,
-       value,
-       className = '',
-       size = 'md',
-       helperText,
-       error = false,
-       wrap = true,
-     }) => {
+  id,
+  name,
+  label,
+  placeholder = 'Select an option',
+  required = false,
+  disabled = false,
+  multiple = false,
+  children,
+  onChange,
+  value,
+  className = '',
+  size = 'md',
+  helperText,
+  error = false,
+  wrap = true,
+}) => {
   // State
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState<
@@ -154,6 +154,14 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
     return singleVal.label || singleVal.value || placeholder;
   };
 
+  const multiSelected = multiple
+    ? Array.isArray(selectedValues)
+      ? selectedValues
+      : selectedValues
+        ? [selectedValues]
+        : []
+    : selectedValues;
+
   return (
     <SearchableSelectContext.Provider value={contextValue}>
       <div className={`w-full ${className}`} ref={selectRef}>
@@ -185,17 +193,17 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
               block w-full rounded-lg border bg-white p-2.5 pr-8 text-left ${sizeClasses[size]}
               dark:bg-gray-700 dark:text-white
               ${
-              error
-                ? 'border-red-500 text-red-900 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'
-            }
+                error
+                  ? 'border-red-500 text-red-900 focus:border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'
+              }
               ${disabled ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-600' : 'cursor-pointer'}
             `}
           >
             {/* Multi-select with tags */}
             {multiple ? (
               <div className={`flex ${wrap ? 'flex-wrap' : 'overflow-hidden truncate'} gap-1`}>
-                {(selectedValues as SearchableOption[])?.map((val) => (
+                {multiSelected.map((val) => (
                   <span
                     key={val.value}
                     className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-200 dark:text-blue-800"
@@ -212,14 +220,12 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
                         handleRemoveTag(val);
                       }}
                     >
-                      <HiX className="h-3 w-3"/>
-                    </span>
-                  </span>
+          <HiX className="h-3 w-3" />
+        </span>
+      </span>
                 ))}
-                {(selectedValues as SearchableOption[]).length === 0 && (
-                  <span className="text-gray-400 dark:text-gray-400">
-                    {placeholder}
-                  </span>
+                {(Array.isArray(selectedValues) ? selectedValues : []).length === 0 && (
+                  <span className="text-gray-400 dark:text-gray-400">{placeholder}</span>
                 )}
               </div>
             ) : (
@@ -279,11 +285,11 @@ interface SearchProps {
 }
 
 const Search: FC<SearchProps> = ({
-                                   placeholder = 'Search...',
-                                   onChange,
-                                   className = '',
-                                   disabled,
-                                 }) => {
+  placeholder = 'Search...',
+  onChange,
+  className = '',
+  disabled,
+}) => {
   const ctx = useContext(SearchableSelectContext);
   if (!ctx) return null;
 
@@ -350,12 +356,12 @@ interface OptionProps {
 }
 
 const Option: FC<OptionProps> = ({
-                                   value,
-                                   label,
-                                   disabled = false,
-                                   className = '',
-                                   children,
-                                 }) => {
+  value,
+  label,
+  disabled = false,
+  className = '',
+  children,
+}) => {
   const ctx = useContext(SearchableSelectContext);
   if (!ctx) return null;
 
@@ -370,7 +376,7 @@ const Option: FC<OptionProps> = ({
   // Determine if this option is selected
   const isSelected = multiple
     ? Array.isArray(selectedValues) &&
-    selectedValues.some((v) => v.value === value)
+      selectedValues.some((v) => v.value === value)
     : (selectedValues as SearchableOption)?.value === value;
 
   const handleClick = () => {
@@ -401,7 +407,7 @@ const Option: FC<OptionProps> = ({
             onClick={(e) => e.stopPropagation()}
           />
         )}
-        {children}
+        {children || label}
       </div>
     </div>
   );
@@ -416,10 +422,10 @@ interface OptionGroupProps {
 }
 
 const OptionGroup: FC<OptionGroupProps> = ({
-                                             label,
-                                             className = '',
-                                             children,
-                                           }) => {
+  label,
+  className = '',
+  children,
+}) => {
   return (
     <div className={`py-1 ${className}`}>
       <div className="bg-gray-50 px-4 py-2 text-xs font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-400">
@@ -438,9 +444,9 @@ interface NoResultsProps {
 }
 
 const NoResults: FC<NoResultsProps> = ({
-                                         children = 'No results found',
-                                         className = '',
-                                       }) => {
+  children = 'No results found',
+  className = '',
+}) => {
   return (
     <div
       className={`px-4 py-3 text-center text-sm text-gray-500 dark:text-gray-400 ${className}`}
@@ -474,13 +480,13 @@ interface PaginationProps {
 }
 
 const Pagination: FC<PaginationProps> = ({
-                                           hasPreviousPage,
-                                           hasNextPage,
-                                           onPreviousPage,
-                                           onNextPage,
-                                           currentPage,
-                                           totalPages,
-                                         }) => {
+  hasPreviousPage,
+  hasNextPage,
+  onPreviousPage,
+  onNextPage,
+  currentPage,
+  totalPages,
+}) => {
   // Detect if we're using cursor-based pagination (prev/next flags) or page-based (currentPage/totalPages)
   const isCursorPagination =
     onPreviousPage &&

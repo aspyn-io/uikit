@@ -6,7 +6,12 @@ const meta: Meta<typeof SearchableSelect> = {
   title: "forms/SearchableSelect",
   component: SearchableSelect,
   parameters: {
-    layout: "centered",
+    layout: "padded",
+    docs: {
+      story: {
+        height: "250px",
+      }
+    },
   },
   tags: ["autodocs"],
   args: {

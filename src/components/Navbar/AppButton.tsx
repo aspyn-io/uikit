@@ -1,20 +1,20 @@
 import type { FC, ReactNode } from "react";
 import classNames from "classnames";
+import { DropdownItem } from "flowbite-react";
 
 interface AppButtonProps {
   icon: ReactNode;
   title: string;
   onClick?: () => void;
-  className?: string; // Add optional className property
+  className?: string;
 }
 
 const AppButton: FC<AppButtonProps> = ({ icon, title, onClick, className }) => {
   return (
-    <a
-      href="#"
+    <DropdownItem
       className={classNames(
         "flex flex-col items-center justify-center rounded-lg p-4 text-center bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 text-black dark:text-white transition",
-        className // Apply optional className
+        className
       )}
       onClick={onClick}
     >
@@ -24,7 +24,7 @@ const AppButton: FC<AppButtonProps> = ({ icon, title, onClick, className }) => {
       <div className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
         {title}
       </div>
-    </a>
+    </DropdownItem>
   );
 };
 

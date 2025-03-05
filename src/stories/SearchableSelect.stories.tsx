@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
-import SearchableSelect from "../components/SearchableSelect"; // adjust path as needed
+import SearchableSelect, { SearchableOption } from "../components/SearchableSelect"; // adjust path as needed
 
 const meta: Meta<typeof SearchableSelect> = {
   title: "forms/SearchableSelect",
@@ -56,7 +56,7 @@ type Story = StoryObj<typeof SearchableSelect>;
 // Default Template for SearchableSelect
 const SearchableSelectTemplate: React.FC<{ args: any }> = ({ args }) => {
   // For multi-select, the value is an array; for single select it's null by default.
-  const [selected, setSelected] = useState(args.multiple ? [] : null);
+  const [selected, setSelected] = useState<SearchableOption | SearchableOption[] | null>(args.multiple ? [] : null);
 
   return (
     <SearchableSelect
@@ -95,7 +95,7 @@ export const MultiSelect: Story = {
 // Grouped Options story example
 export const GroupedOptions: Story = {
   render: (args) => {
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState<SearchableOption | SearchableOption[] | null>(args.multiple ? [] : null);
     return (
       <SearchableSelect
         {...args}

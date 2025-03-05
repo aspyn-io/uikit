@@ -109,6 +109,20 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
     }
   }, [value]);
 
+  useEffect(() => {
+    if (multiple) {
+      // Ensure selectedValues is an array when switching to multiple mode
+      setSelectedValues((prev) =>
+        prev ? (Array.isArray(prev) ? prev : [prev]) : []
+      );
+    } else {
+      // Ensure selectedValues is a single object when switching to single mode
+      setSelectedValues((prev) =>
+        Array.isArray(prev) ? prev[0] || null : prev
+      );
+    }
+  }, [multiple]);
+
   // Handle clicks outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | globalThis.MouseEvent) => {
@@ -128,8 +142,13 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   // Handle selection changes
   const handleSelectionChange = (newValue: SearchableOption) => {
     if (multiple) {
-      // Multi-select: toggle the value in the array
-      const current = (selectedValues || []) as SearchableOption[];
+      // Ensure selectedValues is always an array
+      const current: SearchableOption[] = Array.isArray(selectedValues)
+        ? selectedValues
+        : selectedValues
+          ? [selectedValues]
+          : [];
+
       const exists = current.some((v) => v.value === newValue.value);
       let updatedValues: SearchableOption[];
 
@@ -140,6 +159,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
         // Add if it doesn't exist
         updatedValues = [...current, newValue];
       }
+
       setSelectedValues(updatedValues);
       onChange?.(updatedValues);
     } else {
@@ -149,6 +169,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
       setIsOpen(false);
     }
   };
+
 
   // Handle removing a tag in multi-select mode
   const handleRemoveTag = (valToRemove: SearchableOption) => {
@@ -183,13 +204,10 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
     return singleVal.label || singleVal.value || placeholder;
   };
 
-  const multiSelected = multiple
-    ? Array.isArray(selectedValues)
-      ? selectedValues
-      : selectedValues
-        ? [selectedValues]
-        : []
-    : selectedValues;
+  const ensureArray = (value: SearchableOption | SearchableOption[] | null): SearchableOption[] =>
+    Array.isArray(value) ? value : value ? [value] : [];
+
+  const multiSelected: SearchableOption[] = multiple ? ensureArray(selectedValues) : ensureArray(selectedValues)[0] ? [ensureArray(selectedValues)[0]] : [];
 
   return (
     <SearchableSelectContext.Provider value={contextValue}>
@@ -232,7 +250,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
             {/* Multi-select with tags */}
             {multiple ? (
               <div className={`flex ${wrap ? 'flex-wrap' : 'overflow-hidden truncate'} gap-1`}>
-                {multiSelected.map((val) => (
+                {multiSelected.map((val: SearchableOption) => (
                   <span
                     key={val.value}
                     className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-200 dark:text-blue-800"
@@ -433,6 +451,7 @@ const Option: FC<OptionProps> = ({
             checked={isSelected}
             disabled={disabled}
             className="mr-2"
+            onChange={() => handleClick()}
             onClick={(e) => e.stopPropagation()}
           />
         )}

@@ -16,3 +16,6 @@ export { InvoiceDetail } from "./components/InvoiceDetail";
 
 // Context
 export { NavbarProvider, useNavbarContext } from "./context/NavbarContext";
+
+// Form Inputs
+export { SearchableSelect } from "./components/SearchableSelect";

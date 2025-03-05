@@ -6,7 +6,12 @@ const meta: Meta<typeof SearchableSelect> = {
   title: "forms/SearchableSelect",
   component: SearchableSelect,
   parameters: {
-    layout: "centered",
+    layout: "padded",
+    docs: {
+      story: {
+        height: "250px",
+      }
+    },
   },
   tags: ["autodocs"],
   args: {
@@ -15,6 +20,7 @@ const meta: Meta<typeof SearchableSelect> = {
     helperText: "Please select an option",
     multiple: false,
     error: false,
+    wrap: true
   },
   argTypes: {
     label: {
@@ -37,6 +43,10 @@ const meta: Meta<typeof SearchableSelect> = {
       control: "boolean",
       description: "Displays the select in an error state.",
     },
+    wrap: {
+      control: "boolean",
+      description: "Displays truncated tags with overflow-hidden if set to false.",
+    }
   },
 };
 

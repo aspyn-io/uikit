@@ -50,6 +50,7 @@ export interface SearchableSelectProps {
   helperText?: string;
   /** Whether this field is in an error state (affects styling). */
   error?: boolean;
+  wrap?: boolean;
 }
 
 interface SearchableSelectContextValue {
@@ -91,6 +92,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   size = 'md',
   helperText,
   error = false,
+  wrap = true,
 }) => {
   // State
   const [isOpen, setIsOpen] = useState(false);
@@ -181,6 +183,14 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
     return singleVal.label || singleVal.value || placeholder;
   };
 
+  const multiSelected = multiple
+    ? Array.isArray(selectedValues)
+      ? selectedValues
+      : selectedValues
+        ? [selectedValues]
+        : []
+    : selectedValues;
+
   return (
     <SearchableSelectContext.Provider value={contextValue}>
       <div className={`w-full ${className}`} ref={selectRef}>
@@ -209,7 +219,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
             aria-expanded={isOpen}
             aria-labelledby={label ? id : undefined}
             className={`
-              block w-full rounded-lg border bg-white p-2.5 text-left ${sizeClasses[size]}
+              block w-full rounded-lg border bg-white p-2.5 pr-8 text-left ${sizeClasses[size]}
               dark:bg-gray-700 dark:text-white
               ${
                 error
@@ -221,13 +231,15 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
           >
             {/* Multi-select with tags */}
             {multiple ? (
-              <div className="flex flex-wrap gap-1">
-                {(selectedValues as SearchableOption[])?.map((val) => (
+              <div className={`flex ${wrap ? 'flex-wrap' : 'overflow-hidden truncate'} gap-1`}>
+                {multiSelected.map((val) => (
                   <span
                     key={val.value}
                     className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-200 dark:text-blue-800"
                   >
-        {val.label || val.value}
+                    <span className="overflow-hidden whitespace-nowrap">
+                      {val.label || val.value}
+                    </span>
                     <span
                       role="button"
                       tabIndex={0}
@@ -241,10 +253,8 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
         </span>
       </span>
                 ))}
-                {(selectedValues as SearchableOption[]).length === 0 && (
-                  <span className="text-gray-400 dark:text-gray-400">
-        {placeholder}
-      </span>
+                {(Array.isArray(selectedValues) ? selectedValues : []).length === 0 && (
+                  <span className="text-gray-400 dark:text-gray-400">{placeholder}</span>
                 )}
               </div>
             ) : (
@@ -426,7 +436,7 @@ const Option: FC<OptionProps> = ({
             onClick={(e) => e.stopPropagation()}
           />
         )}
-        {children}
+        {children || label}
       </div>
     </div>
   );

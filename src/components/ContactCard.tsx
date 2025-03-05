@@ -28,7 +28,7 @@ interface ContactCardProps {
 }
 
 export const ContactCard: React.FC<ContactCardProps> & {
-  Button: React.FC<{ to: string; icon: React.ReactNode; label: string }>;
+  Button: React.FC<{ to: string; icon: React.ReactNode; label: string, className?: string }>;
 } = ({
   avatar,
   name,
@@ -163,6 +163,7 @@ export const ContactCard: React.FC<ContactCardProps> & {
                 to={`tel:${phone}`}
                 icon={<HiPhone className="mr-2 h-5 w-5" />}
                 label="Call"
+                className="border-r border-gray-200 dark:border-gray-700"
               />
               <ContactCard.Button
                 to={`mailto:${email}`}
@@ -177,10 +178,10 @@ export const ContactCard: React.FC<ContactCardProps> & {
   );
 };
 
-ContactCard.Button = ({ to, icon, label }) => (
+ContactCard.Button = ({ to, icon, label, className }) => (
   <Link
     to={to}
-    className="w-1/2 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
+    className={`w-1/2 ${className ? className : ""}`}
   >
     <Button
       color="gray"

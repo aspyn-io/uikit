@@ -15,7 +15,6 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
   useEffect(() => {
     if (onSearch) {
       onSearch(query);
-    } else {
       setFilteredItems(items.filter(item => item.toLowerCase().includes(query.toLowerCase())));
     }
   }, [query, items, onSearch]);
@@ -25,30 +24,40 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
   };
 
   return (
+ 
     <Dropdown
-      label={
-        <div className="flex items-center">
-          <HiSearch className="mr-2" />
-          <span>Select Item</span>
-        </div>
-      }
-    >
-      <div className="p-2">
-        <input
-          type="text"
-          value={query}
-          onChange={handleSearch}
-          placeholder="Search..."
-          className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
-        />
-      </div>
-      <Dropdown.Divider />
-      {filteredItems.map((item: string, index: number) => (
-        <Dropdown.Item key={index} onClick={() => onSelect(item)}>
-          {item}
-        </Dropdown.Item>
-      ))}
-    </Dropdown>
+ label={
+   <div className="flex items-center">
+     <HiSearch className="mr-2" />
+     <span>Select Item</span>
+   </div>
+ }
+>
+<div className="p-3">
+      <input
+        type="text"
+        value={query}
+        onChange={handleSearch}
+        placeholder="Search..."
+        className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+      />
+    </div>
+
+ <Dropdown.Divider />
+ {filteredItems.length === 0 ? (
+   <Dropdown.Item aria-readonly disabled>No items found</Dropdown.Item>
+ ) : (
+   filteredItems.map((item: string, index: number) => (
+     <Dropdown.Item key={index} onClick={() => onSelect(item)}>
+       {item}
+     </Dropdown.Item>
+   ))
+ )}
+</Dropdown>
+ 
+
+
+
   );
 };
 

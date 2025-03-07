@@ -87,4 +87,4 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
   );
 };
 
-export default PhoneNumberInput;
+export { PhoneNumberInput, PhoneNumberInputProps };

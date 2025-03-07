@@ -52,4 +52,4 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
   );
 };
 
-export default SearchDropdown;
+export { SearchDropdown };

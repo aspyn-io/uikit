@@ -10,7 +10,6 @@ export default {
     "./.storybook/**/*.{js,jsx,ts,tsx}",
     flowbite.content(),
   ],
-  darkmode: "class",
   theme: {
     container: {
       center: true,

@@ -15,12 +15,14 @@
       "require": "./dist/index.cjs.js",
       "default": "./dist/index.es.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./tailwind-config": "./tailwind.config.mjs"
   },
   "files": [
     "dist",
     "package.json",
-    "README.md"
+    "README.md",
+    "tailwind.config.mjs"
   ],
   "scripts": {
     "dev": "storybook dev -p 6006",

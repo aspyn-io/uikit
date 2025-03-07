@@ -46,7 +46,7 @@ Pull Request using [GitHub Flow](https://docs.github.com/en/get-started/using-gi
 - [x] `PhoneNumberInput`
 - [ ] `QuickActions`? -- Eh
 - [ ] `ReportLayout`? -- Legacy?
-- [ ] `SearchDropdown`? -- Maybe? There's some good flowbite options
+- [x] `SearchDropdown`? -- Maybe? There's some good flowbite options
 - [x] `Sidebar`
 - [ ] `TaxInput`? -- This component isn't that good
 - [ ] `TruncatedId`? -- Maybe?

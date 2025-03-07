@@ -6,9 +6,12 @@ export interface SearchDropdownProps {
   items: string[];
   onSearch?: (query: string) => void;
   onSelect: (item: string) => void;
+  buttonText?: string;
+  buttonColor?: string;
+  buttonBgColor?: string;
 }
 
-const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSelect }) => {
+const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSelect, buttonText = "Select Item", buttonColor = "white", buttonBgColor = "#4f4f4f" }) => {
   const [query, setQuery] = useState('');
   const [filteredItems, setFilteredItems] = useState(items);
   const dropdownRef = useRef<HTMLButtonElement>(null);
@@ -28,16 +31,15 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
     e.stopPropagation(); 
   };
 
- 
   return (
     <Dropdown
+      style={{ backgroundColor: `${buttonBgColor}`, color: `${buttonColor}` }}
       label={
-        <button   className="flex items-center">
+        <button className="flex items-center">
           <HiSearch className="mr-2" />
-          <span>Select Item</span>
+          <span>{buttonText}</span>
         </button>
       }
-    
     >
       <div className="p-3" onKeyDown={handleKeyDown}>  
         <input
@@ -51,15 +53,17 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
       </div>
 
       <Dropdown.Divider />
-      {filteredItems.length === 0 ? (
-        <Dropdown.Item aria-readonly disabled>No items found</Dropdown.Item>
-      ) : (
-        filteredItems.map((item: string, index: number) => (
-          <Dropdown.Item key={index} onClick={() => onSelect(item)}>
-            {item}
-          </Dropdown.Item>
-        ))
-      )}
+      <div className="max-h-60 overflow-y-auto">
+        {filteredItems.length === 0 ? (
+          <Dropdown.Item aria-readonly disabled>No items found</Dropdown.Item>
+        ) : (
+          filteredItems.map((item: string, index: number) => (
+            <Dropdown.Item key={index} onClick={() => onSelect(item)}>
+              {item}
+            </Dropdown.Item>
+          ))
+        )}
+      </div>
     </Dropdown>
   );
 };

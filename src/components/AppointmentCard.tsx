@@ -13,7 +13,6 @@ import {
 
 interface WorkOrder {
   id: string;
-  orderId: string;
   status: string;
   description: string;
   duration: string;
@@ -213,25 +212,22 @@ export const AppointmentCard = ({
         <div className="border-t dark:border-gray-700">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Work Order ID</Table.HeadCell>
-              <Table.HeadCell>Order ID</Table.HeadCell>
+              <Table.HeadCell>#</Table.HeadCell>
               <Table.HeadCell>Description</Table.HeadCell>
               <Table.HeadCell>Duration</Table.HeadCell>
               <Table.HeadCell>Status</Table.HeadCell>
               <Table.HeadCell className="text-right"></Table.HeadCell>
             </Table.Head>
             <Table.Body>
-              {workOrders.map((order) => (
-                <Table.Row key={order.id}>
-                  <Table.Cell>
-                    <button
-                      onClick={() => onWorkOrderClick?.(order.id)}
-                      className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
-                    >
-                      {order.id}
-                    </button>
+              {workOrders.map((order, index) => (
+                <Table.Row 
+                  key={order.id}
+                  onClick={() => onWorkOrderClick?.(order.id)}
+                  className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <Table.Cell className="text-gray-900 dark:text-white">
+                    {index + 1}
                   </Table.Cell>
-                  <Table.Cell>{order.orderId}</Table.Cell>
                   <Table.Cell className="text-sm text-gray-500 dark:text-gray-400">
                     {order.description}
                   </Table.Cell>
@@ -253,7 +249,10 @@ export const AppointmentCard = ({
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className="flex justify-end">
+                    <div 
+                      className="flex justify-end"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Dropdown
                         inline
                         arrowIcon={false}

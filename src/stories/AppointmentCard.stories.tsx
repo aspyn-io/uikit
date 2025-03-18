@@ -47,6 +47,8 @@ export const Default: Story = {
     timeActive: true,
     userActive: true,
     showIcons: true,
+    appointmentId: "APT123",
+    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
   },
 };
 
@@ -67,6 +69,8 @@ export const EditState: Story = {
     onRescheduleAppointment: () => console.log("Rescheduled Appointment"),
     onCancelAppointment: () => console.log("Canceled Appointment"),
     showIcons: true,
+    appointmentId: "APT123",
+    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
   },
 };
 
@@ -79,6 +83,8 @@ export const WithoutSelectButton: Story = {
     userActive: true,
     onSelect: () => console.log("Appointment Selected"),
     showIcons: true,
+    appointmentId: "APT123",
+    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
   },
 };
 
@@ -93,6 +99,8 @@ export const SelectedWithStatus: Story = {
     isSelected: true,
     onSelect: () => console.log("Appointment Selected"),
     showIcons: true,
+    appointmentId: "APT123",
+    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
   },
 };
 
@@ -104,5 +112,7 @@ export const WithoutIcons: Story = {
     timeActive: true,
     userActive: true,
     showIcons: false,
+    appointmentId: "APT123",
+    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
   },
 };

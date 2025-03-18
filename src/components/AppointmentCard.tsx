@@ -36,6 +36,8 @@ interface AppointmentCardProps {
   workOrders?: WorkOrder[];
   showIcons?: boolean;
   onWorkOrderClick?: (workOrderId: string) => void;
+  appointmentId?: string;
+  onCalendarClick?: (appointmentId: string) => void;
 }
 
 export const AppointmentCard = ({
@@ -55,6 +57,8 @@ export const AppointmentCard = ({
   workOrders = [],
   showIcons = true,
   onWorkOrderClick,
+  appointmentId,
+  onCalendarClick,
 }: AppointmentCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -88,9 +92,12 @@ export const AppointmentCard = ({
     <div className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300">
       <div className="grid grid-cols-[60%_40%] items-center p-4">
         <div className="flex items-center gap-6">
-          <div className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center">
+          <button
+            onClick={() => appointmentId && onCalendarClick?.(appointmentId)}
+            className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+          >
             <HiOutlineCalendar size={20} />
-          </div>
+          </button>
           <div className="flex flex-col items-center">
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {dayNumber}

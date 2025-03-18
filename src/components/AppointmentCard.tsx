@@ -15,6 +15,8 @@ interface WorkOrder {
   id: string;
   orderId: string;
   status: string;
+  description: string;
+  duration: string;
 }
 
 interface AppointmentCardProps {
@@ -33,6 +35,7 @@ interface AppointmentCardProps {
   editable?: boolean;
   workOrders?: WorkOrder[];
   showIcons?: boolean;
+  onWorkOrderClick?: (workOrderId: string) => void;
 }
 
 export const AppointmentCard = ({
@@ -51,6 +54,7 @@ export const AppointmentCard = ({
   editable = false,
   workOrders = [],
   showIcons = true,
+  onWorkOrderClick,
 }: AppointmentCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -204,14 +208,29 @@ export const AppointmentCard = ({
             <Table.Head>
               <Table.HeadCell>Work Order ID</Table.HeadCell>
               <Table.HeadCell>Order ID</Table.HeadCell>
+              <Table.HeadCell>Description</Table.HeadCell>
+              <Table.HeadCell>Duration</Table.HeadCell>
               <Table.HeadCell>Status</Table.HeadCell>
               <Table.HeadCell className="text-right"></Table.HeadCell>
             </Table.Head>
             <Table.Body>
               {workOrders.map((order) => (
                 <Table.Row key={order.id}>
-                  <Table.Cell>{order.id}</Table.Cell>
+                  <Table.Cell>
+                    <button
+                      onClick={() => onWorkOrderClick?.(order.id)}
+                      className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
+                    >
+                      {order.id}
+                    </button>
+                  </Table.Cell>
                   <Table.Cell>{order.orderId}</Table.Cell>
+                  <Table.Cell className="text-sm text-gray-500 dark:text-gray-400">
+                    {order.description}
+                  </Table.Cell>
+                  <Table.Cell className="text-sm text-gray-500 dark:text-gray-400">
+                    {order.duration}
+                  </Table.Cell>
                   <Table.Cell>
                     <Badge
                       color={

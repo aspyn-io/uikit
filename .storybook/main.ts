@@ -13,9 +13,7 @@ const config = {
     options: {},
   },
 
-  docs: {
-    autodocs: true,
-  },
+  docs: {},
 
   typescript: {
     reactDocgen: "react-docgen-typescript",

@@ -13,8 +13,9 @@ import {
 
 interface WorkOrder {
   id: string;
-  orderId: string;
   status: string;
+  description: string;
+  duration: string;
 }
 
 interface AppointmentCardProps {
@@ -33,6 +34,9 @@ interface AppointmentCardProps {
   editable?: boolean;
   workOrders?: WorkOrder[];
   showIcons?: boolean;
+  onWorkOrderClick?: (workOrderId: string) => void;
+  appointmentId?: string;
+  onCalendarClick?: (appointmentId: string) => void;
 }
 
 export const AppointmentCard = ({
@@ -51,6 +55,9 @@ export const AppointmentCard = ({
   editable = false,
   workOrders = [],
   showIcons = true,
+  onWorkOrderClick,
+  appointmentId,
+  onCalendarClick,
 }: AppointmentCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -84,9 +91,12 @@ export const AppointmentCard = ({
     <div className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300">
       <div className="grid grid-cols-[60%_40%] items-center p-4">
         <div className="flex items-center gap-6">
-          <div className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center">
+          <button
+            onClick={() => appointmentId && onCalendarClick?.(appointmentId)}
+            className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+          >
             <HiOutlineCalendar size={20} />
-          </div>
+          </button>
           <div className="flex flex-col items-center">
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {dayNumber}
@@ -202,16 +212,28 @@ export const AppointmentCard = ({
         <div className="border-t dark:border-gray-700">
           <Table>
             <Table.Head>
-              <Table.HeadCell>Work Order ID</Table.HeadCell>
-              <Table.HeadCell>Order ID</Table.HeadCell>
+              <Table.HeadCell>#</Table.HeadCell>
+              <Table.HeadCell>Description</Table.HeadCell>
+              <Table.HeadCell>Duration</Table.HeadCell>
               <Table.HeadCell>Status</Table.HeadCell>
               <Table.HeadCell className="text-right"></Table.HeadCell>
             </Table.Head>
             <Table.Body>
-              {workOrders.map((order) => (
-                <Table.Row key={order.id}>
-                  <Table.Cell>{order.id}</Table.Cell>
-                  <Table.Cell>{order.orderId}</Table.Cell>
+              {workOrders.map((order, index) => (
+                <Table.Row 
+                  key={order.id}
+                  onClick={() => onWorkOrderClick?.(order.id)}
+                  className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <Table.Cell className="text-gray-900 dark:text-white">
+                    {index + 1}
+                  </Table.Cell>
+                  <Table.Cell className="text-sm text-gray-500 dark:text-gray-400">
+                    {order.description}
+                  </Table.Cell>
+                  <Table.Cell className="text-sm text-gray-500 dark:text-gray-400">
+                    {order.duration}
+                  </Table.Cell>
                   <Table.Cell>
                     <Badge
                       color={
@@ -227,7 +249,10 @@ export const AppointmentCard = ({
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className="flex justify-end">
+                    <div 
+                      className="flex justify-end"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Dropdown
                         inline
                         arrowIcon={false}

@@ -31,3 +31,6 @@ export {
   PhoneNumberInput,
   PhoneNumberInputProps,
 } from "./components/PhoneNumberInput";
+
+// Theme
+export { grayscaleTheme, ThemeProvider } from './grayscale-theme';

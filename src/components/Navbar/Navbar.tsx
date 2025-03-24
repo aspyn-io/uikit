@@ -45,7 +45,10 @@ export const Navbar: FC<NavbarProps> = function ({
   } = useNavbarContext();
 
   return (
-    <FlowbiteNavbar fluid className="fixed z-30 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <FlowbiteNavbar
+      fluid
+      className="fixed z-30 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+    >
       <div className="w-full p-3 lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
@@ -56,12 +59,15 @@ export const Navbar: FC<NavbarProps> = function ({
               <span className="sr-only">Toggle sidebar</span>
               <HiMenuAlt1 className="h-6 w-6" />
             </button>
-            <Link to={logoLink}>
-              <Tooltip content="Return to Home">
-                <img alt="Aspyn" src={logo} className="mr-3 h-6 sm:h-8" />
-              </Tooltip>
-            </Link>
-            <FlowbiteNavbar.Brand as={Link} to={contextTitleLink}> {/* Update href to use titleLink */}
+            {logo && (
+              <Link to={logoLink}>
+                <Tooltip content="Return to Home">
+                  <img alt="Aspyn" src={logo} className="mr-3 h-8 sm:h-8" />
+                </Tooltip>
+              </Link>
+            )}
+            <FlowbiteNavbar.Brand as={Link} to={contextTitleLink}>
+              {/* Update href to use titleLink */}
               <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white border-l pl-3 border-gray-200 dark:border-gray-600 dark:border-">
                 {contextTitle}
               </span>
@@ -88,9 +94,17 @@ export const Navbar: FC<NavbarProps> = function ({
                 onViewAll={onViewAllNotifications}
               />
               <DarkThemeToggle />
-              <AppDrawerDropdown appButtons={appButtons} onClickExploreProducts={onClickExploreProducts} />
+              <AppDrawerDropdown
+                appButtons={appButtons}
+                onClickExploreProducts={onClickExploreProducts}
+              />
               <div className="ml-3">
-                <UserDropdown avatar={avatar} username={username} email={email} items={userDropdownItems} />
+                <UserDropdown
+                  avatar={avatar}
+                  username={username}
+                  email={email}
+                  items={userDropdownItems}
+                />
               </div>
             </div>
           </div>

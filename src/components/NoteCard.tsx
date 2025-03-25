@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "flowbite-react";
 
 interface NoteCardProps {
-  tags: { label: string; color: string }[];
+  tags?: { label: string; color: string }[];
   title: string;
   content: string;
   author: string;
@@ -22,16 +22,24 @@ export const NoteCard: React.FC<NoteCardProps> = ({
 }) => {
   return (
     <Card className={`bg-white dark:bg-gray-800 ${className}`}>
-      <div className="flex flex-wrap gap-1 mb-2">
-        {tags.map((tag, index) => (
-          <span
-            key={index}
-            className={`text-xs font-semibold px-2 py-1 rounded-full bg-${tag.color}-100 text-${tag.color}-700 dark:bg-${tag.color}-700 dark:text-${tag.color}-100`}
-          >
-            {tag.label}
-          </span>
-        ))}
-      </div>
+      {tags && (
+        <div className="flex flex-wrap gap-1 mb-2">
+          {tags.length === 0 ? (
+            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-100">
+              No Tags
+            </span>
+          ) : (
+            tags.map((tag, index) => (
+              <span
+                key={index}
+                className={`text-xs font-semibold px-2 py-1 rounded-full bg-${tag.color}-100 text-${tag.color}-700 dark:bg-${tag.color}-700 dark:text-${tag.color}-100`}
+              >
+                {tag.label}
+              </span>
+            ))
+          )}
+        </div>
+      )}
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
         {title}
       </h3>

@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import NoteCard from "../components/NoteCard";
 
 const meta: Meta<typeof NoteCard> = {
-  title: "components/NoteCard",
+  title: "cards/NoteCard",
   component: NoteCard,
   tags: ["autodocs"],
 };
@@ -68,3 +68,13 @@ export const WithoutTags: Story = {
   },
 };
 
+export const WithEmptyTags: Story = {
+  args: {
+    tags: [],
+    title: "Note Without Any Tags",
+    content: "This is a note that has an empty tags array...",
+    author: "Bob Wilson",
+    time: "5 hours ago",
+    avatar: "https://i.pravatar.cc/300",
+  },
+};

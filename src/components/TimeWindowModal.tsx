@@ -6,7 +6,7 @@ import { format, addDays } from 'date-fns';
 export interface TimeWindow {
   window_start_at: string;
   window_end_at: string;
-  total_slots?: number;
+  total_slots: number;
 }
 
 interface TimeWindowModalProps {

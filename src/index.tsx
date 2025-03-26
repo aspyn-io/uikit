@@ -31,6 +31,7 @@ export {
   PhoneNumberInput,
   PhoneNumberInputProps,
 } from "./components/PhoneNumberInput";
+export { default as TimeWindowModal, TimeWindow } from "./components/TimeWindowModal";
 
 // Theme
 export { grayscaleTheme, ThemeProvider } from './grayscale-theme';

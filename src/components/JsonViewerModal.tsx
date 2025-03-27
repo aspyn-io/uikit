@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Modal, Button, Clipboard } from 'flowbite-react';
+import { HiClipboard } from 'react-icons/hi';
 
 export interface JsonViewerModalProps {
   isOpen: boolean;
@@ -39,7 +40,7 @@ const JsonViewerModal: FC<JsonViewerModalProps> = ({
             {allowCopy && formattedJson !== invalidDataMessage && (
               <Clipboard.WithIcon 
                 valueToCopy={formattedJson}
-                className="absolute top-5" 
+                className="absolute top-5 right-4" 
               />
             )}
             {formattedJson}

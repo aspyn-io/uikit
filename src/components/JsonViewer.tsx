@@ -7,19 +7,18 @@ interface BaseJsonViewerProps {
   title: string;
   buttonLabel?: ReactNode;
   buttonProps?: ButtonProps;
-  dismissible?: boolean;
   invalidDataMessage?: string;
   allowCopy?: boolean;
 }
 
 interface UncontrolledJsonViewerProps extends BaseJsonViewerProps {
-  isOpen?: undefined;
-  onOpenChange?: undefined;
+  show?: undefined;
+  onClose?: undefined;
 }
 
 interface ControlledJsonViewerProps extends BaseJsonViewerProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  show: boolean;
+  onClose: () => void;
 }
 
 export type JsonViewerProps = ControlledJsonViewerProps | UncontrolledJsonViewerProps;
@@ -29,35 +28,41 @@ const JsonViewer: FC<JsonViewerProps> = ({
   title,
   buttonLabel = 'View JSON',
   buttonProps,
-  isOpen: controlledIsOpen,
-  onOpenChange,
-  dismissible,
+  show: controlledShow,
+  onClose,
   invalidDataMessage,
   allowCopy,
 }) => {
-  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false);
+  const [uncontrolledShow, setUncontrolledShow] = useState(false);
   
-  const isControlled = controlledIsOpen !== undefined;
-  const isModalOpen = isControlled ? controlledIsOpen : uncontrolledIsOpen;
+  const isControlled = controlledShow !== undefined;
+  const modalShow = isControlled ? controlledShow : uncontrolledShow;
   
-  const handleOpenChange = (open: boolean) => {
+  const handleClose = () => {
     if (!isControlled) {
-      setUncontrolledIsOpen(open);
+      setUncontrolledShow(false);
     }
-    onOpenChange?.(open);
+    onClose?.();
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isControlled) {
+      buttonProps?.onClick?.(event);
+    } else {
+      setUncontrolledShow(true);
+    }
   };
 
   return (
     <>
-      <Button {...buttonProps} onClick={() => handleOpenChange(true)}>
+      <Button {...buttonProps} onClick={handleClick}>
         {buttonLabel}
       </Button>
       <JsonViewerModal
-        isOpen={isModalOpen}
-        onClose={() => handleOpenChange(false)}
+        show={modalShow}
+        onClose={handleClose}
         title={title}
         data={data}
-        dismissible={dismissible}
         invalidDataMessage={invalidDataMessage}
         allowCopy={allowCopy}
       />

@@ -17,7 +17,7 @@ const meta: Meta<typeof JsonViewerModal> = {
   },
   tags: ['autodocs'],
   argTypes: {
-    isOpen: {
+    show: {
       control: 'boolean',
       description: 'Controls whether the modal is open or closed',
     },
@@ -32,11 +32,6 @@ const meta: Meta<typeof JsonViewerModal> = {
     onClose: {
       action: 'closed',
       description: 'Callback function when the modal is closed',
-    },
-    dismissible: {
-      control: 'boolean',
-      description: 'Controls whether the modal can be closed by clicking outside or using ESC key',
-      defaultValue: true,
     },
     invalidDataMessage: {
       control: 'text',
@@ -65,15 +60,15 @@ const sampleData = {
 };
 
 const JsonViewerModalTemplate: React.FC<{ args: any }> = ({ args }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [show, setShow] = useState(false);
 
   return (
     <div className="p-4">
-      <Button onClick={() => setIsOpen(true)}>View JSON Data</Button>
+      <Button onClick={() => setShow(true)}>View JSON Data</Button>
       <JsonViewerModal
         {...args}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        show={show}
+        onClose={() => setShow(false)}
       />
     </div>
   );
@@ -99,15 +94,6 @@ const circularObject: any = {
   name: 'Circular Reference',
 };
 circularObject.self = circularObject;
-
-export const NonDismissible: Story = {
-  render: (args) => <JsonViewerModalTemplate args={args} />,
-  args: {
-    title: 'Non-dismissible Modal',
-    data: sampleData,
-    dismissible: false,
-  },
-};
 
 export const CustomMessageForInvalidData: Story = {
   render: (args) => <JsonViewerModalTemplate args={args} />,

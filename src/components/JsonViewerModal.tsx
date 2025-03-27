@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Modal, Button } from 'flowbite-react';
+import { Modal, Button, Clipboard } from 'flowbite-react';
 
 export interface JsonViewerModalProps {
   isOpen: boolean;
@@ -8,6 +8,7 @@ export interface JsonViewerModalProps {
   data: any;
   dismissible?: boolean;
   invalidDataMessage?: string;
+  allowCopy?: boolean;
 }
 
 const JsonViewerModal: FC<JsonViewerModalProps> = ({
@@ -17,6 +18,7 @@ const JsonViewerModal: FC<JsonViewerModalProps> = ({
   data,
   dismissible = true,
   invalidDataMessage = 'Unable to display data: Invalid or circular JSON structure',
+  allowCopy = true,
 }) => {
   const getFormattedJson = () => {
     try {
@@ -26,13 +28,23 @@ const JsonViewerModal: FC<JsonViewerModalProps> = ({
     }
   };
 
+  const formattedJson = getFormattedJson();
+
   return (
     <Modal show={isOpen} onClose={onClose} size="4xl" dismissible={dismissible}>
       <Modal.Header>{title}</Modal.Header>
       <Modal.Body className="pl-5 pr-5 pt-2 pb-2">
-        <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded text-sm text-gray-700 dark:text-gray-200 overflow-auto max-h-[600px]">
-          {getFormattedJson()}
-        </pre>
+        <div className="relative">
+          <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded text-sm text-gray-700 dark:text-gray-200 overflow-auto max-h-[600px]">
+            {allowCopy && formattedJson !== invalidDataMessage && (
+              <Clipboard.WithIcon 
+                valueToCopy={formattedJson}
+                className="absolute top-5" 
+              />
+            )}
+            {formattedJson}
+          </pre>
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <Button color="gray" onClick={onClose}>

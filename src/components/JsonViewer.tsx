@@ -11,6 +11,7 @@ export interface JsonViewerProps {
   onOpenChange: (open: boolean) => void;
   dismissible?: boolean;
   invalidDataMessage?: string;
+  allowCopy?: boolean;
 }
 
 const JsonViewer: FC<JsonViewerProps> = ({
@@ -22,6 +23,7 @@ const JsonViewer: FC<JsonViewerProps> = ({
   onOpenChange,
   dismissible,
   invalidDataMessage,
+  allowCopy,
 }) => {
   return (
     <>
@@ -35,6 +37,7 @@ const JsonViewer: FC<JsonViewerProps> = ({
         data={data}
         dismissible={dismissible}
         invalidDataMessage={invalidDataMessage}
+        allowCopy={allowCopy}
       />
     </>
   );

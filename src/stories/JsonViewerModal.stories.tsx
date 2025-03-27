@@ -43,6 +43,11 @@ const meta: Meta<typeof JsonViewerModal> = {
       description: 'Custom message to display when JSON data cannot be stringified',
       defaultValue: 'Unable to display data: Invalid or circular JSON structure',
     },
+    allowCopy: {
+      control: 'boolean',
+      description: 'Whether to show the copy button',
+      defaultValue: true,
+    },
   },
 };
 
@@ -118,5 +123,14 @@ export const InvalidJsonData: Story = {
   args: {
     title: 'Custom Error Message',
     data: circularObject,
+  },
+};
+
+export const WithoutCopyButton: Story = {
+  render: (args) => <JsonViewerModalTemplate args={args} />,
+  args: {
+    title: 'Modal Without Copy Button',
+    data: sampleData,
+    allowCopy: false,
   },
 };

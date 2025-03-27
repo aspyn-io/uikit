@@ -33,6 +33,11 @@ const meta: Meta<typeof JsonViewer> = {
       control: 'text',
       description: 'Custom message to display when data cannot be stringified',
     },
+    allowCopy: {
+      control: 'boolean',
+      description: 'Whether to show the copy button',
+      defaultValue: true,
+    },
   },
 };
 
@@ -127,5 +132,15 @@ export const InvalidData: Story = {
       color: 'failure',
     },
     invalidDataMessage: 'This data cannot be displayed due to circular references',
+  },
+};
+
+export const WithoutCopyButton: Story = {
+  render: (args) => <JsonViewerTemplate args={args} />,
+  args: {
+    data: sampleData,
+    title: 'View Without Copy Button',
+    buttonLabel: 'View JSON',
+    allowCopy: false,
   },
 };

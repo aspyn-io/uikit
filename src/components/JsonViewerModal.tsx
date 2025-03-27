@@ -1,23 +1,21 @@
 import { FC } from 'react';
-import { Modal, Button, Clipboard } from 'flowbite-react';
-import { HiClipboard } from 'react-icons/hi';
+import { Button, Clipboard } from 'flowbite-react';
+import Modal from './Modal';
 
 export interface JsonViewerModalProps {
-  isOpen: boolean;
+  show: boolean; 
   onClose: () => void;
   title?: string;
   data: any;
-  dismissible?: boolean;
   invalidDataMessage?: string;
   allowCopy?: boolean;
 }
 
 const JsonViewerModal: FC<JsonViewerModalProps> = ({
-  isOpen,
+  show,
   onClose,
   title = 'JSON Data Viewer',
   data,
-  dismissible = true,
   invalidDataMessage = 'Unable to display data: Invalid or circular JSON structure',
   allowCopy = true,
 }) => {
@@ -32,7 +30,7 @@ const JsonViewerModal: FC<JsonViewerModalProps> = ({
   const formattedJson = getFormattedJson();
 
   return (
-    <Modal show={isOpen} onClose={onClose} size="4xl" dismissible={dismissible}>
+    <Modal show={show} onClose={onClose} size="4xl">
       <Modal.Header>{title}</Modal.Header>
       <Modal.Body className="pl-5 pr-5 pt-2 pb-2">
         <div className="relative">

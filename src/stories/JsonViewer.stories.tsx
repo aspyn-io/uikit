@@ -8,26 +8,29 @@ const meta: Meta<typeof JsonViewer> = {
   component: JsonViewer,
   tags: ['autodocs'],
   argTypes: {
-    buttonLabel: {
-      control: 'text',
-      description: 'Text to display on the button',
+    data: {
+      control: 'object',
+      description: 'JSON data to display',
     },
     title: {
       control: 'text',
       description: 'Title for the modal',
+      required: true,
     },
-    data: {
-      control: 'object',
-      description: 'JSON data to display',
+    buttonLabel: {
+      control: 'text',
+      description: 'Text to display on the button',
     },
     buttonProps: {
       control: 'object',
       description: 'Props to pass to the button component',
     },
-    dismissible: {
+    show: {
       control: 'boolean',
-      description: 'Whether the modal can be dismissed by clicking outside or pressing ESC',
-      defaultValue: true,
+      description: 'Optional controlled state for the modal. If not provided, the component manages its own state.',
+    },
+    onClose: {
+      description: 'Optional callback fired when the modal closes. Required if show is provided.',
     },
     invalidDataMessage: {
       control: 'text',
@@ -55,15 +58,20 @@ const sampleData = {
 
 // Template component to handle state
 const JsonViewerTemplate: React.FC<{ args: any }> = ({ args }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="p-4">
+      <JsonViewer {...args} />
+    </div>
+  );
+};
+
+// Add a template for controlled behavior demonstration
+const ControlledJsonViewerTemplate: React.FC<{ args: any }> = ({ args }) => {
+  const [show, setShow] = useState(false);
 
   return (
     <div className="p-4">
-      <JsonViewer
-        {...args}
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-      />
+      <JsonViewer {...args} show={show} onClose={() => setShow(false)} />
     </div>
   );
 };
@@ -74,6 +82,30 @@ export const Default: Story = {
     data: sampleData,
     title: 'Sample Data Viewer',
     buttonLabel: 'View JSON',
+  },
+};
+
+export const ControlledState: Story = {
+  render: function ControlledStateStory(args) {
+    const [show, setShow] = useState(false);
+    return (
+      <div className="p-4">
+        <JsonViewer
+          {...args}
+          show={show}
+          onClose={() => setShow(false)}
+          buttonProps={{
+            onClick: () => setShow(true),
+            ...args.buttonProps
+          }}
+        />
+      </div>
+    );
+  },
+  args: {
+    data: sampleData,
+    title: 'Controlled Modal Example',
+    buttonLabel: 'Open Controlled Modal',
   },
 };
 
@@ -108,19 +140,6 @@ const circularObject: any = {
   name: 'Circular Reference',
 };
 circularObject.self = circularObject;
-
-export const NonDismissibleModal: Story = {
-  render: (args) => <JsonViewerTemplate args={args} />,
-  args: {
-    data: sampleData,
-    title: 'Non-dismissible Modal',
-    buttonLabel: 'Open Non-dismissible Modal',
-    buttonProps: {
-      color: 'warning',
-    },
-    dismissible: false,
-  },
-};
 
 export const InvalidData: Story = {
   render: (args) => <JsonViewerTemplate args={args} />,

@@ -1,41 +1,68 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { Button, ButtonProps } from 'flowbite-react';
 import JsonViewerModal from './JsonViewerModal';
 
-export interface JsonViewerProps {
+interface BaseJsonViewerProps {
   data: any;
-  title?: string;
+  title: string;
   buttonLabel?: ReactNode;
   buttonProps?: ButtonProps;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  dismissible?: boolean;
   invalidDataMessage?: string;
   allowCopy?: boolean;
 }
+
+interface UncontrolledJsonViewerProps extends BaseJsonViewerProps {
+  show?: undefined;
+  onClose?: undefined;
+}
+
+interface ControlledJsonViewerProps extends BaseJsonViewerProps {
+  show: boolean;
+  onClose: () => void;
+}
+
+export type JsonViewerProps = ControlledJsonViewerProps | UncontrolledJsonViewerProps;
 
 const JsonViewer: FC<JsonViewerProps> = ({
   data,
   title,
   buttonLabel = 'View JSON',
   buttonProps,
-  isOpen,
-  onOpenChange,
-  dismissible,
+  show: controlledShow,
+  onClose,
   invalidDataMessage,
   allowCopy,
 }) => {
+  const [uncontrolledShow, setUncontrolledShow] = useState(false);
+  
+  const isControlled = controlledShow !== undefined;
+  const modalShow = isControlled ? controlledShow : uncontrolledShow;
+  
+  const handleClose = () => {
+    if (!isControlled) {
+      setUncontrolledShow(false);
+    }
+    onClose?.();
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isControlled) {
+      buttonProps?.onClick?.(event);
+    } else {
+      setUncontrolledShow(true);
+    }
+  };
+
   return (
     <>
-      <Button {...buttonProps} onClick={() => onOpenChange(true)}>
+      <Button {...buttonProps} onClick={handleClick}>
         {buttonLabel}
       </Button>
       <JsonViewerModal
-        isOpen={isOpen}
-        onClose={() => onOpenChange(false)}
+        show={modalShow}
+        onClose={handleClose}
         title={title}
         data={data}
-        dismissible={dismissible}
         invalidDataMessage={invalidDataMessage}
         allowCopy={allowCopy}
       />

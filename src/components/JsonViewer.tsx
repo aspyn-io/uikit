@@ -2,17 +2,27 @@ import { FC, ReactNode, useState } from 'react';
 import { Button, ButtonProps } from 'flowbite-react';
 import JsonViewerModal from './JsonViewerModal';
 
-export interface JsonViewerProps {
+interface BaseJsonViewerProps {
   data: any;
   title: string;
   buttonLabel?: ReactNode;
   buttonProps?: ButtonProps;
-  isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
   dismissible?: boolean;
   invalidDataMessage?: string;
   allowCopy?: boolean;
 }
+
+interface UncontrolledJsonViewerProps extends BaseJsonViewerProps {
+  isOpen?: undefined;
+  onOpenChange?: undefined;
+}
+
+interface ControlledJsonViewerProps extends BaseJsonViewerProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export type JsonViewerProps = ControlledJsonViewerProps | UncontrolledJsonViewerProps;
 
 const JsonViewer: FC<JsonViewerProps> = ({
   data,

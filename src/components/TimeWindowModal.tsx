@@ -3,6 +3,7 @@ import { Modal } from './Modal';
 import { FC, useState } from 'react';
 import { format, addDays } from 'date-fns';
 
+
 export interface TimeWindow {
   window_start_at: string;
   window_end_at: string;
@@ -10,14 +11,13 @@ export interface TimeWindow {
 }
 
 interface TimeWindowModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  timeWindows: TimeWindow[];
-  onSubmit: (selectedTimeWindow: TimeWindow, startDate: string, endDate: string) => void;
-  onSearch?: (startDate: string, endDate: string) => void;
+    isOpen: boolean;
+    onClose: () => void;
+    title?: string;
+    timeWindows: TimeWindow[];
+    onSubmit: (selectedTimeWindow: TimeWindow, startDate: string, endDate: string) => void;
+    onSearch?: (startDate: string, endDate: string) => void;
 }
-
 // Helper function to format dates and times
 const formatDateTime = (start: string, end: string) => {
   const startDate = new Date(start);

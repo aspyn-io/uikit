@@ -1,8 +1,7 @@
 import { Card, Button, Label, TextInput } from 'flowbite-react';
 import { Modal } from './Modal';
-import { FC, useState } from 'react';
+import { FC, JSX, useState } from 'react';
 import { format, addDays } from 'date-fns';
-
 
 export interface TimeWindow {
   window_start_at: string;
@@ -10,14 +9,16 @@ export interface TimeWindow {
   total_slots: number;
 }
 
-interface TimeWindowModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title?: string;
-    timeWindows: TimeWindow[];
-    onSubmit: (selectedTimeWindow: TimeWindow, startDate: string, endDate: string) => void;
-    onSearch?: (startDate: string, endDate: string) => void;
+// Use a generic type T that extends TimeWindow
+interface TimeWindowModalProps<T extends TimeWindow> {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  timeWindows: T[];
+  onSubmit: (selectedTimeWindow: T, startDate: string, endDate: string) => void;
+  onSearch?: (startDate: string, endDate: string) => void;
 }
+
 // Helper function to format dates and times
 const formatDateTime = (start: string, end: string) => {
   const startDate = new Date(start);
@@ -35,15 +36,16 @@ const formatDateTime = (start: string, end: string) => {
   };
 };
 
-const TimeWindowModal: FC<TimeWindowModalProps> = ({
+// Make the component generic with <T extends TimeWindow>
+const TimeWindowModal = <T extends TimeWindow>({
   isOpen,
   onClose,
   title = 'Select Time Window',
   timeWindows,
   onSubmit,
   onSearch = () => {},
-}) => {
-  const [selectedWindow, setSelectedWindow] = useState<TimeWindow | null>(null);
+}: TimeWindowModalProps<T>): JSX.Element => {
+  const [selectedWindow, setSelectedWindow] = useState<T | null>(null);
   const [startDate, setStartDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [endDate, setEndDate] = useState<string>(format(addDays(new Date(), 3), 'yyyy-MM-dd'));
 
@@ -65,7 +67,7 @@ const TimeWindowModal: FC<TimeWindowModalProps> = ({
               id="startDate"
               type="date"
               value={startDate}
-              onChange={(e: { target: { value: any; }; }) => setStartDate(e.target.value)}
+              onChange={(e) => setStartDate(e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>

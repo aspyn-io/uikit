@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Modal, Button, Clipboard } from 'flowbite-react';
-import { HiClipboard } from 'react-icons/hi';
 
 export interface JsonViewerModalProps {
   isOpen: boolean;

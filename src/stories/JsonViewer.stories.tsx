@@ -14,7 +14,8 @@ const meta: Meta<typeof JsonViewer> = {
     },
     title: {
       control: 'text',
-      description: 'Title for the modal',
+      description: 'Title for the modal (required)',
+      required: true,
     },
     data: {
       control: 'object',
@@ -38,6 +39,13 @@ const meta: Meta<typeof JsonViewer> = {
       description: 'Whether to show the copy button',
       defaultValue: true,
     },
+    isOpen: {
+      control: 'boolean',
+      description: 'Optional controlled state for the modal. If not provided, the component manages its own state.',
+    },
+    onOpenChange: {
+      description: 'Optional callback fired when the modal open state changes. Required if isOpen is provided.',
+    },
   },
 };
 
@@ -55,15 +63,20 @@ const sampleData = {
 
 // Template component to handle state
 const JsonViewerTemplate: React.FC<{ args: any }> = ({ args }) => {
+  return (
+    <div className="p-4">
+      <JsonViewer {...args} />
+    </div>
+  );
+};
+
+// Add a template for controlled behavior demonstration
+const ControlledJsonViewerTemplate: React.FC<{ args: any }> = ({ args }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="p-4">
-      <JsonViewer
-        {...args}
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-      />
+      <JsonViewer {...args} isOpen={isOpen} onOpenChange={setIsOpen} />
     </div>
   );
 };
@@ -74,6 +87,15 @@ export const Default: Story = {
     data: sampleData,
     title: 'Sample Data Viewer',
     buttonLabel: 'View JSON',
+  },
+};
+
+export const ControlledState: Story = {
+  render: (args) => <ControlledJsonViewerTemplate args={args} />,
+  args: {
+    data: sampleData,
+    title: 'Controlled Modal Example',
+    buttonLabel: 'Open Controlled Modal',
   },
 };
 

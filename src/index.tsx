@@ -36,6 +36,7 @@ export { default as TimeWindowModal, TimeWindow } from "./components/TimeWindowM
 // Data Display
 export { default as JsonViewer } from './components/JsonViewer';
 export { default as JsonViewerModal } from './components/JsonViewerModal';
+export { default as MetadataViewer } from './components/MetadataViewer';
 
 // Theme
 export { grayscaleTheme, ThemeProvider } from './grayscale-theme';

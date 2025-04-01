@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchableSelect, { SearchableOption } from "../components/SearchableSelect"; // adjust path as needed
 
 const meta: Meta<typeof SearchableSelect> = {
@@ -130,4 +130,103 @@ export const WithError: Story = {
     error: true,
     helperText: "There is an error with your selection",
   },
+};
+
+// Mock data for pagination story
+const mockOptions = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3' },
+  { value: 'option4', label: 'Option 4' },
+  { value: 'option5', label: 'Option 5' },
+  { value: 'option6', label: 'Option 6' },
+  { value: 'option7', label: 'Option 7' },
+  { value: 'option8', label: 'Option 8' },
+  { value: 'option9', label: 'Option 9' },
+  { value: 'option10', label: 'Option 10' },
+];
+
+// Mock API call that returns paginated data
+const fetchPaginatedOptions = async (page: number, perPage: number = 5) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  const start = (page - 1) * perPage;
+  const end = start + perPage;
+  return {
+    data: mockOptions.slice(start, end),
+    totalPages: Math.ceil(mockOptions.length / perPage),
+    currentPage: page
+  };
+};
+
+export const WithPagination: Story = {
+  render: (args) => {
+    const [selected, setSelected] = useState<SearchableOption | SearchableOption[] | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [options, setOptions] = useState<SearchableOption[]>([]);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const loadPage = async (page: number) => {
+      setLoading(true);
+      try {
+        const response = await fetchPaginatedOptions(page);
+        setOptions(response.data);
+        setTotalPages(response.totalPages);
+        setCurrentPage(response.currentPage);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Load initial page
+    useEffect(() => {
+      loadPage(1);
+    }, []);
+
+    const handlePreviousPage = () => {
+      if (currentPage > 1) {
+        loadPage(currentPage - 1);
+      }
+    };
+
+    const handleNextPage = () => {
+      if (currentPage < totalPages) {
+        loadPage(currentPage + 1);
+      }
+    };
+
+    return (
+      <SearchableSelect
+        {...args}
+        value={selected}
+        onChange={(val) => setSelected(val)}
+      >
+        <SearchableSelect.Search placeholder="Search options..." />
+        {loading && <SearchableSelect.Loading />}
+        {!loading && options.map(option => (
+          <SearchableSelect.Option
+            key={option.value}
+            value={option.value}
+            label={String(option.label)}
+          />
+        ))}
+        {!loading && options.length === 0 && (
+          <SearchableSelect.NoResults>No options available</SearchableSelect.NoResults>
+        )}
+        <SearchableSelect.Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPreviousPage={handlePreviousPage}
+          onNextPage={handleNextPage}
+        />
+      </SearchableSelect>
+    );
+  },
+  args: {
+    label: "Paginated Select",
+    placeholder: "Select with pagination",
+    helperText: "5 items per page, 10 total items"
+  }
 };

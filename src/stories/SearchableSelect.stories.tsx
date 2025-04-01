@@ -148,16 +148,25 @@ const mockOptions = [
 
 // Mock API call that returns paginated data
 const fetchPaginatedOptions = async (page: number, perPage: number = 5) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  try {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-  const start = (page - 1) * perPage;
-  const end = start + perPage;
-  return {
-    data: mockOptions.slice(start, end),
-    totalPages: Math.ceil(mockOptions.length / perPage),
-    currentPage: page
-  };
+    const start = (page - 1) * perPage;
+    const end = start + perPage;
+    return {
+      data: mockOptions.slice(start, end),
+      totalPages: Math.ceil(mockOptions.length / perPage),
+      currentPage: page
+    };
+  } catch (error) {
+    console.error("Failed to fetch paginated options:", error);
+    return {
+      data: [],
+      totalPages: 0,
+      currentPage: page
+    };
+  }
 };
 
 export const WithPagination: Story = {

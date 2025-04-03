@@ -366,7 +366,7 @@ const Search: FC<SearchProps> = ({
           type="text"
           disabled={disabled}
           className={`
-            block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-9 text-sm text-gray-900 
+            block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-9 text-sm text-gray-900
             focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white
             dark:focus:border-blue-500 dark:focus:ring-blue-500
             ${className}
@@ -438,8 +438,8 @@ const Option: FC<OptionProps> = ({
       aria-selected={isSelected}
       onClick={handleClick}
       className={`
-        cursor-pointer px-4 py-2 text-sm 
-        hover:bg-gray-100 dark:hover:bg-gray-600 
+        cursor-pointer px-4 py-2 text-sm
+        hover:bg-gray-100 dark:hover:bg-gray-600
         ${isSelected ? 'bg-blue-100 text-blue-900 dark:bg-blue-600 dark:text-white' : ''}
         ${disabled ? 'cursor-not-allowed opacity-50' : ''}
         ${className}

@@ -2,19 +2,22 @@
   "files.associations": {
     "*.css": "tailwindcss"
   },
-  "tailwindCSS.classAttributes": [
-    "class",
-    "className",
-    "theme"
-  ],
+  "tailwindCSS.classAttributes": ["class", "className", "theme"],
   "tailwindCSS.experimental.classRegex": [
-    [
-      "twMerge\\(([^)]*)\\)",
-      "[\"'`]([^\"'`]*).*?[\"'`]"
-    ],
+    ["twMerge\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     [
       "createTheme(?:<\\w+>)?\\s*\\(([^)]*)\\)",
       "{?\\s?[\\w].*:\\s*?[\"'`]([^\"'`]*).*?,?\\s?}?"
     ]
-  ]
+  ],
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
 }

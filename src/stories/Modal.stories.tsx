@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
-import Modal from "../components/Modal";
+import Modal, {
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "../components/Modal";
 
 import { Button } from "flowbite-react";
 
@@ -69,14 +73,14 @@ const ModalTemplate: React.FC<{ args: any }> = ({ args }) => {
           args.onClose?.();
         }}
       >
-        <Modal.Header>{args.title || "Default Title"}</Modal.Header>
-        <Modal.Body>{args.children}</Modal.Body>
-        <Modal.Footer>
+        <ModalHeader>{args.title || "Default Title"}</ModalHeader>
+        <ModalBody>{args.children}</ModalBody>
+        <ModalFooter>
           <Button color="gray" onClick={() => setShow(false)}>
             Cancel
           </Button>
           <Button onClick={() => alert("Confirmed!")}>Confirm</Button>
-        </Modal.Footer>
+        </ModalFooter>
       </Modal>
     </>
   );
@@ -84,7 +88,20 @@ const ModalTemplate: React.FC<{ args: any }> = ({ args }) => {
 
 // Default Story
 export const Default: Story = {
-  render: (args) => <ModalTemplate args={args} />,
+  render: (args) => (
+    <Modal {...args}>
+      <ModalHeader>{args.title || "Default Title"}</ModalHeader>
+      <ModalBody>{args.children}</ModalBody>
+      <ModalFooter>
+        <Button color="blue" onClick={() => console.log("Action clicked")}>
+          I accept
+        </Button>
+        <Button color="gray" onClick={() => console.log("Cancel clicked")}>
+          Cancel
+        </Button>
+      </ModalFooter>
+    </Modal>
+  ),
   args: {
     title: "Example Modal Title",
     children: "This is an example of a modal using the default configuration.",
@@ -110,8 +127,8 @@ export const MassiveModal: Story = {
       <>
         <Button onClick={() => setShow(true)}>Open Massive Modal</Button>
         <Modal {...args} show={show} onClose={() => setShow(false)}>
-          <Modal.Header>{args.title || "Massive Modal"}</Modal.Header>
-          <Modal.Body>
+          <ModalHeader>{args.title || "Massive Modal"}</ModalHeader>
+          <ModalBody>
             <p>
               This modal demonstrates the `4xl` size configuration. You can use
               it to display significant amounts of content without breaking the
@@ -126,13 +143,13 @@ export const MassiveModal: Story = {
               Try resizing the window or interacting with the modal to test its
               behavior with click-outside and escape-key handling.
             </p>
-          </Modal.Body>
-          <Modal.Footer>
+          </ModalBody>
+          <ModalFooter>
             <Button color="gray" onClick={() => setShow(false)}>
               Close
             </Button>
             <Button>Save</Button>
-          </Modal.Footer>
+          </ModalFooter>
         </Modal>
       </>
     );

@@ -1,12 +1,18 @@
 import React, { useRef, useEffect } from "react";
-import { Modal as FlowbiteModal } from "flowbite-react";
+import {
+  Modal as FlowbiteModal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "flowbite-react";
 import type { ModalProps } from "flowbite-react";
 
-export const Modal: React.FC<ModalProps> & {
-  Header: typeof FlowbiteModal.Header;
-  Body: typeof FlowbiteModal.Body;
-  Footer: typeof FlowbiteModal.Footer;
-} = ({ show, onClose, children, ...rest }) => {
+export const Modal: React.FC<ModalProps> = ({
+  show,
+  onClose,
+  children,
+  ...rest
+}) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,9 +55,7 @@ export const Modal: React.FC<ModalProps> & {
   );
 };
 
-// Re-export subcomponents to make them accessible through Modal
-Modal.Header = FlowbiteModal.Header;
-Modal.Body = FlowbiteModal.Body;
-Modal.Footer = FlowbiteModal.Footer;
-
 export default Modal;
+
+// Export the imported components directly
+export { ModalHeader, ModalBody, ModalFooter };

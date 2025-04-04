@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Dropdown } from "flowbite-react";
+import { Dropdown, DropdownItem } from "flowbite-react";
 import PaymentMethodCard from "../components/PaymentMethodCard";
 
 const meta: Meta<typeof PaymentMethodCard> = {
@@ -67,12 +67,12 @@ const MastercardIcon = () => (
 
 const commonDrawerContent = (
   <>
-    <Dropdown.Item onClick={() => console.log("Edit")}>
+    <DropdownItem onClick={() => console.log("Edit")}>
       Edit payment method
-    </Dropdown.Item>
-    <Dropdown.Item onClick={() => console.log("Delete")}>
+    </DropdownItem>
+    <DropdownItem onClick={() => console.log("Delete")}>
       Delete payment method
-    </Dropdown.Item>
+    </DropdownItem>
   </>
 );
 

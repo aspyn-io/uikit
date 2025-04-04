@@ -1,9 +1,9 @@
-import { Meta, StoryObj } from '@storybook/react';
-import { MemoryRouter } from 'react-router-dom';
-import Breadcrumb from '../components/Breadcrumb';
+import { Meta, StoryObj } from "@storybook/react";
+import { MemoryRouter } from "react-router-dom";
+import Breadcrumb from "../components/Breadcrumb";
 
 const meta: Meta<typeof Breadcrumb> = {
-  title: 'Navigation/Breadcrumb',
+  title: "Navigation/Breadcrumb",
   component: Breadcrumb,
   decorators: [
     (Story) => (

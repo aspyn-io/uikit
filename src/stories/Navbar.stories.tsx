@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { BrowserRouter } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
-import Sidebar from "../components/Sidebar";
+import Sidebar, { SidebarItemGroup, SidebarItem } from "../components/Sidebar";
 import icon from "../images/icon.svg";
 import { useEffect } from "react";
 import {
@@ -132,17 +132,17 @@ const NavbarWithSidebarMenu = () => {
         onClickExploreProducts={() => console.log("Explore Products clicked")} // Add console log for Explore Products click
       />
       <Sidebar>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
+        <SidebarItemGroup>
+          <SidebarItem href="#" icon={HiChartPie}>
             Dashboard
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewGrid}>
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiViewGrid}>
             Kanban
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiInbox} label="3">
+          </SidebarItem>
+          <SidebarItem href="#" icon={HiInbox} label="3">
             Inbox
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
+          </SidebarItem>
+        </SidebarItemGroup>
       </Sidebar>
     </>
   );

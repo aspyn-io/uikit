@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { HiSearch } from 'react-icons/hi';
-import { Dropdown } from 'flowbite-react';
+import { Dropdown, DropdownDivider, DropdownItem } from 'flowbite-react';
 
 export interface SearchDropdownProps {
   items: string[];
@@ -52,15 +52,15 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
         />
       </div>
 
-      <Dropdown.Divider />
+      <DropdownDivider />
       <div className="max-h-60 overflow-y-auto">
         {filteredItems.length === 0 ? (
-          <Dropdown.Item aria-readonly disabled>No items found</Dropdown.Item>
+          <DropdownItem aria-readonly disabled>No items found</DropdownItem>
         ) : (
           filteredItems.map((item: string, index: number) => (
-            <Dropdown.Item key={index} onClick={() => onSelect(item)}>
+            <DropdownItem key={index} onClick={() => onSelect(item)}>
               {item}
-            </Dropdown.Item>
+            </DropdownItem>
           ))
         )}
       </div>

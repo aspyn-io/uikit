@@ -1,7 +1,7 @@
-import { Card, Button, Label, TextInput } from 'flowbite-react';
-import { Modal } from './Modal';
-import { FC, JSX, useState } from 'react';
-import { format, addDays } from 'date-fns';
+import { Card, Button, Label, TextInput } from "flowbite-react";
+import Modal, { ModalHeader, ModalBody, ModalFooter } from "./Modal";
+import { FC, JSX, useState } from "react";
+import { format, addDays } from "date-fns";
 
 export interface TimeWindow {
   window_start_at: string;
@@ -23,16 +23,27 @@ interface TimeWindowModalProps<T extends TimeWindow> {
 const formatDateTime = (start: string, end: string) => {
   const startDate = new Date(start);
   const endDate = new Date(end);
-  const dateOptions: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-  const timeOptions: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
   const sameDay = startDate.toDateString() === endDate.toDateString();
 
   return {
     date: startDate.toLocaleDateString(undefined, dateOptions),
     start: startDate.toLocaleTimeString(undefined, timeOptions),
-    end: sameDay 
+    end: sameDay
       ? endDate.toLocaleTimeString(undefined, timeOptions)
-      : `${endDate.toLocaleDateString(undefined, dateOptions)}, ${endDate.toLocaleTimeString(undefined, timeOptions)}`
+      : `${endDate.toLocaleDateString(
+          undefined,
+          dateOptions
+        )}, ${endDate.toLocaleTimeString(undefined, timeOptions)}`,
   };
 };
 
@@ -40,14 +51,18 @@ const formatDateTime = (start: string, end: string) => {
 const TimeWindowModal = <T extends TimeWindow>({
   isOpen,
   onClose,
-  title = 'Select Time Window',
+  title = "Select Time Window",
   timeWindows,
   onSubmit,
   onSearch = () => {},
 }: TimeWindowModalProps<T>): JSX.Element => {
   const [selectedWindow, setSelectedWindow] = useState<T | null>(null);
-  const [startDate, setStartDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
-  const [endDate, setEndDate] = useState<string>(format(addDays(new Date(), 3), 'yyyy-MM-dd'));
+  const [startDate, setStartDate] = useState<string>(
+    format(new Date(), "yyyy-MM-dd")
+  );
+  const [endDate, setEndDate] = useState<string>(
+    format(addDays(new Date(), 3), "yyyy-MM-dd")
+  );
 
   const handleSearch = () => {
     onSearch(startDate, endDate);
@@ -56,13 +71,13 @@ const TimeWindowModal = <T extends TimeWindow>({
   return (
     <Modal show={isOpen} onClose={onClose} size="4xl">
       <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
-        <Modal.Header>{title}</Modal.Header>
+        <ModalHeader>{title}</ModalHeader>
       </div>
 
-      <Modal.Body>
+      <ModalBody>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
           <div>
-            <Label htmlFor="startDate" value="Start Date" />
+            <Label htmlFor="startDate">Start Date</Label>
             <TextInput
               id="startDate"
               type="date"
@@ -72,7 +87,7 @@ const TimeWindowModal = <T extends TimeWindow>({
             />
           </div>
           <div>
-            <Label htmlFor="endDate" value="End Date" />
+            <Label htmlFor="endDate">End Date</Label>
             <TextInput
               id="endDate"
               type="date"
@@ -96,12 +111,17 @@ const TimeWindowModal = <T extends TimeWindow>({
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {timeWindows.map((window) => {
-              const { date, start, end } = formatDateTime(window.window_start_at, window.window_end_at);
+              const { date, start, end } = formatDateTime(
+                window.window_start_at,
+                window.window_end_at
+              );
               return (
                 <Card
                   key={`${window.window_start_at}-${window.window_end_at}`}
                   className={`cursor-pointer transition-transform transform hover:scale-105 ${
-                    selectedWindow === window ? 'ring-2 ring-blue-500 dark:ring-blue-700' : ''
+                    selectedWindow === window
+                      ? "ring-2 ring-blue-500 dark:ring-blue-700"
+                      : ""
                   }`}
                   onClick={() => setSelectedWindow(window)}
                 >
@@ -117,7 +137,10 @@ const TimeWindowModal = <T extends TimeWindow>({
                     </p>
                     {window.total_slots !== undefined && (
                       <p className="text-xs font-semibold text-gray-900 dark:text-gray-400">
-                        Total Slots: <span className="font-normal">{window.total_slots}</span>
+                        Total Slots:{" "}
+                        <span className="font-normal">
+                          {window.total_slots}
+                        </span>
                       </p>
                     )}
                   </div>
@@ -126,22 +149,24 @@ const TimeWindowModal = <T extends TimeWindow>({
             })}
           </div>
         )}
-      </Modal.Body>
+      </ModalBody>
 
-      <Modal.Footer>
+      <ModalFooter>
         <div className="flex justify-end space-x-3 w-full">
           <Button color="gray" onClick={onClose}>
             Cancel
           </Button>
           <Button
             color="primary"
-            onClick={() => selectedWindow && onSubmit(selectedWindow, startDate, endDate)}
+            onClick={() =>
+              selectedWindow && onSubmit(selectedWindow, startDate, endDate)
+            }
             disabled={!selectedWindow || !startDate || !endDate}
           >
             Confirm
           </Button>
         </div>
-      </Modal.Footer>
+      </ModalFooter>
     </Modal>
   );
 };

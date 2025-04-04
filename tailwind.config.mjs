@@ -1,4 +1,3 @@
-import flowbite from "flowbite-react/tailwind";
 import defaultTheme from "tailwindcss/defaultTheme";
 
 // CAUTION: This file is exported to clients for shared configuration of tailwind css
@@ -8,7 +7,7 @@ export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./.storybook/**/*.{js,jsx,ts,tsx}",
-    flowbite.content(),
+    "node_modules/flowbite-react/lib/**/*.js",
   ],
   theme: {
     container: {
@@ -37,5 +36,5 @@ export default {
       },
     },
   },
-  plugins: [flowbite.plugin()],
+  plugins: [require("flowbite/plugin")],
 };

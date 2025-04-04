@@ -1,6 +1,6 @@
-import { FC, ReactNode, useState } from 'react';
-import { Button, ButtonProps } from 'flowbite-react';
-import JsonViewerModal from './JsonViewerModal';
+import { FC, ReactNode, useState } from "react";
+import { Button, ButtonProps } from "flowbite-react";
+import JsonViewerModal from "./JsonViewerModal";
 
 interface BaseJsonViewerProps {
   data: any;
@@ -21,12 +21,14 @@ interface ControlledJsonViewerProps extends BaseJsonViewerProps {
   onClose: () => void;
 }
 
-export type JsonViewerProps = ControlledJsonViewerProps | UncontrolledJsonViewerProps;
+export type JsonViewerProps =
+  | ControlledJsonViewerProps
+  | UncontrolledJsonViewerProps;
 
 const JsonViewer: FC<JsonViewerProps> = ({
   data,
   title,
-  buttonLabel = 'View JSON',
+  buttonLabel = "View JSON",
   buttonProps,
   show: controlledShow,
   onClose,
@@ -34,10 +36,10 @@ const JsonViewer: FC<JsonViewerProps> = ({
   allowCopy,
 }) => {
   const [uncontrolledShow, setUncontrolledShow] = useState(false);
-  
+
   const isControlled = controlledShow !== undefined;
   const modalShow = isControlled ? controlledShow : uncontrolledShow;
-  
+
   const handleClose = () => {
     if (!isControlled) {
       setUncontrolledShow(false);

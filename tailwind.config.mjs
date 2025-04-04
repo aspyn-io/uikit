@@ -10,6 +10,7 @@ export default {
     "./.storybook/**/*.{js,jsx,ts,tsx}",
     ".flowbite-react/class-list.json"
   ],
+  darkMode: 'class',
   theme: {
     container: {
       center: true,

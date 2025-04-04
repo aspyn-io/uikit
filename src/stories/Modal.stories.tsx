@@ -1,12 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
-import Modal, {
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "../components/Modal";
+import Modal from "../components/Modal";
 
-import { Button } from "flowbite-react";
+import { Button, ModalBody, ModalFooter, ModalHeader } from "flowbite-react";
 
 // Meta configuration for the Modal component
 const meta: Meta<typeof Modal> = {
@@ -73,14 +69,14 @@ const ModalTemplate: React.FC<{ args: any }> = ({ args }) => {
           args.onClose?.();
         }}
       >
-        <ModalHeader>{args.title || "Default Title"}</ModalHeader>
-        <ModalBody>{args.children}</ModalBody>
-        <ModalFooter>
+        <Modal.Header>{args.title || "Default Title"}</Modal.Header>
+        <Modal.Body>{args.children}</Modal.Body>
+        <Modal.Footer>
           <Button color="gray" onClick={() => setShow(false)}>
             Cancel
           </Button>
           <Button onClick={() => alert("Confirmed!")}>Confirm</Button>
-        </ModalFooter>
+        </Modal.Footer>
       </Modal>
     </>
   );
@@ -90,16 +86,16 @@ const ModalTemplate: React.FC<{ args: any }> = ({ args }) => {
 export const Default: Story = {
   render: (args) => (
     <Modal {...args}>
-      <ModalHeader>{args.title || "Default Title"}</ModalHeader>
-      <ModalBody>{args.children}</ModalBody>
-      <ModalFooter>
+      <Modal.Header>{args.title || "Default Title"}</Modal.Header>
+      <Modal.Body>{args.children}</Modal.Body>
+      <Modal.Footer>
         <Button color="blue" onClick={() => console.log("Action clicked")}>
           I accept
         </Button>
         <Button color="gray" onClick={() => console.log("Cancel clicked")}>
           Cancel
         </Button>
-      </ModalFooter>
+      </Modal.Footer>
     </Modal>
   ),
   args: {

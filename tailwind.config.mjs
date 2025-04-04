@@ -8,7 +8,6 @@ export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./.storybook/**/*.{js,jsx,ts,tsx}",
-    "node_modules/flowbite-react/lib/**/*.js",
     ".flowbite-react/class-list.json"
   ],
   theme: {
@@ -38,5 +37,5 @@ export default {
       },
     },
   },
-  plugins: [require("flowbite/plugin"), flowbiteReact],
+  plugins: [flowbiteReact],
 };

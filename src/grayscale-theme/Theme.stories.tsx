@@ -128,6 +128,9 @@ The grayscale theme supports all button variants:
         defaultContent={
           <div className="flex flex-wrap gap-4">
             <Button className="w-32">Primary</Button>
+            <Button className="w-32 bg-gradient-to-br from-purple-500 to-blue-500">
+              Gradient
+            </Button>
             <Button className="w-32" outline>
               Outline
             </Button>
@@ -137,6 +140,12 @@ The grayscale theme supports all button variants:
           <div className="flex flex-wrap gap-4">
             <Button color="gray" className="w-32">
               Primary
+            </Button>
+            <Button
+              color="gray"
+              className="w-32 bg-gradient-to-br from-gray-400 to-gray-700"
+            >
+              Gradient
             </Button>
             <Button color="gray" className="w-32" outline>
               Outline

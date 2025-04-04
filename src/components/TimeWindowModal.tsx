@@ -1,5 +1,5 @@
 import { Card, Button, Label, TextInput } from "flowbite-react";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "./Modal";
+import Modal from "./Modal";
 import { FC, JSX, useState } from "react";
 import { format, addDays } from "date-fns";
 
@@ -71,10 +71,10 @@ const TimeWindowModal = <T extends TimeWindow>({
   return (
     <Modal show={isOpen} onClose={onClose} size="4xl">
       <div className="border-b border-gray-200 dark:border-gray-700 pb-4">
-        <ModalHeader>{title}</ModalHeader>
+        <Modal.Header>{title}</Modal.Header>
       </div>
 
-      <ModalBody>
+      <Modal.Body>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
           <div>
             <Label htmlFor="startDate">Start Date</Label>
@@ -149,9 +149,9 @@ const TimeWindowModal = <T extends TimeWindow>({
             })}
           </div>
         )}
-      </ModalBody>
+      </Modal.Body>
 
-      <ModalFooter>
+      <Modal.Footer>
         <div className="flex justify-end space-x-3 w-full">
           <Button color="gray" onClick={onClose}>
             Cancel
@@ -166,7 +166,7 @@ const TimeWindowModal = <T extends TimeWindow>({
             Confirm
           </Button>
         </div>
-      </ModalFooter>
+      </Modal.Footer>
     </Modal>
   );
 };

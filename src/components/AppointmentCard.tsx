@@ -169,9 +169,17 @@ export const AppointmentCard = ({
             </Badge>
           )}
           {workOrders.length > 0 && (
-            <Button color="gray" onClick={toggleExpanded}>
+            <Button
+              color="gray"
+              className="w-24 hover:bg-gray-200"
+              outline
+              onClick={toggleExpanded}
+            >
               <div className="flex items-center gap-2">
-                <HiOutlineClipboardList size={16} className="text-gray-600" />
+                <HiOutlineClipboardList
+                  size={16}
+                  className="text-gray-900 dark:text-white"
+                />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
                   {workOrders.length}
                 </span>
@@ -179,12 +187,12 @@ export const AppointmentCard = ({
               {isExpanded ? (
                 <HiOutlineChevronUp
                   size={16}
-                  className="ml-2 text-gray-500 dark:text-gray-400"
+                  className="ml-2 text-gray-900 dark:text-white"
                 />
               ) : (
                 <HiOutlineChevronDown
                   size={16}
-                  className="ml-2 text-gray-500 dark:text-gray-400"
+                  className="ml-2 text-gray-900 dark:text-white"
                 />
               )}
             </Button>

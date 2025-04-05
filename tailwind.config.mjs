@@ -8,9 +8,9 @@ export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./.storybook/**/*.{js,jsx,ts,tsx}",
-    ".flowbite-react/class-list.json"
+    ".flowbite-react/class-list.json",
   ],
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
     container: {
       center: true,

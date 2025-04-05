@@ -11,11 +11,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  plugins: [react(), svgr(), dts({
-    insertTypesEntry: true, // Ensures "types" entry in package.json
-    outputDir: "dist", // Saves .d.ts files in dist/
-    copyDtsFiles: true, // Copies external .d.ts files from src
-  }), flowbiteReact()],
+  plugins: [
+    react(),
+    svgr(),
+    dts({
+      insertTypesEntry: true, // Ensures "types" entry in package.json
+      outputDir: "dist", // Saves .d.ts files in dist/
+      copyDtsFiles: true, // Copies external .d.ts files from src
+    }),
+    flowbiteReact(),
+  ],
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.tsx"), // Entry point

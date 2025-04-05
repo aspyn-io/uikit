@@ -2,6 +2,7 @@ import * as React from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import { SubscriptionCard } from "../components/SubscriptionCard";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
+import { BrowserRouter } from "react-router-dom";
 
 const meta: Meta<typeof SubscriptionCard> = {
   title: "Cards/SubscriptionCard",
@@ -114,7 +115,9 @@ export const YearlySubscription: Story = {
 export const Clickable: Story = {
   render: (args) => (
     <Wrapper>
-      <SubscriptionCard {...args} />
+      <BrowserRouter>
+        <SubscriptionCard {...args} />
+      </BrowserRouter>
     </Wrapper>
   ),
   args: {

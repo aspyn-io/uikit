@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { Badge, Dropdown } from "flowbite-react";
+import { Badge, Dropdown, DropdownItem } from "flowbite-react";
 import { HiOutlineCreditCard, HiOutlineDotsVertical } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
@@ -91,10 +91,10 @@ export const SubscriptionCard = ({
             label={<HiOutlineDotsVertical size={20} />}
             className="overflow-hidden"
           >
-            <Dropdown.Item onClick={onEdit}>Edit Subscription</Dropdown.Item>
-            <Dropdown.Item onClick={onCancel}>
+            <DropdownItem onClick={onEdit}>Edit Subscription</DropdownItem>
+            <DropdownItem onClick={onCancel}>
               Cancel Subscription
-            </Dropdown.Item>
+            </DropdownItem>
           </Dropdown>
         )}
       </div>

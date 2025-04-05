@@ -1,5 +1,5 @@
 import React from "react";
-import { Badge, Table } from "flowbite-react";
+import { Badge, Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -169,24 +169,24 @@ export const InvoiceDetail: React.FC<InvoiceDetailProps> = ({
 
       <div className="overflow-x-auto">
         <Table hoverable>
-          <Table.Head>
-            <Table.HeadCell>Product Name</Table.HeadCell>
-            <Table.HeadCell>Qty</Table.HeadCell>
-            <Table.HeadCell>Price</Table.HeadCell>
-            <Table.HeadCell>Total Price</Table.HeadCell>
-          </Table.Head>
-          <Table.Body>
+          <TableHead>
+            <TableHeadCell>Product Name</TableHeadCell>
+            <TableHeadCell>Qty</TableHeadCell>
+            <TableHeadCell>Price</TableHeadCell>
+            <TableHeadCell>Total Price</TableHeadCell>
+          </TableHead>
+          <TableBody>
             {items.map((item) => (
-              <Table.Row key={item.id}>
-                <Table.Cell>{item.description}</Table.Cell>
-                <Table.Cell>{item.quantity}</Table.Cell>
-                <Table.Cell>{formatCurrency(item.amount, 'USD')}</Table.Cell>
-                <Table.Cell>
+              <TableRow key={item.id}>
+                <TableCell>{item.description}</TableCell>
+                <TableCell>{item.quantity}</TableCell>
+                <TableCell>{formatCurrency(item.amount, 'USD')}</TableCell>
+                <TableCell>
                   {formatCurrency(item.amount * item.quantity, 'USD')}
-                </Table.Cell>
-              </Table.Row>
+                </TableCell>
+              </TableRow>
             ))}
-          </Table.Body>
+          </TableBody>
         </Table>
       </div>
 

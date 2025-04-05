@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Avatar, Dropdown } from "flowbite-react";
+import { Avatar, Dropdown, DropdownHeader, DropdownItem } from "flowbite-react";
 import { HiUserCircle } from "react-icons/hi";
 
 interface UserDropdownItem {
@@ -30,16 +30,16 @@ const UserDropdown: FC<UserDropdownProps> = ({ avatar, username, email, items })
         </span>
       }
     >
-      <Dropdown.Header>
+      <DropdownHeader>
         <span className="block text-sm">{username}</span>
         <span className="block truncate text-sm font-medium">
           {email}
         </span>
-      </Dropdown.Header>
+      </DropdownHeader>
       {items.map((item, index) => (
-        <Dropdown.Item key={index} onClick={item.onClick}>
+        <DropdownItem key={index} onClick={item.onClick}>
           {item.title}
-        </Dropdown.Item>
+        </DropdownItem>
       ))}
     </Dropdown>
   );

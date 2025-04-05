@@ -1,4 +1,10 @@
-import { Sidebar as FlowbiteSidebar } from "flowbite-react";
+import {
+  Sidebar as FlowbiteSidebar,
+  SidebarItem,
+  SidebarItemGroup,
+  SidebarItems,
+  SidebarCollapse,
+} from "flowbite-react";
 import { ReactNode } from "react";
 import { useNavbarContext } from "../context/NavbarContext";
 
@@ -15,7 +21,8 @@ export const Sidebar = ({ children, className, ...props }: SidebarProps) => {
       theme={{
         root: {
           base: "h-full bg-white text-gray-900 dark:bg-gray-800 dark:text-white border-r border-gray-200 dark:border-gray-700 shadow-none rounded-none", // ✅ Removed rounded edges
-          inner: "h-full overflow-y-auto overflow-x-hidden bg-inherit py-4 px-3",
+          inner:
+            "h-full overflow-y-auto overflow-x-hidden bg-inherit py-4 px-3",
         },
       }}
       className={`${className}`}
@@ -27,10 +34,7 @@ export const Sidebar = ({ children, className, ...props }: SidebarProps) => {
   );
 };
 
-// Re-export sidebar components to make them accessible from uikit
-Sidebar.Item = FlowbiteSidebar.Item;
-Sidebar.ItemGroup = FlowbiteSidebar.ItemGroup;
-Sidebar.Items = FlowbiteSidebar.Items;
-Sidebar.Collapse = FlowbiteSidebar.Collapse;
-
 export default Sidebar;
+
+// Export the imported components directly
+export { SidebarItem, SidebarItemGroup, SidebarItems, SidebarCollapse };

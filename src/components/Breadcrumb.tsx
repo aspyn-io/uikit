@@ -1,16 +1,19 @@
-import React from 'react';
-import { Breadcrumb as FlowbiteBreadcrumb } from 'flowbite-react';
-import { Link } from 'react-router-dom';
-import type { ReactNode, AnchorHTMLAttributes } from 'react';
+import React from "react";
+import {
+  Breadcrumb as FlowbiteBreadcrumb,
+  BreadcrumbItem as FlowbiteBreadcrumbItem,
+} from "flowbite-react";
+import { Link } from "react-router-dom";
+import type { ReactNode, AnchorHTMLAttributes } from "react";
 
-// Derive types for Breadcrumb and Breadcrumb.Item
+// Derive types for Breadcrumb and BreadcrumbItem
 type BreadcrumbProps = React.ComponentProps<typeof FlowbiteBreadcrumb>;
-type BreadcrumbItemProps = React.ComponentProps<typeof FlowbiteBreadcrumb.Item>;
+type BreadcrumbItemProps = React.ComponentProps<typeof FlowbiteBreadcrumbItem>;
 
 // CustomBreadcrumbItemProps resolves conflicts between BreadcrumbItemProps and AnchorHTMLAttributes
 type CustomBreadcrumbItemProps = Omit<
   BreadcrumbItemProps & AnchorHTMLAttributes<HTMLAnchorElement>,
-  'href' | 'onAbort' | 'onError'
+  "href" | "onAbort" | "onError"
 > & {
   to?: string; // Add `to` for React Router links
   href?: string; // Add `href` for anchor links
@@ -28,25 +31,25 @@ const BreadcrumbItem: React.FC<CustomBreadcrumbItemProps> = ({
   if (to) {
     // Use React Router's Link when `to` is provided
     return (
-      <FlowbiteBreadcrumb.Item {...props}>
+      <FlowbiteBreadcrumbItem {...props}>
         <Link to={to} target={target} rel={rel}>
           {children}
         </Link>
-      </FlowbiteBreadcrumb.Item>
+      </FlowbiteBreadcrumbItem>
     );
   }
 
   // Default behavior with `href`
   return (
-    <FlowbiteBreadcrumb.Item {...props}>
+    <FlowbiteBreadcrumbItem {...props}>
       <a href={href} target={target} rel={rel}>
         {children}
       </a>
-    </FlowbiteBreadcrumb.Item>
+    </FlowbiteBreadcrumbItem>
   );
 };
 
-// Custom Breadcrumb component that uses the custom Breadcrumb.Item
+// Custom Breadcrumb component that uses the custom BreadcrumbItem
 export const Breadcrumb: React.FC<BreadcrumbProps> & {
   Item: typeof BreadcrumbItem;
 } = ({ ...props }) => {

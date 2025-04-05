@@ -4,6 +4,7 @@ import svgr from "vite-plugin-svgr";
 import dts from "vite-plugin-dts";
 import path from "path";
 import { fileURLToPath } from "url";
+import flowbiteReact from "flowbite-react/plugin/vite";
 
 // Fix for __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +19,7 @@ export default defineConfig({
       outputDir: "dist", // Saves .d.ts files in dist/
       copyDtsFiles: true, // Copies external .d.ts files from src
     }),
+    flowbiteReact(),
   ],
   build: {
     lib: {

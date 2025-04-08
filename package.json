@@ -29,9 +29,9 @@
     "build": "tsup",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
-    "lint-fix": "eslint . --fix",
+    "lint:fix": "eslint . --fix",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build:storybook": "storybook build",
     "prepare": "husky install"
   },
   "dependencies": {

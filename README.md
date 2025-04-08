@@ -59,7 +59,7 @@ Before each push:
 You can manually run the linting fix and build with:
 
 ```bash
-npm run lint-fix
+npm run lint:fix
 npm run build
 ```
 

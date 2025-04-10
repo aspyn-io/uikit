@@ -34,7 +34,10 @@ export const Sidebar = ({ children, className, ...props }: SidebarProps) => {
   );
 };
 
-export default Sidebar;
+// Re-export the imported components directly
+Sidebar.Item = SidebarItem;
+Sidebar.ItemGroup = SidebarItemGroup;
+Sidebar.Items = SidebarItems;
+Sidebar.Collapse = SidebarCollapse;
 
-// Export the imported components directly
-export { SidebarItem, SidebarItemGroup, SidebarItems, SidebarCollapse };
+export default Sidebar;

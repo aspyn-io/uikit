@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Clipboard } from 'flowbite-react';
+import { Clipboard, ClipboardWithIcon } from 'flowbite-react';
 
 export interface MetadataViewerProps {
   metadata: Record<string, any> | null | undefined;
@@ -40,7 +40,7 @@ const MetadataViewer: FC<MetadataViewerProps> = ({
         {metadata && Object.keys(metadata).length > 0 ? (
           <div className="relative">
             {allowCopy && (
-              <Clipboard.WithIcon
+              <ClipboardWithIcon
                 valueToCopy={formattedJson}
                 className="absolute top-2.5 right-0"
               />

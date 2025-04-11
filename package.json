@@ -32,12 +32,14 @@
     "lint:fix": "eslint . --fix",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "flowbite-react patch"
   },
   "dependencies": {
     "flowbite": "^3.1.2",
-    "flowbite-react": "^0.10.2",
+    "flowbite-react": "^0.11.7",
     "react": "^19.1.0",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.4.1",
     "@fullcalendar/core": "6.1.17",
     "@fullcalendar/interaction": "6.1.17",
@@ -71,7 +73,7 @@
     "postcss": "^8.5.2",
     "prop-types": "^15.8.1",
     "storybook": "^8.6.11",
-    "tailwindcss": "^3.4.16",
+    "tailwindcss": "^3.4.17",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "vite": "^6.2.5",

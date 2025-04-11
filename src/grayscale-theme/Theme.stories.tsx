@@ -1,9 +1,20 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { ThemeProvider } from './ThemeProvider';
-import { Button, Card, Alert, Badge, Table } from 'flowbite-react';
+import type { Meta, StoryObj } from "@storybook/react";
+import { ThemeProvider } from "./ThemeProvider";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "flowbite-react";
 
 const meta: Meta = {
-  title: 'Theme/Grayscale Theme',
+  title: "Theme/Grayscale Theme",
   decorators: [
     (Story) => (
       <ThemeProvider>
@@ -12,7 +23,7 @@ const meta: Meta = {
     ),
   ],
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
         component: `
@@ -72,10 +83,10 @@ export default meta;
 type Story = StoryObj;
 
 // Theme Comparison Layout Component
-const ThemeComparison = ({ 
-  defaultContent, 
-  grayscaleContent 
-}: { 
+const ThemeComparison = ({
+  defaultContent,
+  grayscaleContent,
+}: {
   defaultContent: React.ReactNode;
   grayscaleContent: React.ReactNode;
 }) => (
@@ -101,12 +112,10 @@ export const Buttons: Story = {
 The grayscale theme supports all button variants:
 
 - Primary: Solid background with white text
-- Gradient: Gray gradient background
 - Outline: Transparent background with border
 
 \`\`\`jsx
 <Button color="gray">Primary</Button>
-<Button color="gray" gradientDuoTone="grayToGray">Gradient</Button>
 <Button color="gray" outline>Outline</Button>
 \`\`\`
 `,
@@ -118,10 +127,8 @@ The grayscale theme supports all button variants:
       <ThemeComparison
         defaultContent={
           <div className="flex flex-wrap gap-4">
-            <Button className="w-32">
-              Primary
-            </Button>
-            <Button className="w-32" gradientDuoTone="purpleToBlue">
+            <Button className="w-32">Primary</Button>
+            <Button className="w-32 bg-gradient-to-br from-purple-500 to-blue-500">
               Gradient
             </Button>
             <Button className="w-32" outline>
@@ -134,7 +141,10 @@ The grayscale theme supports all button variants:
             <Button color="gray" className="w-32">
               Primary
             </Button>
-            <Button color="gray" className="w-32" gradientDuoTone="grayToGray">
+            <Button
+              color="gray"
+              className="w-32 bg-gradient-to-br from-gray-400 to-gray-700"
+            >
               Gradient
             </Button>
             <Button color="gray" className="w-32" outline>
@@ -172,22 +182,16 @@ Cards in the grayscale theme maintain the same structure but use grayscale color
       <ThemeComparison
         defaultContent={
           <Card className="max-w-sm">
-            <h5 className="text-2xl font-bold tracking-tight">
-              Card Title
-            </h5>
+            <h5 className="text-2xl font-bold tracking-tight">Card Title</h5>
             <p className="font-normal">
               This card demonstrates the theme styling.
             </p>
-            <Button className="mt-4">
-              Read more
-            </Button>
+            <Button className="mt-4">Read more</Button>
           </Card>
         }
         grayscaleContent={
           <Card className="max-w-sm">
-            <h5 className="text-2xl font-bold tracking-tight">
-              Card Title
-            </h5>
+            <h5 className="text-2xl font-bold tracking-tight">Card Title</h5>
             <p className="font-normal">
               This card demonstrates the theme styling.
             </p>
@@ -229,7 +233,8 @@ Alerts use grayscale colors for backgrounds, borders, and text while maintaining
               <span className="font-medium">Info alert!</span> This is an alert.
             </Alert>
             <Alert className="w-96" withBorderAccent>
-              <span className="font-medium">Info alert!</span> This is an alert with border accent.
+              <span className="font-medium">Info alert!</span> This is an alert
+              with border accent.
             </Alert>
           </div>
         }
@@ -239,7 +244,8 @@ Alerts use grayscale colors for backgrounds, borders, and text while maintaining
               <span className="font-medium">Info alert!</span> This is an alert.
             </Alert>
             <Alert color="gray" className="w-96" withBorderAccent>
-              <span className="font-medium">Info alert!</span> This is an alert with border accent.
+              <span className="font-medium">Info alert!</span> This is an alert
+              with border accent.
             </Alert>
           </div>
         }
@@ -279,8 +285,12 @@ Badges are available in different sizes and use grayscale colors for consistent 
         grayscaleContent={
           <div className="flex flex-wrap gap-2">
             <Badge color="gray">Default</Badge>
-            <Badge color="gray" size="sm">Small</Badge>
-            <Badge color="gray" size="lg">Large</Badge>
+            <Badge color="gray" size="sm">
+              Small
+            </Badge>
+            <Badge color="gray" size="lg">
+              Large
+            </Badge>
           </div>
         }
       />
@@ -319,54 +329,54 @@ Tables use grayscale colors for borders, backgrounds, and text while maintaining
         defaultContent={
           <div className="w-full max-w-2xl">
             <Table>
-              <Table.Head>
-                <Table.HeadCell>Name</Table.HeadCell>
-                <Table.HeadCell>Status</Table.HeadCell>
-                <Table.HeadCell>Date</Table.HeadCell>
-              </Table.Head>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>John Doe</Table.Cell>
-                  <Table.Cell>
+              <TableHead>
+                <TableHeadCell>Name</TableHeadCell>
+                <TableHeadCell>Status</TableHeadCell>
+                <TableHeadCell>Date</TableHeadCell>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>John Doe</TableCell>
+                  <TableCell>
                     <Badge>Active</Badge>
-                  </Table.Cell>
-                  <Table.Cell>2024-03-20</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>Jane Smith</Table.Cell>
-                  <Table.Cell>
+                  </TableCell>
+                  <TableCell>2024-03-20</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Jane Smith</TableCell>
+                  <TableCell>
                     <Badge>Pending</Badge>
-                  </Table.Cell>
-                  <Table.Cell>2024-03-19</Table.Cell>
-                </Table.Row>
-              </Table.Body>
+                  </TableCell>
+                  <TableCell>2024-03-19</TableCell>
+                </TableRow>
+              </TableBody>
             </Table>
           </div>
         }
         grayscaleContent={
           <div className="w-full max-w-2xl">
             <Table>
-              <Table.Head>
-                <Table.HeadCell>Name</Table.HeadCell>
-                <Table.HeadCell>Status</Table.HeadCell>
-                <Table.HeadCell>Date</Table.HeadCell>
-              </Table.Head>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>John Doe</Table.Cell>
-                  <Table.Cell>
+              <TableHead>
+                <TableHeadCell>Name</TableHeadCell>
+                <TableHeadCell>Status</TableHeadCell>
+                <TableHeadCell>Date</TableHeadCell>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>John Doe</TableCell>
+                  <TableCell>
                     <Badge color="gray">Active</Badge>
-                  </Table.Cell>
-                  <Table.Cell>2024-03-20</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>Jane Smith</Table.Cell>
-                  <Table.Cell>
+                  </TableCell>
+                  <TableCell>2024-03-20</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Jane Smith</TableCell>
+                  <TableCell>
                     <Badge color="gray">Pending</Badge>
-                  </Table.Cell>
-                  <Table.Cell>2024-03-19</Table.Cell>
-                </Table.Row>
-              </Table.Body>
+                  </TableCell>
+                  <TableCell>2024-03-19</TableCell>
+                </TableRow>
+              </TableBody>
             </Table>
           </div>
         }
@@ -530,11 +540,11 @@ Dark mode colors are automatically applied when the parent container has the \`d
       defaultContent={
         <div className="p-4 bg-gray-900 rounded-lg">
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-white">Default Theme Dark Mode</h2>
+            <h2 className="text-2xl font-bold text-white">
+              Default Theme Dark Mode
+            </h2>
             <div className="flex flex-wrap gap-4">
-              <Button className="w-32">
-                Primary
-              </Button>
+              <Button className="w-32">Primary</Button>
               <Button className="w-32" outline>
                 Outline
               </Button>
@@ -546,12 +556,11 @@ Dark mode colors are automatically applied when the parent container has the \`d
               <p className="font-normal text-gray-400">
                 This card demonstrates dark mode styling.
               </p>
-              <Button className="mt-4">
-                Read more
-              </Button>
+              <Button className="mt-4">Read more</Button>
             </Card>
             <Alert className="w-96 bg-gray-800">
-              <span className="font-medium text-white">Dark alert!</span> This is an alert in dark mode.
+              <span className="font-medium text-white">Dark alert!</span> This
+              is an alert in dark mode.
             </Alert>
           </div>
         </div>
@@ -559,7 +568,9 @@ Dark mode colors are automatically applied when the parent container has the \`d
       grayscaleContent={
         <div className="p-4 bg-gray-900 rounded-lg">
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-white">Grayscale Theme Dark Mode</h2>
+            <h2 className="text-2xl font-bold text-white">
+              Grayscale Theme Dark Mode
+            </h2>
             <div className="flex flex-wrap gap-4">
               <Button color="gray" className="w-32">
                 Primary
@@ -580,11 +591,12 @@ Dark mode colors are automatically applied when the parent container has the \`d
               </Button>
             </Card>
             <Alert color="gray" className="w-96 bg-gray-800">
-              <span className="font-medium text-white">Dark alert!</span> This is a grayscale alert in dark mode.
+              <span className="font-medium text-white">Dark alert!</span> This
+              is a grayscale alert in dark mode.
             </Alert>
           </div>
         </div>
       }
     />
   ),
-}; 
+};

@@ -1,6 +1,18 @@
 import { useState, useRef } from "react";
 import { format, isToday, isTomorrow, differenceInDays } from "date-fns";
-import { Badge, Button, Dropdown, Table } from "flowbite-react";
+import {
+  Badge,
+  Button,
+  Dropdown,
+  DropdownItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "flowbite-react";
+
 import {
   HiOutlineCalendar,
   HiOutlineClock,
@@ -157,9 +169,17 @@ export const AppointmentCard = ({
             </Badge>
           )}
           {workOrders.length > 0 && (
-            <Button color="gray" onClick={toggleExpanded}>
+            <Button
+              color="gray"
+              className="w-24 hover:bg-gray-200"
+              outline
+              onClick={toggleExpanded}
+            >
               <div className="flex items-center gap-2">
-                <HiOutlineClipboardList size={16} className="text-gray-600" />
+                <HiOutlineClipboardList
+                  size={16}
+                  className="text-gray-900 dark:text-white"
+                />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
                   {workOrders.length}
                 </span>
@@ -167,12 +187,12 @@ export const AppointmentCard = ({
               {isExpanded ? (
                 <HiOutlineChevronUp
                   size={16}
-                  className="ml-2 text-gray-500 dark:text-gray-400"
+                  className="ml-2 text-gray-900 dark:text-white"
                 />
               ) : (
                 <HiOutlineChevronDown
                   size={16}
-                  className="ml-2 text-gray-500 dark:text-gray-400"
+                  className="ml-2 text-gray-900 dark:text-white"
                 />
               )}
             </Button>
@@ -184,12 +204,12 @@ export const AppointmentCard = ({
               label={<HiOutlineDotsVertical size={20} />}
               className="overflow-hidden"
             >
-              <Dropdown.Item onClick={onRescheduleAppointment}>
+              <DropdownItem onClick={onRescheduleAppointment}>
                 Reschedule Appointment
-              </Dropdown.Item>
-              <Dropdown.Item onClick={onCancelAppointment}>
+              </DropdownItem>
+              <DropdownItem onClick={onCancelAppointment}>
                 Cancel Appointment
-              </Dropdown.Item>
+              </DropdownItem>
             </Dropdown>
           )}
           {!editable && showSelectButton && onSelect && (
@@ -211,30 +231,30 @@ export const AppointmentCard = ({
       >
         <div className="border-t dark:border-gray-700">
           <Table>
-            <Table.Head>
-              <Table.HeadCell>#</Table.HeadCell>
-              <Table.HeadCell>Description</Table.HeadCell>
-              <Table.HeadCell>Duration</Table.HeadCell>
-              <Table.HeadCell>Status</Table.HeadCell>
-              <Table.HeadCell className="text-right"></Table.HeadCell>
-            </Table.Head>
-            <Table.Body>
+            <TableHead>
+              <TableHeadCell>#</TableHeadCell>
+              <TableHeadCell>Description</TableHeadCell>
+              <TableHeadCell>Duration</TableHeadCell>
+              <TableHeadCell>Status</TableHeadCell>
+              <TableHeadCell className="text-right"></TableHeadCell>
+            </TableHead>
+            <TableBody>
               {workOrders.map((order, index) => (
-                <Table.Row 
+                <TableRow
                   key={order.id}
                   onClick={() => onWorkOrderClick?.(order.id)}
                   className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
-                  <Table.Cell className="text-gray-900 dark:text-white">
+                  <TableCell className="text-gray-900 dark:text-white">
                     {index + 1}
-                  </Table.Cell>
-                  <Table.Cell className="text-sm text-gray-500 dark:text-gray-400">
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-500 dark:text-gray-400">
                     {order.description}
-                  </Table.Cell>
-                  <Table.Cell className="text-sm text-gray-500 dark:text-gray-400">
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-500 dark:text-gray-400">
                     {order.duration}
-                  </Table.Cell>
-                  <Table.Cell>
+                  </TableCell>
+                  <TableCell>
                     <Badge
                       color={
                         order.status === "Active"
@@ -247,9 +267,9 @@ export const AppointmentCard = ({
                     >
                       {order.status}
                     </Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div 
+                  </TableCell>
+                  <TableCell>
+                    <div
                       className="flex justify-end"
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -259,22 +279,22 @@ export const AppointmentCard = ({
                         label={<HiOutlineDotsVertical size={16} />}
                         className="overflow-hidden"
                       >
-                        <Dropdown.Item
+                        <DropdownItem
                           onClick={() => onRescheduleWorkOrder?.(order.id)}
                         >
                           Reschedule Work Order
-                        </Dropdown.Item>
-                        <Dropdown.Item
+                        </DropdownItem>
+                        <DropdownItem
                           onClick={() => onCancelWorkOrder?.(order.id)}
                         >
                           Cancel Work Order
-                        </Dropdown.Item>
+                        </DropdownItem>
                       </Dropdown>
                     </div>
-                  </Table.Cell>
-                </Table.Row>
+                  </TableCell>
+                </TableRow>
               ))}
-            </Table.Body>
+            </TableBody>
           </Table>
         </div>
       </div>

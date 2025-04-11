@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Button, Dropdown, Badge } from "flowbite-react";
+import { Avatar, Badge, Button, Dropdown, DropdownItem } from "flowbite-react";
 import { Link } from "react-router-dom";
 import {
   HiDotsVertical,
@@ -130,9 +130,9 @@ export const ContactCard: React.FC<ContactCardProps> & {
                 placement="left-start"
               >
                 {actions.map((action, index) => (
-                  <Dropdown.Item key={index} onClick={action.onClick}>
+                  <DropdownItem key={index} onClick={action.onClick}>
                     {action.label}
-                  </Dropdown.Item>
+                  </DropdownItem>
                 ))}
               </Dropdown>
             )}

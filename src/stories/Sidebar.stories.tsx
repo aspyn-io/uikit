@@ -17,16 +17,16 @@ import {
  * The `Sidebar` component is an extension of the flowbite react sidebar component
  *
  * ```tsx
- * import Sidebar from './Sidebar';
+ * import Sidebar, { SidebarItemGroup, SidebarItem } from './Sidebar';
  *
  * const MySidebar = () => (
  *   <SidebarProvider>
  *     <Sidebar>
- *       <Sidebar.ItemGroup>
- *         <Sidebar.Item href="#" icon={HiChartPie}>Dashboard</Sidebar.Item>
- *         <Sidebar.Item href="#" icon={HiViewGrid}>Kanban</Sidebar.Item>
- *         <Sidebar.Item href="#" icon={HiInboxIn} label="3">Inbox</Sidebar.Item>
- *       </Sidebar.ItemGroup>
+ *       <SidebarItemGroup>
+ *         <SidebarItem href="#" icon={HiChartPie}>Dashboard</SidebarItem>
+ *         <SidebarItem href="#" icon={HiViewGrid}>Kanban</SidebarItem>
+ *         <SidebarItem href="#" icon={HiInboxIn} label="3">Inbox</SidebarItem>
+ *       </SidebarItemGroup>
  *     </Sidebar>
  *   </SidebarProvider>
  * );

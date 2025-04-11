@@ -3,7 +3,7 @@ import type { FC } from "react";
 import { Link } from "react-router-dom";
 import { DarkThemeToggle, TextInput, Tooltip } from "flowbite-react";
 import { HiMenuAlt1, HiSearch, HiOutlinePhotograph } from "react-icons/hi"; // Import placeholder icon
-import { Navbar as FlowbiteNavbar } from "flowbite-react";
+import { Navbar as FlowbiteNavbar, NavbarBrand } from "flowbite-react";
 import NotificationBellDropdown from "./NotificationBellDropdown";
 import AppDrawerDropdown from "./AppDrawerDropdown";
 import UserDropdown from "./UserDropdown";
@@ -66,12 +66,11 @@ export const Navbar: FC<NavbarProps> = function ({
                 </Tooltip>
               </Link>
             )}
-            <FlowbiteNavbar.Brand as={Link} to={contextTitleLink}>
-              {/* Update href to use titleLink */}
+            <NavbarBrand as={Link} href={contextTitleLink}>
               <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white border-l pl-3 border-gray-200 dark:border-gray-600 dark:border-">
                 {contextTitle}
               </span>
-            </FlowbiteNavbar.Brand>
+            </NavbarBrand>
             {contextShowSearch && (
               <form className="ml-16 hidden md:block">
                 <TextInput

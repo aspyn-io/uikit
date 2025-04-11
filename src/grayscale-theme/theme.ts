@@ -36,6 +36,10 @@ export const grayscaleTheme = createTheme({
   modal: {
     root: {
       base: "relative h-full w-full p-4 md:h-auto",
+      show: {
+        on: "flex bg-black/50 dark:bg-black/50",
+        off: "hidden",
+      },
     },
     body: {
       base: "p-6 pt-0",

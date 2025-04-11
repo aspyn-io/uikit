@@ -46,10 +46,20 @@ export const Modal: React.FC<ModalProps> & {
   }, [show, onClose]);
 
   return (
-    <FlowbiteModal show={show} onClose={onClose} {...rest}>
-      <div ref={modalRef} className="max-h-screen overflow-y-auto">
-        {children}
-      </div>
+    <FlowbiteModal
+      theme={{
+        root: {
+          show: {
+            on: "flex bg-black/50 dark:bg-black/50",
+            off: "hidden",
+          },
+        },
+      }}
+      show={show}
+      onClose={onClose}
+      {...rest}
+    >
+      {children}
     </FlowbiteModal>
   );
 };

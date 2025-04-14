@@ -5,7 +5,7 @@ import { DarkThemeToggle, TextInput, Tooltip } from "flowbite-react";
 import { HiMenuAlt1, HiSearch, HiOutlinePhotograph } from "react-icons/hi"; // Import placeholder icon
 import { Navbar as FlowbiteNavbar, NavbarBrand } from "flowbite-react";
 import NotificationBellDropdown from "./NotificationBellDropdown";
-import AppDrawerDropdown from "./AppDrawerDropdown";
+import AppDrawerDropdown, { AppSection } from "./AppDrawerDropdown"; // Import AppSection interface
 import UserDropdown from "./UserDropdown";
 import { NotificationItem } from "./NotificationItem";
 import { useNavbarContext } from "../../context/NavbarContext";
@@ -13,7 +13,7 @@ import { useNavbarContext } from "../../context/NavbarContext";
 interface NavbarProps {
   notifications?: NotificationItem[];
   onViewAllNotifications?: () => void;
-  appButtons?: { icon: React.ReactNode; title: string }[];
+  sections?: AppSection[]; // Replace appButtons with sections
   avatar?: string; // Make avatar optional
   username: string;
   email: string;
@@ -26,7 +26,7 @@ interface NavbarProps {
 export const Navbar: FC<NavbarProps> = function ({
   notifications = [],
   onViewAllNotifications,
-  appButtons = [],
+  sections = [],
   avatar,
   username,
   email,
@@ -94,7 +94,7 @@ export const Navbar: FC<NavbarProps> = function ({
               />
               <DarkThemeToggle />
               <AppDrawerDropdown
-                appButtons={appButtons}
+                sections={sections}
                 onClickExploreProducts={onClickExploreProducts}
               />
               <div className="ml-3">

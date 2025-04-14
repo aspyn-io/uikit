@@ -56,51 +56,71 @@ export default meta;
 type Story = StoryObj<typeof Navbar>;
 
 // TODO: Fix sizing of icons in the app button component
-const appButtons = [
+const sections = [
   {
-    icon: <HiShoppingBag className="h-8 w-8" />,
-    title: "Sales",
-    onClick: () => console.log("Sales clicked"),
+    label: "Section 1",
+    appButtons: [
+      {
+        icon: <HiShoppingBag className="h-8 w-8" />,
+        title: "Sales",
+        onClick: () => console.log("Sales clicked"),
+      },
+      {
+        icon: <HiUsers className="h-8 w-8" />,
+        title: "Users",
+        onClick: () => console.log("Users clicked"),
+      },
+    ],
   },
   {
-    icon: <HiUsers className="h-8 w-8" />,
-    title: "Users",
-    onClick: () => console.log("Users clicked"),
+    label: "Section 2",
+    appButtons: [
+      {
+        icon: <HiInbox className="h-8 w-8" />,
+        title: "Inbox",
+        onClick: () => console.log("Inbox clicked"),
+      },
+      {
+        icon: <HiUserCircle className="h-8 w-8" />,
+        title: "Profile",
+        onClick: () => console.log("Profile clicked"),
+      },
+    ],
   },
   {
-    icon: <HiInbox className="h-8 w-8" />,
-    title: "Inbox",
-    onClick: () => console.log("Inbox clicked"),
+    label: "Section 3",
+    appButtons: [
+      {
+        icon: <HiCog className="h-8 w-8" />,
+        title: "Settings",
+        onClick: () => console.log("Settings clicked"),
+      },
+      {
+        icon: <HiArchive className="h-8 w-8" />,
+        title: "Products",
+        onClick: () => console.log("Products clicked"),
+      },
+      {
+        icon: <HiCurrencyDollar className="h-8 w-8" />,
+        title: "Pricing",
+        onClick: () => console.log("Pricing clicked"),
+      },
+    ],
   },
   {
-    icon: <HiUserCircle className="h-8 w-8" />,
-    title: "Profile",
-    onClick: () => console.log("Profile clicked"),
-  },
-  {
-    icon: <HiCog className="h-8 w-8" />,
-    title: "Settings",
-    onClick: () => console.log("Settings clicked"),
-  },
-  {
-    icon: <HiArchive className="h-8 w-8" />,
-    title: "Products",
-    onClick: () => console.log("Products clicked"),
-  },
-  {
-    icon: <HiCurrencyDollar className="h-8 w-8" />,
-    title: "Pricing",
-    onClick: () => console.log("Pricing clicked"),
-  },
-  {
-    icon: <HiOutlineTicket className="h-8 w-8" />,
-    title: "Billing",
-    onClick: () => console.log("Billing clicked"),
-  },
-  {
-    icon: <HiLogout className="h-8 w-8" />,
-    title: "Logout",
-    onClick: () => console.log("Logout clicked"),
+    label: "Section 4",
+    appButtons: [
+      {
+        icon: <HiOutlineTicket className="h-8 w-8" />,
+        title: "Billing",
+        onClick: () => console.log("Billing clicked"),
+      },
+      {
+        icon: <HiLogout className="h-8 w-8" />,
+        title: "Logout",
+        onClick: () => console.log("Logout clicked"),
+      },
+    ],
   },
 ];
 
@@ -124,7 +144,7 @@ const NavbarWithSidebarMenu = () => {
       <Navbar
         logo={icon} // Rename icon to logo
         onViewAllNotifications={() => console.log("View all notifications")}
-        appButtons={appButtons}
+        sections={sections}
         avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
         username="Neil Sims"
         email="neil.sims@flowbite.com"
@@ -154,7 +174,7 @@ export const Default: Story = {
       <Navbar
         logo={icon} // Rename icon to logo
         onViewAllNotifications={() => console.log("View all notifications")}
-        appButtons={appButtons}
+        sections={sections}
         avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
         username="Neil Sims"
         email="neil.sims@flowbite.com"
@@ -179,7 +199,7 @@ export const NoSearch: Story = {
       <Navbar
         logo={icon} // Rename icon to logo
         onViewAllNotifications={() => console.log("View all notifications")}
-        appButtons={appButtons}
+        sections={sections}
         avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
         username="Neil Sims"
         email="neil.sims@flowbite.com"
@@ -196,7 +216,7 @@ export const NoAvatar: Story = {
       <Navbar
         logo={icon} // Rename icon to logo
         onViewAllNotifications={() => console.log("View all notifications")}
-        appButtons={appButtons}
+        sections={sections}
         username="Neil Sims"
         email="neil.sims@flowbite.com"
         userDropdownItems={userDropdownItems}
@@ -211,7 +231,7 @@ export const NoLogo: Story = {
     <NavbarProvider>
       <Navbar
         onViewAllNotifications={() => console.log("View all notifications")}
-        appButtons={appButtons}
+        sections={sections}
         avatar="https://i.pravatar.cc/300?img=6" // Optional avatar
         username="Neil Sims"
         email="neil.sims@flowbite.com"

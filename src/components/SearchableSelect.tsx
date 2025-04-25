@@ -259,6 +259,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
                   : 'border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'
               }
               ${disabled ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-600' : 'cursor-pointer'}
+              ${resetable && !multiple && selectedValues ? 'pr-10' : ''}
             `}
           >
             {/* Multi-select with tags */}
@@ -292,14 +293,16 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
             ) : (
               // Single-select display
               <span
-                className={
-                  !selectedValues
+                className={`
+                  ${!selectedValues
                     ? 'text-gray-400 dark:text-gray-400'
                     : 'text-gray-700 dark:text-white'
-                }
+                  }
+                  ${resetable && selectedValues ? 'pr-4 truncate block' : ''}
+                `}
               >
-    {getSingleDisplayText()}
-  </span>
+                {getSingleDisplayText()}
+              </span>
             )}
 
 
@@ -315,6 +318,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
               type="button"
               onClick={handleReset}
               className="absolute right-8 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+              aria-label="Clear selection"
             >
               <HiX className="h-4 w-4" />
             </button>

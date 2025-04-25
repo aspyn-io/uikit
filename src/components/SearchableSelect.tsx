@@ -368,7 +368,7 @@ const Search: FC<SearchProps> = ({
   if (!ctx) return null;
 
   const { searchTerm, setSearchTerm } = ctx;
-  const debounceTimeout = useRef<NodeJS.Timeout>();
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

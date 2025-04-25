@@ -137,6 +137,99 @@ export const GroupedOptions: Story = {
   },
 };
 
+// Demonstrating debounce options for the Search component
+export const SearchDebouncing: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<SearchableOption | null>(null);
+    const [searchLogs, setSearchLogs] = useState<string[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [debounceMs, setDebounceMs] = useState<number>(300);
+    
+    // This simulates what would normally go to an API
+    const handleSearch = (term: string) => {
+      const timestamp = new Date().toLocaleTimeString();
+      setSearchLogs(prev => [`${timestamp}: Search for "${term}"`, ...prev].slice(0, 5));
+      setSearchTerm(term);
+    };
+    
+    const options = [
+      { value: "apple", label: "Apple" },
+      { value: "banana", label: "Banana" },
+      { value: "cherry", label: "Cherry" },
+      { value: "date", label: "Date" },
+      { value: "elderberry", label: "Elderberry" },
+      { value: "fig", label: "Fig" },
+      { value: "grape", label: "Grape" }
+    ];
+    
+    // Filter options based on search term
+    const filteredOptions = options.filter(option => 
+      searchTerm === "" || 
+      option.label.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    return (
+      <div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Debounce Time (ms):</label>
+          <div className="flex gap-4 items-center">
+            <input 
+              type="range" 
+              min="0" 
+              max="2000" 
+              step="100" 
+              value={debounceMs} 
+              onChange={(e) => setDebounceMs(Number(e.target.value))}
+              className="w-64"
+            />
+            <span className="text-sm">{debounceMs}ms</span>
+          </div>
+        </div>
+        
+        <SearchableSelect
+          label="Search with Debouncing"
+          placeholder="Search fruits"
+          helperText="Try typing quickly to see how debouncing affects search events"
+          value={selected}
+          onChange={(val) => setSelected(val as SearchableOption)}
+        >
+          <SearchableSelect.Search 
+            placeholder="Type to search fruits..." 
+            debounceMs={debounceMs}
+            onChange={handleSearch}
+          />
+          {filteredOptions.map(option => (
+            <SearchableSelect.Option 
+              key={option.value}
+              value={option.value}
+              label={option.label}
+            />
+          ))}
+          {filteredOptions.length === 0 && (
+            <SearchableSelect.NoResults>No fruits match your search</SearchableSelect.NoResults>
+          )}
+        </SearchableSelect>
+        
+        <div className="mt-4 p-3 border border-gray-200 rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+          <h3 className="text-sm font-medium mb-2">Search Event Log (debounce: {debounceMs}ms)</h3>
+          {searchLogs.length > 0 ? (
+            <ul className="text-xs space-y-1">
+              {searchLogs.map((log, index) => (
+                <li key={index}>{log}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-xs text-gray-500 dark:text-gray-400">No search events yet. Try typing in the search box.</p>
+          )}
+        </div>
+      </div>
+    );
+  },
+  args: {
+    // No custom args needed as we're handling everything in the component
+  }
+};
+
 // Story demonstrating error state
 export const WithError: Story = {
   render: (args) => <SearchableSelectTemplate args={args} />,

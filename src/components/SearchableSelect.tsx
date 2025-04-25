@@ -36,6 +36,8 @@ export interface SearchableSelectProps {
   disabled?: boolean;
   /** Single select (false) or multi-select (true). */
   multiple?: boolean;
+  /** Whether the select can be reset by clicking X button (only applies to single select) */
+  resetable?: boolean;
   /** Child elements: <SearchableSelect.Search/>, <SearchableSelect.Option/>, etc. */
   children?: ReactNode;
   /** Callback when selection changes. */
@@ -85,6 +87,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   required = false,
   disabled = false,
   multiple = false,
+  resetable = false,
   children,
   onChange,
   value,
@@ -162,11 +165,15 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
 
       setSelectedValues(updatedValues);
       onChange?.(updatedValues);
+      // Reset search term after selection
+      setSearchTerm('');
     } else {
       // Single select: replace the value
       setSelectedValues(newValue);
       onChange?.(newValue);
       setIsOpen(false);
+      // Reset search term after selection
+      setSearchTerm('');
     }
   };
 
@@ -177,6 +184,13 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
     const updatedValues = current.filter((v) => v.value !== valToRemove.value);
     setSelectedValues(updatedValues);
     onChange?.(updatedValues);
+  };
+
+  // Handle reset button click
+  const handleReset = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedValues(null);
+    onChange?.(null);
   };
 
   // Sizing classes
@@ -295,6 +309,17 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
             </span>
           </button>
 
+          {/* Reset button (X) for single select */}
+          {resetable && !multiple && selectedValues && !disabled && (
+            <button
+              type="button"
+              onClick={handleReset}
+              className="absolute right-8 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+            >
+              <HiX className="h-4 w-4" />
+            </button>
+          )}
+
           {/* Dropdown menu */}
           {isOpen && (
             <div
@@ -329,6 +354,7 @@ interface SearchProps {
   onChange?: (term: string) => void;
   className?: string;
   disabled?: boolean;
+  debounceMs?: number;
 }
 
 const Search: FC<SearchProps> = ({
@@ -336,20 +362,44 @@ const Search: FC<SearchProps> = ({
   onChange,
   className = '',
   disabled,
+  debounceMs = 300,
 }) => {
   const ctx = useContext(SearchableSelectContext);
   if (!ctx) return null;
 
   const { searchTerm, setSearchTerm } = ctx;
+  const debounceTimeout = useRef<NodeJS.Timeout>();
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    onChange?.(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    // Clear existing timeout
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    // Set new timeout for the onChange callback
+    debounceTimeout.current = setTimeout(() => {
+      onChange?.(value);
+    }, debounceMs);
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, []);
 
   const clearSearch = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSearchTerm('');
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
     onChange?.('');
   };
 

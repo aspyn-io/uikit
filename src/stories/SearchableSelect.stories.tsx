@@ -20,7 +20,8 @@ const meta: Meta<typeof SearchableSelect> = {
     helperText: "Please select an option",
     multiple: false,
     error: false,
-    wrap: true
+    wrap: true,
+    resetable: false
   },
   argTypes: {
     label: {
@@ -34,6 +35,10 @@ const meta: Meta<typeof SearchableSelect> = {
     multiple: {
       control: "boolean",
       description: "Allow multiple selections.",
+    },
+    resetable: {
+      control: "boolean",
+      description: "Shows an X button to clear the selection (single select only).",
     },
     helperText: {
       control: "text",
@@ -89,6 +94,17 @@ export const MultiSelect: Story = {
     label: "Multi Select",
     placeholder: "Choose one or more options",
     multiple: true,
+  },
+};
+
+// Resetable single select story
+export const ResetableSelect: Story = {
+  render: (args) => <SearchableSelectTemplate args={args} />,
+  args: {
+    label: "Resetable Select",
+    placeholder: "Choose an option (can be cleared)",
+    resetable: true,
+    helperText: "Click the X button to clear your selection",
   },
 };
 
@@ -237,5 +253,43 @@ export const WithPagination: Story = {
     label: "Paginated Select",
     placeholder: "Select with pagination",
     helperText: "5 items per page, 10 total items"
+  }
+};
+
+// Demonstrate loading state
+export const Loading: Story = {
+  render: (args) => (
+    <SearchableSelect
+      {...args}
+      onChange={() => {}}
+      value={null}
+    >
+      <SearchableSelect.Search placeholder="Search options..." />
+      <SearchableSelect.Loading />
+    </SearchableSelect>
+  ),
+  args: {
+    label: "Loading State",
+    placeholder: "Loading options...",
+    helperText: "Showing the loading spinner while options are being fetched",
+  }
+};
+
+// Demonstrate empty state
+export const NoResults: Story = {
+  render: (args) => (
+    <SearchableSelect
+      {...args}
+      onChange={() => {}}
+      value={null}
+    >
+      <SearchableSelect.Search placeholder="Search options..." />
+      <SearchableSelect.NoResults>No matching options found</SearchableSelect.NoResults>
+    </SearchableSelect>
+  ),
+  args: {
+    label: "No Results State",
+    placeholder: "No results available",
+    helperText: "Showing the empty state when no options match search criteria",
   }
 };

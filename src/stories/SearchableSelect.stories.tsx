@@ -20,7 +20,8 @@ const meta: Meta<typeof SearchableSelect> = {
     helperText: "Please select an option",
     multiple: false,
     error: false,
-    wrap: true
+    wrap: true,
+    resetable: false
   },
   argTypes: {
     label: {
@@ -34,6 +35,10 @@ const meta: Meta<typeof SearchableSelect> = {
     multiple: {
       control: "boolean",
       description: "Allow multiple selections.",
+    },
+    resetable: {
+      control: "boolean",
+      description: "Shows an X button to clear the selection (single select only).",
     },
     helperText: {
       control: "text",
@@ -92,6 +97,17 @@ export const MultiSelect: Story = {
   },
 };
 
+// Resetable single select story
+export const ResetableSelect: Story = {
+  render: (args) => <SearchableSelectTemplate args={args} />,
+  args: {
+    label: "Resetable Select",
+    placeholder: "Choose an option (can be cleared)",
+    resetable: true,
+    helperText: "Click the X button to clear your selection",
+  },
+};
+
 // Grouped Options story example
 export const GroupedOptions: Story = {
   render: (args) => {
@@ -119,6 +135,99 @@ export const GroupedOptions: Story = {
     placeholder: "Choose an option",
     multiple: false,
   },
+};
+
+// Demonstrating debounce options for the Search component
+export const SearchDebouncing: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<SearchableOption | null>(null);
+    const [searchLogs, setSearchLogs] = useState<string[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [debounceMs, setDebounceMs] = useState<number>(300);
+    
+    // This simulates what would normally go to an API
+    const handleSearch = (term: string) => {
+      const timestamp = new Date().toLocaleTimeString();
+      setSearchLogs(prev => [`${timestamp}: Search for "${term}"`, ...prev].slice(0, 5));
+      setSearchTerm(term);
+    };
+    
+    const options = [
+      { value: "apple", label: "Apple" },
+      { value: "banana", label: "Banana" },
+      { value: "cherry", label: "Cherry" },
+      { value: "date", label: "Date" },
+      { value: "elderberry", label: "Elderberry" },
+      { value: "fig", label: "Fig" },
+      { value: "grape", label: "Grape" }
+    ];
+    
+    // Filter options based on search term
+    const filteredOptions = options.filter(option => 
+      searchTerm === "" || 
+      option.label.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    return (
+      <div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Debounce Time (ms):</label>
+          <div className="flex gap-4 items-center">
+            <input 
+              type="range" 
+              min="0" 
+              max="2000" 
+              step="100" 
+              value={debounceMs} 
+              onChange={(e) => setDebounceMs(Number(e.target.value))}
+              className="w-64"
+            />
+            <span className="text-sm">{debounceMs}ms</span>
+          </div>
+        </div>
+        
+        <SearchableSelect
+          label="Search with Debouncing"
+          placeholder="Search fruits"
+          helperText="Try typing quickly to see how debouncing affects search events"
+          value={selected}
+          onChange={(val) => setSelected(val as SearchableOption)}
+        >
+          <SearchableSelect.Search 
+            placeholder="Type to search fruits..." 
+            debounceMs={debounceMs}
+            onChange={handleSearch}
+          />
+          {filteredOptions.map(option => (
+            <SearchableSelect.Option 
+              key={option.value}
+              value={option.value}
+              label={option.label}
+            />
+          ))}
+          {filteredOptions.length === 0 && (
+            <SearchableSelect.NoResults>No fruits match your search</SearchableSelect.NoResults>
+          )}
+        </SearchableSelect>
+        
+        <div className="mt-4 p-3 border border-gray-200 rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+          <h3 className="text-sm font-medium mb-2">Search Event Log (debounce: {debounceMs}ms)</h3>
+          {searchLogs.length > 0 ? (
+            <ul className="text-xs space-y-1">
+              {searchLogs.map((log, index) => (
+                <li key={index}>{log}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-xs text-gray-500 dark:text-gray-400">No search events yet. Try typing in the search box.</p>
+          )}
+        </div>
+      </div>
+    );
+  },
+  args: {
+    // No custom args needed as we're handling everything in the component
+  }
 };
 
 // Story demonstrating error state
@@ -237,5 +346,43 @@ export const WithPagination: Story = {
     label: "Paginated Select",
     placeholder: "Select with pagination",
     helperText: "5 items per page, 10 total items"
+  }
+};
+
+// Demonstrate loading state
+export const Loading: Story = {
+  render: (args) => (
+    <SearchableSelect
+      {...args}
+      onChange={() => {}}
+      value={null}
+    >
+      <SearchableSelect.Search placeholder="Search options..." />
+      <SearchableSelect.Loading />
+    </SearchableSelect>
+  ),
+  args: {
+    label: "Loading State",
+    placeholder: "Loading options...",
+    helperText: "Showing the loading spinner while options are being fetched",
+  }
+};
+
+// Demonstrate empty state
+export const NoResults: Story = {
+  render: (args) => (
+    <SearchableSelect
+      {...args}
+      onChange={() => {}}
+      value={null}
+    >
+      <SearchableSelect.Search placeholder="Search options..." />
+      <SearchableSelect.NoResults>No matching options found</SearchableSelect.NoResults>
+    </SearchableSelect>
+  ),
+  args: {
+    label: "No Results State",
+    placeholder: "No results available",
+    helperText: "Showing the empty state when no options match search criteria",
   }
 };

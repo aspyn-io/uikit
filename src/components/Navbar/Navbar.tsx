@@ -1,11 +1,14 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import type { FC } from "react";
 import { Link } from "react-router-dom";
 import { DarkThemeToggle, TextInput, Tooltip } from "flowbite-react";
-import { HiMenuAlt1, HiSearch, HiOutlinePhotograph } from "react-icons/hi"; // Import placeholder icon
+import {
+  HiMenuAlt1,
+  HiSearch,
+  HiOutlineInformationCircle,
+} from "react-icons/hi";
 import { Navbar as FlowbiteNavbar, NavbarBrand } from "flowbite-react";
 import NotificationBellDropdown from "./NotificationBellDropdown";
-import AppDrawerDropdown, { AppSection } from "./AppDrawerDropdown"; // Import AppSection interface
+import AppDrawerDropdown, { AppSection } from "./AppDrawerDropdown";
 import UserDropdown from "./UserDropdown";
 import { NotificationItem } from "./NotificationItem";
 import { useNavbarContext } from "../../context/NavbarContext";
@@ -13,14 +16,15 @@ import { useNavbarContext } from "../../context/NavbarContext";
 interface NavbarProps {
   notifications?: NotificationItem[];
   onViewAllNotifications?: () => void;
-  sections?: AppSection[]; // Replace appButtons with sections
-  avatar?: string; // Make avatar optional
+  sections?: AppSection[];
+  avatar?: string;
   username: string;
   email: string;
   userDropdownItems: { title: string; onClick?: () => void }[];
-  onClickExploreProducts?: () => void; // Add this prop to handle Explore Products click
-  logo?: string; // Rename icon to logo
-  logoLink?: string; // Add logoLink prop
+  onClickExploreProducts?: () => void;
+  logo?: string;
+  logoLink?: string;
+  helpLink?: string;
 }
 
 export const Navbar: FC<NavbarProps> = function ({
@@ -31,9 +35,10 @@ export const Navbar: FC<NavbarProps> = function ({
   username,
   email,
   userDropdownItems,
-  onClickExploreProducts, // Add this prop to handle Explore Products click
-  logo, // Rename icon to logo
-  logoLink = "/", // Default value for logoLink
+  onClickExploreProducts,
+  logo,
+  logoLink = "/",
+  helpLink = "https://www.aptivenotes.com",
 }) {
   const {
     title: contextTitle,
@@ -41,7 +46,7 @@ export const Navbar: FC<NavbarProps> = function ({
     onSearch: contextOnSearch,
     isSidebarCollapsed,
     setIsSidebarCollapsed,
-    titleLink: contextTitleLink, // Add titleLink from context
+    titleLink: contextTitleLink,
   } = useNavbarContext();
 
   return (
@@ -88,6 +93,16 @@ export const Navbar: FC<NavbarProps> = function ({
           </div>
           <div className="flex items-center lg:gap-3">
             <div className="flex items-center">
+              {helpLink && (
+                <a
+                  href={helpLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mr-3"
+                >
+                  <HiOutlineInformationCircle className="h-6 w-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
+                </a>
+              )}
               <NotificationBellDropdown
                 notifications={notifications}
                 onViewAll={onViewAllNotifications}

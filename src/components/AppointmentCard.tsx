@@ -232,11 +232,13 @@ export const AppointmentCard = ({
         <div className="border-t dark:border-gray-700">
           <Table>
             <TableHead>
-              <TableHeadCell>#</TableHeadCell>
-              <TableHeadCell>Description</TableHeadCell>
-              <TableHeadCell>Duration</TableHeadCell>
-              <TableHeadCell>Status</TableHeadCell>
-              <TableHeadCell className="text-right"></TableHeadCell>
+              <TableRow>
+                <TableHeadCell>#</TableHeadCell>
+                <TableHeadCell>Description</TableHeadCell>
+                <TableHeadCell>Duration</TableHeadCell>
+                <TableHeadCell>Status</TableHeadCell>
+                <TableHeadCell className="text-right"></TableHeadCell>
+              </TableRow>
             </TableHead>
             <TableBody>
               {workOrders.map((order, index) => (

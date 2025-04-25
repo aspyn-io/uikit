@@ -1,35 +1,43 @@
 import React from "react";
-import { Badge, Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
+import {
+  Badge,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "flowbite-react";
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'draft':
-      return 'gray';
-    case 'open':
-      return 'blue';
-    case 'paid':
-      return 'green';
-    case 'uncoolectible':
-      return 'red';
-    case 'void':
-      return 'yellow';
+    case "draft":
+      return "gray";
+    case "open":
+      return "blue";
+    case "paid":
+      return "green";
+    case "uncoolectible":
+      return "red";
+    case "void":
+      return "yellow";
     default:
-      return 'gray';
+      return "gray";
   }
 };
 
 const getStatusText = (status: string) => {
   switch (status) {
-    case 'open':
-      return 'Finalized';
+    case "open":
+      return "Finalized";
     default:
       return status.charAt(0).toUpperCase() + status.slice(1);
   }
 };
 
-const formatCurrency = (amount: number, currency: string = 'USD'): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
+const formatCurrency = (amount: number, currency: string = "USD"): string => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
     currency: currency.toUpperCase(),
   }).format(amount / 100);
 };
@@ -45,21 +53,21 @@ type Contact = {
     country: string;
   };
   email: string;
-}
+};
 
 interface InvoiceDetailProps {
   number: string;
   createdDate: string;
   dueDate: string;
-  status: 'draft' | 'open' | 'paid' | 'uncollectible' | 'void'
-  invoicer?: Contact
-  customer: Contact,
+  status: "draft" | "open" | "paid" | "uncollectible" | "void";
+  invoicer?: Contact;
+  customer: Contact;
   items: {
     id: string;
     description: string;
     quantity: number;
     amount: number;
-  }[],
+  }[];
   subtotal: number;
   tax: number;
   amountShipping: number;
@@ -79,10 +87,12 @@ export const InvoiceDetail: React.FC<InvoiceDetailProps> = ({
   tax,
   amountShipping,
   total,
-  className
+  className,
 }) => {
   return (
-    <div className={`bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden mb-6 ${className}`}>
+    <div
+      className={`bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden mb-6 ${className}`}
+    >
       <div className="p-6 border-b dark:border-gray-700">
         <div className="flex justify-between mb-4">
           <div>
@@ -113,27 +123,31 @@ export const InvoiceDetail: React.FC<InvoiceDetailProps> = ({
             </h3>
             {invoicer && (
               <>
-                <p className="text-gray-600 dark:text-gray-400">{invoicer.name}</p>
-                  {invoicer.address && (
-                    <>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {invoicer.name}
+                </p>
+                {invoicer.address && (
+                  <>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {invoicer.address.line1}
+                    </p>
+                    {invoicer.address.line2 && (
                       <p className="text-gray-600 dark:text-gray-400">
-                        {invoicer.address.line1}
+                        {invoicer.address.line2}
                       </p>
-                      {invoicer.address.line2 && (
-                        <p className="text-gray-600 dark:text-gray-400">
-                          {invoicer.address.line2}
-                        </p>
-                      )}
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {invoicer.address.city}, {invoicer.address.state}{' '}
-                        {invoicer.address.postal_code}
-                      </p>
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {invoicer.address.country}
-                      </p>
-                    </>
-                  )}
-                  <p className="text-gray-600 dark:text-gray-400">{invoicer.email}</p>
+                    )}
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {invoicer.address.city}, {invoicer.address.state}{" "}
+                      {invoicer.address.postal_code}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {invoicer.address.country}
+                    </p>
+                  </>
+                )}
+                <p className="text-gray-600 dark:text-gray-400">
+                  {invoicer.email}
+                </p>
               </>
             )}
           </div>
@@ -154,7 +168,7 @@ export const InvoiceDetail: React.FC<InvoiceDetailProps> = ({
                   </p>
                 )}
                 <p className="text-gray-600 dark:text-gray-400">
-                  {customer.address.city}, {customer.address.state}{' '}
+                  {customer.address.city}, {customer.address.state}{" "}
                   {customer.address.postal_code}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400">
@@ -170,19 +184,21 @@ export const InvoiceDetail: React.FC<InvoiceDetailProps> = ({
       <div className="overflow-x-auto">
         <Table hoverable>
           <TableHead>
-            <TableHeadCell>Product Name</TableHeadCell>
-            <TableHeadCell>Qty</TableHeadCell>
-            <TableHeadCell>Price</TableHeadCell>
-            <TableHeadCell>Total Price</TableHeadCell>
+            <TableRow>
+              <TableHeadCell>Product Name</TableHeadCell>
+              <TableHeadCell>Qty</TableHeadCell>
+              <TableHeadCell>Price</TableHeadCell>
+              <TableHeadCell>Total Price</TableHeadCell>
+            </TableRow>
           </TableHead>
           <TableBody>
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.description}</TableCell>
                 <TableCell>{item.quantity}</TableCell>
-                <TableCell>{formatCurrency(item.amount, 'USD')}</TableCell>
+                <TableCell>{formatCurrency(item.amount, "USD")}</TableCell>
                 <TableCell>
-                  {formatCurrency(item.amount * item.quantity, 'USD')}
+                  {formatCurrency(item.amount * item.quantity, "USD")}
                 </TableCell>
               </TableRow>
             ))}
@@ -195,17 +211,19 @@ export const InvoiceDetail: React.FC<InvoiceDetailProps> = ({
           <div>
             <p className="text-gray-600 dark:text-gray-400">Subtotal:</p>
             <p className="text-gray-600 dark:text-gray-400">Tax:</p>
-            <p className="text-gray-600 dark:text-gray-400">Shipping estimate:</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              Shipping estimate:
+            </p>
           </div>
           <div>
             <p className="text-gray-900 dark:text-white">
-              {formatCurrency(subtotal, 'USD')}
+              {formatCurrency(subtotal, "USD")}
             </p>
             <p className="text-gray-900 dark:text-white">
-              {formatCurrency(tax, 'USD')}
+              {formatCurrency(tax, "USD")}
             </p>
             <p className="text-gray-900 dark:text-white">
-              {formatCurrency(amountShipping, 'USD')}
+              {formatCurrency(amountShipping, "USD")}
             </p>
           </div>
         </div>
@@ -214,7 +232,7 @@ export const InvoiceDetail: React.FC<InvoiceDetailProps> = ({
             Order total:
           </h3>
           <h3 className="font-bold text-lg text-gray-900 dark:text-white">
-            {formatCurrency(total, 'USD')}
+            {formatCurrency(total, "USD")}
           </h3>
         </div>
       </div>

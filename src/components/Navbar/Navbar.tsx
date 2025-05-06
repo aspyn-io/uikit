@@ -21,7 +21,6 @@ interface NavbarProps {
   username: string;
   email: string;
   userDropdownItems: { title: string; onClick?: () => void }[];
-  onClickExploreProducts?: () => void;
   logo?: string;
   logoLink?: string;
   helpLink?: string;
@@ -35,7 +34,6 @@ export const Navbar: FC<NavbarProps> = function ({
   username,
   email,
   userDropdownItems,
-  onClickExploreProducts,
   logo,
   logoLink = "/",
   helpLink = "https://www.aptivenotes.com",
@@ -108,10 +106,7 @@ export const Navbar: FC<NavbarProps> = function ({
                 onViewAll={onViewAllNotifications}
               />
               <DarkThemeToggle />
-              <AppDrawerDropdown
-                sections={sections}
-                onClickExploreProducts={onClickExploreProducts}
-              />
+              <AppDrawerDropdown sections={sections} />
               <div className="ml-3">
                 <UserDropdown
                   avatar={avatar}

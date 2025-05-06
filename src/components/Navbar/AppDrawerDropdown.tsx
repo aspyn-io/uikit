@@ -1,42 +1,19 @@
 import type { FC } from "react";
-import { useState } from "react";
 import { Dropdown } from "flowbite-react";
 import { HiViewGrid } from "react-icons/hi";
 import AppButton from "./AppButton";
-import { Spinner } from "flowbite-react";
+import { Link } from "react-router-dom";
 
 export interface AppSection {
   label: string;
-  appButtons: { icon: React.ReactNode; title: string; onClick?: () => void }[];
+  appButtons: { icon: React.ReactNode; title: string; to: string }[];
 }
 
 interface AppDrawerDropdownProps {
-  sections: AppSection[]; // Update to accept sections
-  onClickExploreProducts?: () => void;
+  sections: AppSection[];
 }
 
-const AppDrawerDropdown: FC<AppDrawerDropdownProps> = ({
-  sections,
-  onClickExploreProducts,
-}) => {
-  const [loadingButtonIndex, setLoadingButtonIndex] = useState<{
-    section: number;
-    button: number;
-  } | null>(null);
-
-  const handleButtonClick = (
-    sectionIndex: number,
-    buttonIndex: number,
-    onClick?: () => void
-  ) =>
-    onClick &&
-    (async () => {
-      setLoadingButtonIndex({ section: sectionIndex, button: buttonIndex });
-      await Promise.resolve(onClick()).finally(() =>
-        setLoadingButtonIndex(null)
-      );
-    })();
-
+const AppDrawerDropdown: FC<AppDrawerDropdownProps> = ({ sections }) => {
   return (
     <Dropdown
       arrowIcon={false}
@@ -49,11 +26,7 @@ const AppDrawerDropdown: FC<AppDrawerDropdownProps> = ({
         </span>
       }
     >
-      <div className="block rounded-t-lg bg-white dark:bg-gray-700 py-2 px-4 text-center text-base font-medium text-gray-700 dark:text-gray-400">
-        Apps
-      </div>
-      <div className="border-b border-gray-300 dark:border-gray-500 mx-4"></div>
-      <div className="space-y-6 p-4 bg-white dark:bg-gray-700 rounded-b-lg">
+      <div className="space-y-6 p-4 bg-white dark:bg-gray-700 rounded-lg">
         {sections.map((section, sectionIndex) => (
           <div key={sectionIndex}>
             <div className="mb-2 text-sm text-gray-600 dark:text-gray-300">
@@ -63,22 +36,9 @@ const AppDrawerDropdown: FC<AppDrawerDropdownProps> = ({
               {section.appButtons.map((appButton, buttonIndex) => (
                 <AppButton
                   key={buttonIndex}
-                  icon={
-                    loadingButtonIndex?.section === sectionIndex &&
-                    loadingButtonIndex?.button === buttonIndex ? (
-                      <Spinner />
-                    ) : (
-                      appButton.icon
-                    )
-                  }
+                  icon={appButton.icon}
                   title={appButton.title}
-                  onClick={() =>
-                    handleButtonClick(
-                      sectionIndex,
-                      buttonIndex,
-                      appButton.onClick
-                    )
-                  }
+                  to={appButton.to}
                 />
               ))}
             </div>

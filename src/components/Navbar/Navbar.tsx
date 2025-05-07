@@ -27,7 +27,7 @@ interface NavbarProps {
 }
 
 export const Navbar: FC<NavbarProps> = function ({
-  notifications = [],
+  notifications,
   onViewAllNotifications,
   sections = [],
   avatar,

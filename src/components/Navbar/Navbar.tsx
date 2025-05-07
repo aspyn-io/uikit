@@ -101,10 +101,12 @@ export const Navbar: FC<NavbarProps> = function ({
                   <HiOutlineInformationCircle className="h-6 w-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" />
                 </a>
               )}
-              <NotificationBellDropdown
-                notifications={notifications}
-                onViewAll={onViewAllNotifications}
-              />
+              {notifications && (
+                <NotificationBellDropdown
+                  notifications={notifications}
+                  onViewAll={onViewAllNotifications}
+                />
+              )}
               <DarkThemeToggle />
               <AppDrawerDropdown sections={sections} />
               <div className="ml-3">

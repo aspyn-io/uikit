@@ -1,5 +1,11 @@
 import { useState, useRef } from "react";
-import { format, isToday, isTomorrow, differenceInDays } from "date-fns";
+import {
+  format,
+  isToday,
+  isTomorrow,
+  differenceInDays,
+  isYesterday,
+} from "date-fns";
 import {
   Badge,
   Button,
@@ -86,7 +92,13 @@ export const AppointmentCard = ({
   let daysLabel = "";
   if (isToday(date)) daysLabel = "Today";
   else if (isTomorrow(date)) daysLabel = "Tomorrow";
-  else if (daysDifference < 7) daysLabel = `${daysDifference} days`;
+  else if (daysDifference > 0 && daysDifference < 7)
+    daysLabel = `${daysDifference} days`;
+  else if (isYesterday(date)) daysLabel = "Yesterday";
+  else if (daysDifference < 0)
+    daysLabel = `${Math.abs(daysDifference)} day${
+      Math.abs(daysDifference) > 1 ? "s" : ""
+    } ago`;
   else
     daysLabel = `${Math.ceil(daysDifference / 7)} week${
       daysDifference > 7 ? "s" : ""
@@ -259,40 +271,51 @@ export const AppointmentCard = ({
                   <TableCell>
                     <Badge
                       color={
-                        order.status === "Active"
+                        order.status === "CREATED" ||
+                        order.status === "SCHEDULED"
+                          ? "info"
+                          : order.status === "COMPLETED"
                           ? "success"
-                          : order.status === "Pending"
+                          : order.status === "DEFERRED"
                           ? "warning"
+                          : order.status === "CANCELLED"
+                          ? "failure"
                           : "gray"
                       }
                       className="inline-block capitalize"
                     >
-                      {order.status}
+                      {order.status.toLowerCase()}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <div
-                      className="flex justify-end"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Dropdown
-                        inline
-                        arrowIcon={false}
-                        label={<HiOutlineDotsVertical size={16} />}
-                        className="overflow-hidden"
+                    {(onRescheduleWorkOrder || onCancelWorkOrder) && (
+                      <div
+                        className="flex justify-end"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <DropdownItem
-                          onClick={() => onRescheduleWorkOrder?.(order.id)}
+                        <Dropdown
+                          inline
+                          arrowIcon={false}
+                          label={<HiOutlineDotsVertical size={16} />}
+                          className="overflow-hidden"
                         >
-                          Reschedule Work Order
-                        </DropdownItem>
-                        <DropdownItem
-                          onClick={() => onCancelWorkOrder?.(order.id)}
-                        >
-                          Cancel Work Order
-                        </DropdownItem>
-                      </Dropdown>
-                    </div>
+                          {onRescheduleWorkOrder && (
+                            <DropdownItem
+                              onClick={() => onRescheduleWorkOrder(order.id)}
+                            >
+                              Reschedule Work Order
+                            </DropdownItem>
+                          )}
+                          {onCancelWorkOrder && (
+                            <DropdownItem
+                              onClick={() => onCancelWorkOrder(order.id)}
+                            >
+                              Cancel Work Order
+                            </DropdownItem>
+                          )}
+                        </Dropdown>
+                      </div>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

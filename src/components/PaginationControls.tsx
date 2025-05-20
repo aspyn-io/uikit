@@ -10,6 +10,12 @@ type PaginationControlsProps = {
   pageSize: number;
   setPageSize: (size: number) => void;
   pageSizes?: number[];
+  /** Total number of items in the collection */
+  totals?: number;
+  /** Starting index of the current page (1-based). Defaults to 1 if totals is provided */
+  startIndex?: number;
+  /** Ending index of the current page. Defaults to min(pageSize, totals) if totals is provided */
+  endIndex?: number;
 };
 
 export const PaginationControls: FC<PaginationControlsProps> = ({
@@ -20,7 +26,16 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
   pageSize = 25,
   setPageSize,
   pageSizes = [5, 10, 25, 50],
-}) => (
+  totals,
+  startIndex,
+  endIndex,
+}) => {
+  // Calculate start and end indices if totals is provided but indices are not
+  const showTotals = typeof totals === 'number';
+  const displayStartIndex = showTotals ? (startIndex ?? 1) : undefined;
+  const displayEndIndex = showTotals ? (endIndex ?? Math.min(pageSize, totals!)) : undefined;
+
+  return (
   <div className="flex items-center justify-between">
     <div className="flex items-center">
       <span className="text-sm dark:text-white">Rows per page:</span>
@@ -36,6 +51,13 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
         ))}
       </Select>
     </div>
+    
+    {showTotals && (
+      <div className="text-sm text-gray-700 dark:text-gray-400">
+        Showing {displayStartIndex}-{displayEndIndex} of {totals}
+      </div>
+    )}
+    
     <div className="flex items-center space-x-2">
       <Button color="gray" onClick={handlePrevPage} disabled={!prevPage} className="flex items-center">
         <HiChevronLeft className="mr-1 self-center" />
@@ -47,6 +69,7 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
       </Button>
     </div>
   </div>
-);
+  );
+};
 
 export default PaginationControls;

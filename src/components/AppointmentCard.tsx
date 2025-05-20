@@ -114,7 +114,7 @@ export const AppointmentCard = ({
   };
 
   return (
-    <div className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300">
+    <div className="border border-gray-200 rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300">
       <div className="grid grid-cols-[60%_40%] items-center p-4">
         <div className="flex items-center gap-6">
           <button

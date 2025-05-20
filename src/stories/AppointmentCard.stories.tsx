@@ -71,6 +71,33 @@ export const EditState: Story = {
   },
 };
 
+// Dark Mode Story
+export const DarkMode: Story = {
+  parameters: {
+    themes: {
+      defaultTheme: 'dark',
+    },
+  },
+  args: {
+    datetime: today,
+    status: "Scheduled",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    editable: true,
+    workOrders: workOrders,
+    onCancelWorkOrder: (id: string) => console.log("Canceled Work Order:", id),
+    onRescheduleWorkOrder: (id: string) =>
+      console.log("Rescheduled Work Order:", id),
+    onWorkOrderClick: (id: string) => console.log("Clicked Work Order:", id),
+    onRescheduleAppointment: () => console.log("Rescheduled Appointment"),
+    onCancelAppointment: () => console.log("Canceled Appointment"),
+    showIcons: true,
+    appointmentId: "APT123",
+    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
+  },
+};
+
 // With Select Button
 export const WithoutSelectButton: Story = {
   args: {

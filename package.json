@@ -31,6 +31,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "storybook": "storybook dev -p 6006",
+    "storybook:clean": "rm -rf node_modules/.cache/storybook && storybook dev -p 6006",
     "build:storybook": "storybook build",
     "prepare": "husky install",
     "postinstall": "flowbite-react patch"

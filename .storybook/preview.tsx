@@ -1,7 +1,7 @@
 import "../src/index.css";
 import { Preview } from "@storybook/react";
 import { withThemeByClassName } from '@storybook/addon-themes';
-import React from "react";
+import React, { useEffect } from "react";
 
 /** @type { import('@storybook/react').Preview } */
 const preview: Preview = {
@@ -37,8 +37,25 @@ const preview: Preview = {
       defaultTheme: 'light',
     }),
     (Story, context) => {
+      // Force theme to be explicitly set from Storybook controls
       const isDark = context.globals.theme === 'dark';
-      document.documentElement.classList.toggle("dark", isDark);
+      
+      // Set initial theme state
+      useEffect(() => {
+        // First, force remove any dark class that might be set
+        document.documentElement.classList.remove("dark");
+        
+        // Then only add it if explicitly dark
+        if (isDark) {
+          document.documentElement.classList.add("dark");
+        }
+        
+        // Also set a data attribute that components can read
+        document.documentElement.setAttribute('data-mode', isDark ? 'dark' : 'light');
+        
+        // Set localStorage to match current theme (to override Flowbite's stored preference)
+        localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+      }, [isDark]);
 
       return (
         <div className={`${isDark ? "dark bg-gray-900" : "bg-white"} p-4`}>
@@ -50,5 +67,9 @@ const preview: Preview = {
 
   tags: ["autodocs"],
 };
+
+export default preview;
+
+export default preview;
 
 export default preview;

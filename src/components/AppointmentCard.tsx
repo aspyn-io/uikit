@@ -105,9 +105,11 @@ export const AppointmentCard = ({
     }`;
 
   const toggleExpanded = () => {
-    setIsExpanded((prev) => !prev);
+    const newIsExpanded = !isExpanded;
+    setIsExpanded(newIsExpanded);
+    
     if (contentRef.current) {
-      setMaxHeight(isExpanded ? 0 : contentRef.current.scrollHeight);
+      setMaxHeight(newIsExpanded ? contentRef.current.scrollHeight : 0);
     }
   };
 
@@ -237,11 +239,11 @@ export const AppointmentCard = ({
         </div>
       </div>
       <div
-        className="transition-max-height duration-300 ease-in-out overflow-hidden"
+        className="transition-all duration-300 ease-in-out overflow-hidden"
         style={{ maxHeight: `${maxHeight}px` }}
         ref={contentRef}
       >
-        <div className="border-t dark:border-gray-700">
+        <div className="border-t dark:border-gray-700 relative z-10 bg-white dark:bg-gray-800">
           <Table>
             <TableHead>
               <TableRow>

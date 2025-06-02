@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { Dropdown, DropdownItem } from "flowbite-react";
 import PaymentMethodCard from "../components/PaymentMethodCard";
 

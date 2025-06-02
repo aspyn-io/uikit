@@ -1,8 +1,8 @@
 import "../src/index.css";
-import { Preview } from "@storybook/react";
+import { Preview } from "@storybook/react-vite";
 import React from "react";
 
-/** @type { import('@storybook/react').Preview } */
+/** @type { import('@storybook/react-vite').Preview } */
 const preview: Preview = {
   parameters: {
     backgrounds: {

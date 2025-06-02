@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import Sidebar from "../components/Sidebar";
 import { useEffect } from "react";
 import { NavbarProvider, useNavbarContext } from "../context/NavbarContext";

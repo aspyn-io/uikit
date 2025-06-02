@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { PhoneNumberInput } from '../components/PhoneNumberInput';
 
 const meta: Meta<typeof PhoneNumberInput> = {

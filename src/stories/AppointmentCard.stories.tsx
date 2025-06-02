@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { AppointmentCard } from "../components/AppointmentCard";
 
 const meta: Meta<typeof AppointmentCard> = {

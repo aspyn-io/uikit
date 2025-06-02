@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import React, { useState } from 'react';
 import { HiOutlineCode } from 'react-icons/hi';
 import JsonViewer from '../components/JsonViewer';

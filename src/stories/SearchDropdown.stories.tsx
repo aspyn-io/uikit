@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from 'react';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import { SearchDropdown, SearchDropdownProps } from '../components/SearchDropdown';
  
 const meta: Meta<typeof SearchDropdown> = {

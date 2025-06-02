@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { SubscriptionCard } from "../components/SubscriptionCard";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
 import { BrowserRouter } from "react-router-dom";

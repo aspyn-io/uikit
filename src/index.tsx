@@ -28,8 +28,8 @@ export {
   SearchDropdownProps,
 } from "./components/SearchDropdown";
 export {
-  PhoneNumberInput,
-  PhoneNumberInputProps,
+  default as PhoneNumberInput,
+  PhoneInputProps,
 } from "./components/PhoneNumberInput";
 export {
   default as TimeWindowModal,

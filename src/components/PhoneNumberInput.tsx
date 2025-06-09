@@ -7,7 +7,7 @@ import { Button, Popover, TextInput } from "flowbite-react";
 import { twMerge } from "flowbite-react/helpers/tailwind-merge";
 import { getCountryCallingCode } from "react-phone-number-input";
 
-type PhoneInputProps = Omit<
+export type PhoneInputProps = Omit<
   React.ComponentProps<"input">,
   "onChange" | "value" | "ref"
 > &

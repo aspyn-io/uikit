@@ -1,121 +1,190 @@
-import React, { useState } from "react";
-import { TextInput, HelperText } from "flowbite-react";
-import { HiPhone } from "react-icons/hi";
+import * as React from "react";
+import { HiCheck, HiChevronDown, HiSearch } from "react-icons/hi";
+import * as RPNInput from "react-phone-number-input";
+import flags from "react-phone-number-input/flags";
 
-interface Country {
-  code: string;
-  label: string;
-  flag: string;
-}
+import { Button, Popover, TextInput } from "flowbite-react";
+import { twMerge } from "flowbite-react/helpers/tailwind-merge";
+import { getCountryCallingCode } from "react-phone-number-input";
 
-interface PhoneNumberInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-  countries: Country[];
-}
-
-const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
-  value,
-  onChange,
-  placeholder = "Enter phone number",
-  className,
-  countries,
-}) => {
-  const [isValid, setIsValid] = useState(true);
-  const [selectedCountryCode, setSelectedCountryCode] = useState(
-    countries[0].code
-  );
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    const formattedValue = inputValue.replace(/\D/g, ""); // Remove non-numeric characters
-    setIsValid(/^\d{10,15}$/.test(formattedValue)); // Basic validation for phone numbers with 10-15 digits
-    onChange(`${selectedCountryCode}${formattedValue}`);
+type PhoneInputProps = Omit<
+  React.ComponentProps<"input">,
+  "onChange" | "value" | "ref"
+> &
+  Omit<RPNInput.Props<typeof RPNInput.default>, "onChange"> & {
+    onChange?: (value: RPNInput.Value) => void;
   };
 
-  const handleCountryCodeChange = (code: string) => {
-    setSelectedCountryCode(code);
-    onChange(`${code}${value.replace(selectedCountryCode, "")}`);
-    setDropdownOpen(false);
+const PhoneNumberInput: React.ForwardRefExoticComponent<PhoneInputProps> =
+  React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
+    ({ className, onChange, value, ...props }, ref) => {
+      return (
+        <RPNInput.default
+          ref={ref}
+          className={twMerge("flex", className)}
+          flagComponent={FlagComponent}
+          countrySelectComponent={CountrySelect}
+          inputComponent={InputComponent}
+          smartCaret={false}
+          limitMaxLength
+          addInternationalOption={false}
+          value={value || undefined}
+          /**
+           * Handles the onChange event.
+           *
+           * react-phone-number-input might trigger the onChange event as undefined
+           * when a valid phone number is not entered. To prevent this,
+           * the value is coerced to an empty string.
+           *
+           * @param {E164Number | undefined} value - The entered value
+           */
+          onChange={(value) => onChange?.(value || ("" as RPNInput.Value))}
+          {...props}
+        />
+      );
+    }
+  );
+PhoneNumberInput.displayName = "PhoneNumberInput";
+
+const InputComponent = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<"input">
+>(({ className, ...props }, ref) => (
+  <TextInput
+    id="small"
+    type="text"
+    className={twMerge(
+      "PhoneInputInput [&_input]:rounded-e-lg [&_input]:rounded-s-none [&_input]:pl-10",
+      className
+    )}
+    icon={HiSearch}
+    {...props}
+    ref={ref}
+  />
+));
+InputComponent.displayName = "InputComponent";
+
+type CountryEntry = { label: string; value: RPNInput.Country | undefined };
+
+type CountrySelectProps = {
+  disabled?: boolean;
+  value: RPNInput.Country;
+  options: CountryEntry[];
+  onChange: (country: RPNInput.Country) => void;
+};
+
+const CountrySelect = ({
+  disabled,
+  value: selectedCountry,
+  options: countryList,
+  onChange,
+}: CountrySelectProps) => {
+  const [searchValue, setSearchValue] = React.useState("");
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const filteredCountryList = countryList.filter(({ label }) =>
+    label.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
+  return (
+    <Popover
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      arrow={false}
+      content={
+        <div className="w-[300px]">
+          <div className="border-b border-gray-200 p-2 dark:border-gray-600">
+            <TextInput
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search country..."
+            />
+          </div>
+
+          <div className="h-full max-h-[200px] overflow-y-auto">
+            {filteredCountryList.map(({ value, label }) => (
+              <CountrySelectOption
+                key={value}
+                country={value || ("" as RPNInput.Country)}
+                countryName={label}
+                selectedCountry={selectedCountry}
+                onChange={onChange}
+                onSelectComplete={() => setIsOpen(false)}
+              />
+            ))}
+          </div>
+        </div>
+      }
+    >
+      <Button
+        type="button"
+        outline
+        className="flex gap-2 rounded-e-none rounded-s-lg border-r-0 px-4 focus:z-10 h-auto dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+        disabled={disabled}
+      >
+        <FlagComponent
+          country={selectedCountry}
+          countryName={selectedCountry}
+        />
+        <HiChevronDown
+          className={twMerge(
+            "-mr-2 size-4 opacity-50",
+            disabled ? "hidden" : "opacity-100"
+          )}
+        />
+      </Button>
+    </Popover>
+  );
+};
+
+interface CountrySelectOptionProps extends RPNInput.FlagProps {
+  selectedCountry: RPNInput.Country;
+  onChange: (country: RPNInput.Country) => void;
+  onSelectComplete: () => void;
+}
+
+const CountrySelectOption = ({
+  country,
+  countryName,
+  selectedCountry,
+  onChange,
+  onSelectComplete,
+}: CountrySelectOptionProps) => {
+  const handleSelect = () => {
+    onChange(country);
+    onSelectComplete();
   };
 
   return (
-    <div className={className}>
-      <div className="flex items-center">
-        <div className="relative">
-          <button
-            id="dropdown-phone-button"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="shrink-0 z-10 inline-flex items-center px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600 h-10 whitespace-nowrap"
-            type="button"
-          >
-            {
-              countries.find((country) => country.code === selectedCountryCode)
-                ?.flag
-            }{" "}
-            {selectedCountryCode}{" "}
-            <svg
-              className="w-2.5 h-2.5 ms-2.5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 10 6"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 4 4 4-4"
-              />
-            </svg>
-          </button>
-          {dropdownOpen && (
-            <div
-              id="dropdown-phone"
-              className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-64 dark:bg-gray-700"
-            >
-              <ul
-                className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                aria-labelledby="dropdown-phone-button"
-              >
-                {countries.map((country) => (
-                  <li key={country.code}>
-                    <button
-                      type="button"
-                      className="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                      onClick={() => handleCountryCodeChange(country.code)}
-                    >
-                      <div className="inline-flex items-center">
-                        {country.flag} {country.label} ({country.code})
-                      </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-        <div className="relative w-full">
-          <TextInput
-            icon={HiPhone}
-            type="tel"
-            placeholder={placeholder}
-            value={value.replace(selectedCountryCode, "")}
-            onChange={handleChange}
-            color={isValid ? "success" : "failure"}
-            className="px-2 w-full h-10"
-          />
-          {!isValid && (
-            <HelperText color="failure">Invalid phone number</HelperText>
-          )}
-        </div>
-      </div>
+    <div
+      key={country || countryName}
+      className="flex w-full cursor-pointer items-center gap-2 p-2 text-left text-foreground dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+      onClick={() => {
+        onChange(country);
+      }}
+    >
+      <FlagComponent country={country} countryName={countryName} />
+      <span className="flex-1 text-sm">{countryName}</span>
+      {country && (
+        <span className="text-sm">{`+${getCountryCallingCode(country)}`}</span>
+      )}
+      <HiCheck
+        className={`ml-auto size-4 ${
+          country === selectedCountry ? "opacity-100" : "opacity-0"
+        }`}
+      />
     </div>
   );
 };
 
-export { PhoneNumberInput, PhoneNumberInputProps };
+const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
+  const Flag = flags[country];
+
+  return (
+    <span className="flex h-4 w-6 overflow-hidden rounded-sm bg-foreground/20 [&_svg:not([class*='size-'])]:size-full">
+      {Flag && <Flag title={countryName} />}
+    </span>
+  );
+};
+
+export default PhoneNumberInput;

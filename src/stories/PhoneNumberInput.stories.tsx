@@ -1,32 +1,29 @@
-import React, { useState } from 'react';
-import { Meta, StoryObj } from '@storybook/react-vite';
-import { PhoneNumberInput } from '../components/PhoneNumberInput';
+import React, { useState } from "react";
+import { Meta, StoryObj } from "@storybook/react-vite";
+import PhoneNumberInput from "../components/PhoneNumberInput";
 
 const meta: Meta<typeof PhoneNumberInput> = {
-  title: 'Forms/PhoneNumberInput',
+  title: "Forms/PhoneNumberInput",
   component: PhoneNumberInput,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 };
 
 export default meta;
 
 type Story = StoryObj<typeof PhoneNumberInput>;
 
-const countries = [
-  { code: '+1', label: 'United States', flag: '🇺🇸' },
-  { code: '+44', label: 'United Kingdom', flag: '🇬🇧' },
-  { code: '+61', label: 'Australia', flag: '🇦🇺' },
-  { code: '+49', label: 'Germany', flag: '🇩🇪' },
-  { code: '+33', label: 'France', flag: '🇫🇷' },
-];
-
 export const Default: Story = {
   render: (args) => {
-    const [value, setValue] = useState('');
-    return <PhoneNumberInput {...args} value={value} onChange={setValue} />;
+    const [value, setValue] = useState("");
+    return (
+      <div className="h-[400px] p-4 flex flex-col gap-4">
+        <PhoneNumberInput {...args} value={value} onChange={setValue} />
+
+        <pre>Value: {JSON.stringify(value, null, 2)}</pre>
+      </div>
+    );
   },
   args: {
-    placeholder: 'Enter phone number',
-    countries,
+    placeholder: "Enter phone number",
   },
 };

@@ -127,11 +127,13 @@ The grayscale theme supports all button variants:
       <ThemeComparison
         defaultContent={
           <div className="flex flex-wrap gap-4">
-            <Button className="w-32">Primary</Button>
+            <Button className="w-32" color={"blue"}>
+              Primary
+            </Button>
             <Button className="w-32 bg-gradient-to-br from-purple-500 to-blue-500">
               Gradient
             </Button>
-            <Button className="w-32" outline>
+            <Button className="w-32" color={"blue"} outline>
               Outline
             </Button>
           </div>
@@ -143,7 +145,7 @@ The grayscale theme supports all button variants:
             </Button>
             <Button
               color="gray"
-              className="w-32 bg-gradient-to-br from-gray-400 to-gray-700"
+              className="w-32 bg-linear-to-br from-gray-400 to-gray-700"
             >
               Gradient
             </Button>
@@ -186,7 +188,9 @@ Cards in the grayscale theme maintain the same structure but use grayscale color
             <p className="font-normal">
               This card demonstrates the theme styling.
             </p>
-            <Button className="mt-4">Read more</Button>
+            <Button className="mt-4" color={"blue"}>
+              Read more
+            </Button>
           </Card>
         }
         grayscaleContent={
@@ -229,10 +233,10 @@ Alerts use grayscale colors for backgrounds, borders, and text while maintaining
       <ThemeComparison
         defaultContent={
           <div className="flex flex-col gap-4">
-            <Alert className="w-96">
+            <Alert className="w-96" color="blue">
               <span className="font-medium">Info alert!</span> This is an alert.
             </Alert>
-            <Alert className="w-96" withBorderAccent>
+            <Alert className="w-96" color="blue" withBorderAccent>
               <span className="font-medium">Info alert!</span> This is an alert
               with border accent.
             </Alert>
@@ -277,9 +281,13 @@ Badges are available in different sizes and use grayscale colors for consistent 
       <ThemeComparison
         defaultContent={
           <div className="flex flex-wrap gap-2">
-            <Badge>Default</Badge>
-            <Badge size="sm">Small</Badge>
-            <Badge size="lg">Large</Badge>
+            <Badge color="blue">Default</Badge>
+            <Badge color="blue" size="sm">
+              Small
+            </Badge>
+            <Badge color="blue" size="lg">
+              Large
+            </Badge>
           </div>
         }
         grayscaleContent={
@@ -338,14 +346,14 @@ Tables use grayscale colors for borders, backgrounds, and text while maintaining
                 <TableRow>
                   <TableCell>John Doe</TableCell>
                   <TableCell>
-                    <Badge>Active</Badge>
+                    <Badge color="blue">Active</Badge>
                   </TableCell>
                   <TableCell>2024-03-20</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Jane Smith</TableCell>
                   <TableCell>
-                    <Badge>Pending</Badge>
+                    <Badge color="blue">Pending</Badge>
                   </TableCell>
                   <TableCell>2024-03-19</TableCell>
                 </TableRow>
@@ -544,8 +552,10 @@ Dark mode colors are automatically applied when the parent container has the \`d
               Default Theme Dark Mode
             </h2>
             <div className="flex flex-wrap gap-4">
-              <Button className="w-32">Primary</Button>
-              <Button className="w-32" outline>
+              <Button className="w-32" color={"blue"}>
+                Primary
+              </Button>
+              <Button className="w-32" color={"blue"} outline>
                 Outline
               </Button>
             </div>
@@ -556,11 +566,12 @@ Dark mode colors are automatically applied when the parent container has the \`d
               <p className="font-normal text-gray-400">
                 This card demonstrates dark mode styling.
               </p>
-              <Button className="mt-4">Read more</Button>
+              <Button className="mt-4" color={"blue"}>
+                Read more
+              </Button>
             </Card>
-            <Alert className="w-96 bg-gray-800">
-              <span className="font-medium text-white">Dark alert!</span> This
-              is an alert in dark mode.
+            <Alert className="w-96 bg-gray-800" color="blue">
+              <span className="font-medium text-white">Dark alert!</span>
             </Alert>
           </div>
         </div>
@@ -591,8 +602,7 @@ Dark mode colors are automatically applied when the parent container has the \`d
               </Button>
             </Card>
             <Alert color="gray" className="w-96 bg-gray-800">
-              <span className="font-medium text-white">Dark alert!</span> This
-              is a grayscale alert in dark mode.
+              <span className="font-medium text-white">Dark alert!</span>
             </Alert>
           </div>
         </div>

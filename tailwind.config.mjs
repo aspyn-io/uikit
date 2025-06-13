@@ -1,5 +1,6 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 const flowbiteReact = require("flowbite-react/plugin/tailwindcss");
+const flowbitePlugin = require("flowbite/plugin");
 
 // CAUTION: This file is exported to clients for shared configuration of tailwind css
 
@@ -8,7 +9,8 @@ export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./.storybook/**/*.{js,jsx,ts,tsx}",
-    ".flowbite-react/class-list.json",
+    "./node_modules/flowbite-react/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.{js,ts,jsx,tsx}"
   ],
   darkMode: "class",
   theme: {
@@ -38,5 +40,5 @@ export default {
       },
     },
   },
-  plugins: [flowbiteReact],
+  plugins: [flowbitePlugin, flowbiteReact],
 };

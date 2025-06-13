@@ -1,6 +1,5 @@
 @import "tailwindcss";
+@import "flowbite";
 @import './grayscale-theme/styles.css';
 
-@tailwind base;
-@tailwind components;
 @tailwind utilities;

@@ -57,7 +57,7 @@ const JsonViewer: FC<JsonViewerProps> = ({
 
   return (
     <>
-      <Button {...buttonProps} onClick={handleClick}>
+      <Button {...buttonProps} color={"blue"} onClick={handleClick}>
         {buttonLabel}
       </Button>
       <JsonViewerModal

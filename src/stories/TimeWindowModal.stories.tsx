@@ -1,45 +1,48 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
-import React, { useState } from 'react';
-import TimeWindowModal, { TimeWindow } from '../components/TimeWindowModal';
-import { Button } from 'flowbite-react';
+import { Meta, StoryObj } from "@storybook/react-vite";
+import React, { useState } from "react";
+import TimeWindowModal, { TimeWindow } from "../components/TimeWindowModal";
+import { Button } from "flowbite-react";
 
 const meta: Meta<typeof TimeWindowModal> = {
-  title: 'Modals/TimeWindowModal',
+  title: "Modals/TimeWindowModal",
   component: TimeWindowModal,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
     docs: {
       description: {
         component:
-          'TimeWindowModal is a reusable modal component for selecting time windows, such as scheduling appointments or consultations. It features date range selection, a search functionality, and a grid of available time slots.',
+          "TimeWindowModal is a reusable modal component for selecting time windows, such as scheduling appointments or consultations. It features date range selection, a search functionality, and a grid of available time slots.",
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     isOpen: {
-      control: 'boolean',
-      description: 'Controls whether the modal is open or closed',
+      control: "boolean",
+      description: "Controls whether the modal is open or closed",
     },
     title: {
-      control: 'text',
-      description: 'The title displayed at the top of the modal',
+      control: "text",
+      description: "The title displayed at the top of the modal",
     },
     timeWindows: {
-      control: 'object',
-      description: 'Array of time window objects to display as selectable options',
+      control: "object",
+      description:
+        "Array of time window objects to display as selectable options",
     },
     onClose: {
-      action: 'closed',
-      description: 'Callback function when the modal is closed',
+      action: "closed",
+      description: "Callback function when the modal is closed",
     },
     onSubmit: {
-      action: 'submitted',
-      description: 'Callback function when a time window is selected and confirmed',
+      action: "submitted",
+      description:
+        "Callback function when a time window is selected and confirmed",
     },
     onSearch: {
-      action: 'searched',
-      description: 'Callback function when the search button is clicked with start and end dates',
+      action: "searched",
+      description:
+        "Callback function when the search button is clicked with start and end dates",
     },
   },
 };
@@ -70,14 +73,20 @@ const TimeWindowModalTemplate: React.FC<{ args: any }> = ({ args }) => {
     args.onClose();
   };
 
-  const handleSubmit = (timeWindow: TimeWindow, startDate: string, endDate: string) => {
+  const handleSubmit = (
+    timeWindow: TimeWindow,
+    startDate: string,
+    endDate: string
+  ) => {
     args.onSubmit(timeWindow, startDate, endDate);
     setIsOpen(false);
   };
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+      <Button onClick={() => setIsOpen(true)} color={"blue"}>
+        Open Modal
+      </Button>
       <TimeWindowModal
         {...args}
         isOpen={isOpen}
@@ -92,13 +101,16 @@ const TimeWindowModalTemplate: React.FC<{ args: any }> = ({ args }) => {
 export const Default: Story = {
   render: (args) => <TimeWindowModalTemplate args={args} />,
   args: {
-    title: 'Schedule Appointment',
+    title: "Schedule Appointment",
     timeWindows: sampleTimeWindows,
-    onClose: () => console.log('Modal closed'),
-    onSubmit: (selectedTimeWindow: TimeWindow, startDate: string, endDate: string) =>
-      console.log('Submitted:', selectedTimeWindow, startDate, endDate),
+    onClose: () => console.log("Modal closed"),
+    onSubmit: (
+      selectedTimeWindow: TimeWindow,
+      startDate: string,
+      endDate: string
+    ) => console.log("Submitted:", selectedTimeWindow, startDate, endDate),
     onSearch: (startDate: string, endDate: string) =>
-      console.log('Search for:', startDate, endDate),
+      console.log("Search for:", startDate, endDate),
   },
 };
 
@@ -116,6 +128,6 @@ export const WithCustomTitle: Story = {
   render: (args) => <TimeWindowModalTemplate args={args} />,
   args: {
     ...Default.args,
-    title: 'Book a Consultation',
+    title: "Book a Consultation",
   },
 };

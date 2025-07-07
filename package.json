@@ -36,7 +36,7 @@
     "postinstall": "flowbite-react patch"
   },
   "dependencies": {
-    "@fullcalendar/core": "6.1.17",
+    "@fullcalendar/core": "6.1.18",
     "@fullcalendar/daygrid": "6.1.17",
     "@fullcalendar/interaction": "6.1.17",
     "@fullcalendar/timegrid": "6.1.17",
@@ -50,8 +50,8 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.1",
     "@eslint/js": "^9.29.0",
-    "@storybook/addon-docs": "^9.0.12",
-    "@storybook/addon-themes": "^9.0.12",
+    "@storybook/addon-docs": "^9.0.15",
+    "@storybook/addon-themes": "^9.0.15",
     "@storybook/react-vite": "^9.0.14",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^24.0.10",

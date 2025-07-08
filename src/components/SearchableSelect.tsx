@@ -8,9 +8,9 @@ import React, {
   useContext,
   MouseEvent,
   ChangeEvent,
-} from 'react';
-import { Label, Checkbox } from 'flowbite-react';
-import { HiSearch, HiOutlineChevronDown, HiX } from 'react-icons/hi';
+} from "react";
+import { Label, Checkbox } from "flowbite-react";
+import { HiSearch, HiOutlineChevronDown, HiX } from "react-icons/hi";
 
 // ---------- Types and Interfaces ---------- //
 
@@ -47,7 +47,7 @@ export interface SearchableSelectProps {
   /** Extra classes for outer container. */
   className?: string;
   /** Size variant for text: 'sm', 'md', or 'lg'. */
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   /** Helper text or hint below the select. */
   helperText?: string;
   /** Whether this field is in an error state (affects styling). */
@@ -67,8 +67,7 @@ interface SearchableSelectContextValue {
 
 // ---------- Context Setup ---------- //
 
-const SearchableSelectContext =
-  createContext<SearchableSelectContextValue | null>(null);
+const SearchableSelectContext = createContext<SearchableSelectContextValue | null>(null);
 
 // ---------- Main Component ---------- //
 
@@ -83,7 +82,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   id,
   name,
   label,
-  placeholder = 'Select an option',
+  placeholder = "Select an option",
   required = false,
   disabled = false,
   multiple = false,
@@ -91,23 +90,23 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   children,
   onChange,
   value,
-  className = '',
-  size = 'md',
+  className = "",
+  size = "md",
   helperText,
   error = false,
   wrap = true,
 }) => {
   // State
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValues, setSelectedValues] = useState<
-    SearchableOption[] | SearchableOption | null
-  >(multiple ? [] : null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedValues, setSelectedValues] = useState<SearchableOption[] | SearchableOption | null>(
+    multiple ? [] : null
+  );
+  const [searchTerm, setSearchTerm] = useState("");
   const selectRef = useRef<HTMLDivElement>(null);
 
   // Update internal state when external value changes
   useEffect(() => {
-    if (typeof value !== 'undefined') {
+    if (typeof value !== "undefined") {
       setSelectedValues(value);
     }
   }, [value]);
@@ -115,30 +114,23 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   useEffect(() => {
     if (multiple) {
       // Ensure selectedValues is an array when switching to multiple mode
-      setSelectedValues((prev) =>
-        prev ? (Array.isArray(prev) ? prev : [prev]) : []
-      );
+      setSelectedValues((prev) => (prev ? (Array.isArray(prev) ? prev : [prev]) : []));
     } else {
       // Ensure selectedValues is a single object when switching to single mode
-      setSelectedValues((prev) =>
-        Array.isArray(prev) ? prev[0] || null : prev
-      );
+      setSelectedValues((prev) => (Array.isArray(prev) ? prev[0] || null : prev));
     }
   }, [multiple]);
 
   // Handle clicks outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | globalThis.MouseEvent) => {
-      if (
-        selectRef.current &&
-        !selectRef.current.contains(event.target as Node)
-      ) {
+      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside as any);
+    document.addEventListener("mousedown", handleClickOutside as any);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside as any);
+      document.removeEventListener("mousedown", handleClickOutside as any);
     };
   }, []);
 
@@ -149,8 +141,8 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
       const current: SearchableOption[] = Array.isArray(selectedValues)
         ? selectedValues
         : selectedValues
-          ? [selectedValues]
-          : [];
+        ? [selectedValues]
+        : [];
 
       const exists = current.some((v) => v.value === newValue.value);
       let updatedValues: SearchableOption[];
@@ -166,17 +158,16 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
       setSelectedValues(updatedValues);
       onChange?.(updatedValues);
       // Reset search term after selection
-      setSearchTerm('');
+      setSearchTerm("");
     } else {
       // Single select: replace the value
       setSelectedValues(newValue);
       onChange?.(newValue);
       setIsOpen(false);
       // Reset search term after selection
-      setSearchTerm('');
+      setSearchTerm("");
     }
   };
-
 
   // Handle removing a tag in multi-select mode
   const handleRemoveTag = (valToRemove: SearchableOption) => {
@@ -195,9 +186,9 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
 
   // Sizing classes
   const sizeClasses: Record<string, string> = {
-    sm: 'text-xs',
-    md: 'text-sm',
-    lg: 'text-base',
+    sm: "text-xs",
+    md: "text-sm",
+    lg: "text-base",
   };
 
   // Provide context to children
@@ -221,7 +212,11 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   const ensureArray = (value: SearchableOption | SearchableOption[] | null): SearchableOption[] =>
     Array.isArray(value) ? value : value ? [value] : [];
 
-  const multiSelected: SearchableOption[] = multiple ? ensureArray(selectedValues) : ensureArray(selectedValues)[0] ? [ensureArray(selectedValues)[0]] : [];
+  const multiSelected: SearchableOption[] = multiple
+    ? ensureArray(selectedValues)
+    : ensureArray(selectedValues)[0]
+    ? [ensureArray(selectedValues)[0]]
+    : [];
 
   return (
     <SearchableSelectContext.Provider value={contextValue}>
@@ -231,7 +226,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
           <Label
             htmlFor={id}
             className={`${sizeClasses[size]} mb-2 block font-medium ${
-              error ? 'text-red-700' : 'text-gray-900 dark:text-gray-200'
+              error ? "text-red-700" : "text-gray-900 dark:text-gray-200"
             }`}
           >
             {label} {required && <span className="text-red-500">*</span>}
@@ -255,24 +250,22 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
               dark:bg-gray-700 dark:text-white
               ${
                 error
-                  ? 'border-red-500 text-red-900 focus:border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'
+                  ? "border-red-500 text-red-900 focus:border-red-500 focus:ring-red-500"
+                  : "border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600"
               }
-              ${disabled ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-600' : 'cursor-pointer'}
-              ${resetable && !multiple && selectedValues ? 'pr-10' : ''}
+              ${disabled ? "cursor-not-allowed bg-gray-100 dark:bg-gray-600" : "cursor-pointer"}
+              ${resetable && !multiple && selectedValues ? "pr-10" : ""}
             `}
           >
             {/* Multi-select with tags */}
             {multiple ? (
-              <div className={`flex ${wrap ? 'flex-wrap' : 'overflow-hidden truncate'} gap-1`}>
+              <div className={`flex ${wrap ? "flex-wrap" : "overflow-hidden truncate"} gap-1`}>
                 {multiSelected.map((val: SearchableOption) => (
                   <span
                     key={val.value}
                     className="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-200 dark:text-blue-800"
                   >
-                    <span className="overflow-hidden whitespace-nowrap">
-                      {val.label || val.value}
-                    </span>
+                    <span className="overflow-hidden whitespace-nowrap">{val.label || val.value}</span>
                     <span
                       role="button"
                       tabIndex={0}
@@ -282,9 +275,9 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
                         handleRemoveTag(val);
                       }}
                     >
-          <HiX className="h-3 w-3" />
-        </span>
-      </span>
+                      <HiX className="h-3 w-3" />
+                    </span>
+                  </span>
                 ))}
                 {(Array.isArray(selectedValues) ? selectedValues : []).length === 0 && (
                   <span className="text-gray-400 dark:text-gray-400">{placeholder}</span>
@@ -294,20 +287,16 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
               // Single-select display
               <span
                 className={`
-                  ${!selectedValues
-                    ? 'text-gray-400 dark:text-gray-400'
-                    : 'text-gray-700 dark:text-white'
-                  }
-                  ${resetable && selectedValues ? 'pr-4 truncate block' : ''}
+                  ${!selectedValues ? "text-gray-400 dark:text-gray-400" : "text-gray-700 dark:text-white"}
+                  ${resetable && selectedValues ? "pr-4 truncate block" : ""}
                 `}
               >
                 {getSingleDisplayText()}
               </span>
             )}
 
-
             {/* Dropdown arrow */}
-            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5">
               <HiOutlineChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400" />
             </span>
           </button>
@@ -340,11 +329,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
 
         {/* Helper text */}
         {helperText && (
-          <p
-            className={`mt-1 text-xs ${error ? 'text-red-600' : 'text-gray-500 dark:text-gray-400'}`}
-          >
-            {helperText}
-          </p>
+          <p className={`mt-1 text-xs ${error ? "text-red-600" : "text-gray-500 dark:text-gray-400"}`}>{helperText}</p>
         )}
       </div>
     </SearchableSelectContext.Provider>
@@ -362,9 +347,9 @@ interface SearchProps {
 }
 
 const Search: FC<SearchProps> = ({
-  placeholder = 'Search...',
+  placeholder = "Search...",
   onChange,
-  className = '',
+  className = "",
   disabled,
   debounceMs = 300,
 }) => {
@@ -377,7 +362,7 @@ const Search: FC<SearchProps> = ({
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
-    
+
     // Clear existing timeout
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
@@ -400,11 +385,11 @@ const Search: FC<SearchProps> = ({
 
   const clearSearch = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setSearchTerm('');
+    setSearchTerm("");
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
-    onChange?.('');
+    onChange?.("");
   };
 
   return (
@@ -424,7 +409,7 @@ const Search: FC<SearchProps> = ({
             focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white
             dark:focus:border-blue-500 dark:focus:ring-blue-500
             ${className}
-            ${disabled ? 'cursor-not-allowed bg-gray-100 dark:bg-gray-600' : ''}
+            ${disabled ? "cursor-not-allowed bg-gray-100 dark:bg-gray-600" : ""}
           `}
           placeholder={placeholder}
           value={searchTerm}
@@ -433,11 +418,7 @@ const Search: FC<SearchProps> = ({
 
         {/* Right clear icon (only if there's a search term) */}
         {searchTerm && (
-          <button
-            type="button"
-            className="absolute inset-y-0 right-0 flex items-center pr-3"
-            onClick={clearSearch}
-          >
+          <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3" onClick={clearSearch}>
             <HiX className="h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" />
           </button>
         )}
@@ -456,13 +437,7 @@ interface OptionProps {
   children?: ReactNode;
 }
 
-const Option: FC<OptionProps> = ({
-  value,
-  label,
-  disabled = false,
-  className = '',
-  children,
-}) => {
+const Option: FC<OptionProps> = ({ value, label, disabled = false, className = "", children }) => {
   const ctx = useContext(SearchableSelectContext);
   if (!ctx) return null;
 
@@ -471,13 +446,12 @@ const Option: FC<OptionProps> = ({
   // Build option object using the label prop if provided
   const optionObj: SearchableOption = {
     value,
-    label: label || (typeof children === 'string' ? children : undefined),
+    label: label || (typeof children === "string" ? children : undefined),
   };
 
   // Determine if this option is selected
   const isSelected = multiple
-    ? Array.isArray(selectedValues) &&
-      selectedValues.some((v) => v.value === value)
+    ? Array.isArray(selectedValues) && selectedValues.some((v) => v.value === value)
     : (selectedValues as SearchableOption)?.value === value;
 
   const handleClick = () => {
@@ -494,8 +468,8 @@ const Option: FC<OptionProps> = ({
       className={`
         cursor-pointer px-4 py-2 text-sm
         hover:bg-gray-100 dark:hover:bg-gray-600
-        ${isSelected ? 'bg-blue-100 text-blue-900 dark:bg-blue-600 dark:text-white' : ''}
-        ${disabled ? 'cursor-not-allowed opacity-50' : ''}
+        ${isSelected ? "bg-blue-100 text-blue-900 dark:bg-blue-600 dark:text-white" : ""}
+        ${disabled ? "cursor-not-allowed opacity-50" : ""}
         ${className}
       `}
     >
@@ -523,11 +497,7 @@ interface OptionGroupProps {
   children?: ReactNode;
 }
 
-const OptionGroup: FC<OptionGroupProps> = ({
-  label,
-  className = '',
-  children,
-}) => {
+const OptionGroup: FC<OptionGroupProps> = ({ label, className = "", children }) => {
   return (
     <div className={`py-1 ${className}`}>
       <div className="bg-gray-50 px-4 py-2 text-xs font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-400">
@@ -545,16 +515,9 @@ interface NoResultsProps {
   className?: string;
 }
 
-const NoResults: FC<NoResultsProps> = ({
-  children = 'No results found',
-  className = '',
-}) => {
+const NoResults: FC<NoResultsProps> = ({ children = "No results found", className = "" }) => {
   return (
-    <div
-      className={`px-4 py-3 text-center text-sm text-gray-500 dark:text-gray-400 ${className}`}
-    >
-      {children}
-    </div>
+    <div className={`px-4 py-3 text-center text-sm text-gray-500 dark:text-gray-400 ${className}`}>{children}</div>
   );
 };
 
@@ -591,10 +554,7 @@ const Pagination: FC<PaginationProps> = ({
 }) => {
   // Detect if we're using cursor-based pagination (prev/next flags) or page-based (currentPage/totalPages)
   const isCursorPagination =
-    onPreviousPage &&
-    onNextPage &&
-    (typeof hasPreviousPage !== 'undefined' ||
-      typeof hasNextPage !== 'undefined');
+    onPreviousPage && onNextPage && (typeof hasPreviousPage !== "undefined" || typeof hasNextPage !== "undefined");
 
   if (!isCursorPagination && (!currentPage || !totalPages)) {
     // If no pagination data, hide entirely

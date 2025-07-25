@@ -12,6 +12,12 @@ export { NoteCard } from "./components/NoteCard";
 export { ContactCard } from "./components/ContactCard";
 export { PaymentMethodCard } from "./components/PaymentMethodCard";
 
+// Availability
+export {
+  AvailabilitySelector,
+  type AppointmentAvailability,
+} from "./components/AvailabilitySelector";
+
 export { InvoiceDetail } from "./components/InvoiceDetail";
 
 // Context

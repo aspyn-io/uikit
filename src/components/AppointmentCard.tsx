@@ -112,15 +112,23 @@ export const AppointmentCard = ({
   };
 
   return (
-    <div className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300">
+    <div 
+      className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300 cursor-pointer hover:shadow-md"
+      onClick={(e) => {
+        // Only trigger if click wasn't on an interactive element
+        const target = e.target as HTMLElement;
+        const isInteractiveElement = target.closest('button, a, input, select, textarea, [role="button"], [tabindex]');
+        
+        if (!isInteractiveElement && appointmentId && onCalendarClick) {
+          onCalendarClick(appointmentId);
+        }
+      }}
+    >
       <div className="grid grid-cols-[60%_40%] items-center p-4">
         <div className="flex items-center gap-6">
-          <button
-            onClick={() => appointmentId && onCalendarClick?.(appointmentId)}
-            className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
-          >
+          <div className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center">
             <HiOutlineCalendar size={20} />
-          </button>
+          </div>
           <div className="flex flex-col items-center">
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {dayNumber}

@@ -112,14 +112,10 @@ export const AppointmentCard = ({
   };
 
   return (
-    <div 
+    <div
       className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300 cursor-pointer hover:shadow-md"
-      onClick={(e) => {
-        // Only trigger if click wasn't on an interactive element
-        const target = e.target as HTMLElement;
-        const isInteractiveElement = target.closest('button, a, input, select, textarea, [role="button"], [tabindex]');
-        
-        if (!isInteractiveElement && appointmentId && onCalendarClick) {
+      onClick={() => {
+        if (appointmentId && onCalendarClick) {
           onCalendarClick(appointmentId);
         }
       }}
@@ -193,7 +189,10 @@ export const AppointmentCard = ({
               color="gray"
               className="w-24 hover:bg-gray-200"
               outline
-              onClick={toggleExpanded}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleExpanded();
+              }}
             >
               <div className="flex items-center gap-2">
                 <HiOutlineClipboardList
@@ -218,25 +217,33 @@ export const AppointmentCard = ({
             </Button>
           )}
           {editable && (
-            <Dropdown
-              inline
-              arrowIcon={false}
-              label={<HiOutlineDotsVertical size={20} />}
-              className="overflow-hidden"
+            <div
+              className="flex justify-end"
+              onClick={(e) => e.stopPropagation()}
             >
-              <DropdownItem onClick={onRescheduleAppointment}>
-                Reschedule Appointment
-              </DropdownItem>
-              <DropdownItem onClick={onCancelAppointment}>
-                Cancel Appointment
-              </DropdownItem>
-            </Dropdown>
+              <Dropdown
+                inline
+                arrowIcon={false}
+                label={<HiOutlineDotsVertical size={20} />}
+                className="overflow-hidden"
+              >
+                <DropdownItem onClick={onRescheduleAppointment}>
+                  Reschedule Appointment
+                </DropdownItem>
+                <DropdownItem onClick={onCancelAppointment}>
+                  Cancel Appointment
+                </DropdownItem>
+              </Dropdown>
+            </div>
           )}
           {!editable && showSelectButton && onSelect && (
             <Button
               color={isSelected ? "primary" : "light"}
               disabled={isSelected}
-              onClick={onSelect}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect?.();
+              }}
               className="dark:text-white"
             >
               {isSelected ? "Selected" : "Select"}

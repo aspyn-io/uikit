@@ -72,6 +72,25 @@ git commit -m "your message" --no-verify
 git push --no-verify
 ```
 
+### Local Package Development
+
+You can use your local file path dependency to develop with live updates from your package:
+
+**In your React repo (UI, Customer Portal, etc):**
+
+```bash
+npm uninstall @aspyn-io/uikit
+npm install ../path-to-your-local-uikit
+```
+
+**Then in uikit:**
+
+```bash
+npm run build:watch
+```
+
+This way, your React app always loads the built local version for instant feedback during development.
+
 ## Contributing
 
 Everyone is encouraged to contribute to this repository via submission of

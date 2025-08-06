@@ -27,6 +27,7 @@
   "scripts": {
     "dev": "storybook dev -p 6006",
     "build": "tsup",
+    "build:watch": "tsup --watch",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

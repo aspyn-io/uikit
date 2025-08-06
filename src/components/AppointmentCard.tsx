@@ -112,15 +112,19 @@ export const AppointmentCard = ({
   };
 
   return (
-    <div className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300">
+    <div
+      className="border rounded-lg shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition-all duration-300 cursor-pointer hover:shadow-md"
+      onClick={() => {
+        if (appointmentId && onCalendarClick) {
+          onCalendarClick(appointmentId);
+        }
+      }}
+    >
       <div className="grid grid-cols-[60%_40%] items-center p-4">
         <div className="flex items-center gap-6">
-          <button
-            onClick={() => appointmentId && onCalendarClick?.(appointmentId)}
-            className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
-          >
+          <div className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center">
             <HiOutlineCalendar size={20} />
-          </button>
+          </div>
           <div className="flex flex-col items-center">
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {dayNumber}
@@ -185,7 +189,10 @@ export const AppointmentCard = ({
               color="gray"
               className="w-24 hover:bg-gray-200"
               outline
-              onClick={toggleExpanded}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleExpanded();
+              }}
             >
               <div className="flex items-center gap-2">
                 <HiOutlineClipboardList
@@ -210,25 +217,33 @@ export const AppointmentCard = ({
             </Button>
           )}
           {editable && (
-            <Dropdown
-              inline
-              arrowIcon={false}
-              label={<HiOutlineDotsVertical size={20} />}
-              className="overflow-hidden"
+            <div
+              className="flex justify-end"
+              onClick={(e) => e.stopPropagation()}
             >
-              <DropdownItem onClick={onRescheduleAppointment}>
-                Reschedule Appointment
-              </DropdownItem>
-              <DropdownItem onClick={onCancelAppointment}>
-                Cancel Appointment
-              </DropdownItem>
-            </Dropdown>
+              <Dropdown
+                inline
+                arrowIcon={false}
+                label={<HiOutlineDotsVertical size={20} />}
+                className="overflow-hidden"
+              >
+                <DropdownItem onClick={onRescheduleAppointment}>
+                  Reschedule Appointment
+                </DropdownItem>
+                <DropdownItem onClick={onCancelAppointment}>
+                  Cancel Appointment
+                </DropdownItem>
+              </Dropdown>
+            </div>
           )}
           {!editable && showSelectButton && onSelect && (
             <Button
               color={isSelected ? "primary" : "light"}
               disabled={isSelected}
-              onClick={onSelect}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect?.();
+              }}
               className="dark:text-white"
             >
               {isSelected ? "Selected" : "Select"}

@@ -16,23 +16,23 @@ type Story = StoryObj<typeof AppointmentCard>;
 const today = new Date();
 
 const workOrders = [
-  { 
-    id: "WO123", 
+  {
+    id: "WO123",
     status: "Active",
     description: "Rodent",
-    duration: "60"
+    duration: "60",
   },
-  { 
-    id: "WO124", 
+  {
+    id: "WO124",
     status: "Pending",
     description: "Flea & Tick",
-    duration: "30"
+    duration: "30",
   },
-  { 
-    id: "WO125", 
+  {
+    id: "WO125",
     status: "Completed",
     description: "German Roach",
-    duration: "90"
+    duration: "90",
   },
 ];
 
@@ -45,7 +45,8 @@ export const Default: Story = {
     userActive: true,
     showIcons: true,
     appointmentId: "APT123",
-    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
+    onCalendarClick: (id: string) =>
+      console.log("Calendar clicked for appointment:", id),
   },
 };
 
@@ -65,9 +66,11 @@ export const EditState: Story = {
     onWorkOrderClick: (id: string) => console.log("Clicked Work Order:", id),
     onRescheduleAppointment: () => console.log("Rescheduled Appointment"),
     onCancelAppointment: () => console.log("Canceled Appointment"),
+    onScheduleReturnService: () => console.log("Schedule Return Service"),
     showIcons: true,
     appointmentId: "APT123",
-    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
+    onCalendarClick: (id: string) =>
+      console.log("Calendar clicked for appointment:", id),
   },
 };
 
@@ -81,7 +84,8 @@ export const WithoutSelectButton: Story = {
     onSelect: () => console.log("Appointment Selected"),
     showIcons: true,
     appointmentId: "APT123",
-    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
+    onCalendarClick: (id: string) =>
+      console.log("Calendar clicked for appointment:", id),
   },
 };
 
@@ -97,7 +101,8 @@ export const SelectedWithStatus: Story = {
     onSelect: () => console.log("Appointment Selected"),
     showIcons: true,
     appointmentId: "APT123",
-    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
+    onCalendarClick: (id: string) =>
+      console.log("Calendar clicked for appointment:", id),
   },
 };
 
@@ -110,6 +115,7 @@ export const WithoutIcons: Story = {
     userActive: true,
     showIcons: false,
     appointmentId: "APT123",
-    onCalendarClick: (id: string) => console.log("Calendar clicked for appointment:", id),
+    onCalendarClick: (id: string) =>
+      console.log("Calendar clicked for appointment:", id),
   },
 };

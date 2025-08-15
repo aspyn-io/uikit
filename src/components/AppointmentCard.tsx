@@ -46,6 +46,7 @@ interface AppointmentCardProps {
   onSelect?: () => void;
   onRescheduleAppointment?: () => void;
   onCancelAppointment?: () => void;
+  onScheduleReturnService?: () => void;
   onRescheduleWorkOrder?: (workOrderId: string) => void;
   onCancelWorkOrder?: (workOrderId: string) => void;
   showSelectButton?: boolean;
@@ -67,6 +68,7 @@ export const AppointmentCard = ({
   onSelect,
   onRescheduleAppointment,
   onCancelAppointment,
+  onScheduleReturnService,
   onRescheduleWorkOrder,
   onCancelWorkOrder,
   showSelectButton = true,
@@ -216,7 +218,9 @@ export const AppointmentCard = ({
               )}
             </Button>
           )}
-          {editable && (
+          {(onRescheduleAppointment ||
+            onCancelAppointment ||
+            onScheduleReturnService) && (
             <div
               className="flex justify-end"
               onClick={(e) => e.stopPropagation()}
@@ -227,12 +231,21 @@ export const AppointmentCard = ({
                 label={<HiOutlineDotsVertical size={20} />}
                 className="overflow-hidden"
               >
-                <DropdownItem onClick={onRescheduleAppointment}>
-                  Reschedule Appointment
-                </DropdownItem>
-                <DropdownItem onClick={onCancelAppointment}>
-                  Cancel Appointment
-                </DropdownItem>
+                {onRescheduleAppointment && (
+                  <DropdownItem onClick={onRescheduleAppointment}>
+                    Reschedule Appointment
+                  </DropdownItem>
+                )}
+                {onCancelAppointment && (
+                  <DropdownItem onClick={onCancelAppointment}>
+                    Cancel Appointment
+                  </DropdownItem>
+                )}
+                {onScheduleReturnService && (
+                  <DropdownItem onClick={onScheduleReturnService}>
+                    Schedule a Return Service
+                  </DropdownItem>
+                )}
               </Dropdown>
             </div>
           )}

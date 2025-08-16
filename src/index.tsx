@@ -1,6 +1,3 @@
-export { Navbar } from "./components/Navbar/Navbar";
-export { Sidebar } from "./components/Sidebar";
-
 export { PaginationControls } from "./components/PaginationControls";
 
 export { Modal } from "./components/Modal";
@@ -19,9 +16,6 @@ export {
 } from "./components/AvailabilitySelector";
 
 export { InvoiceDetail } from "./components/InvoiceDetail";
-
-// Context
-export { NavbarProvider, useNavbarContext } from "./context/NavbarContext";
 
 // Form Inputs
 export {

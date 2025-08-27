@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Dropdown, DropdownItem } from "flowbite-react";
 import PaymentMethodCard from "../components/PaymentMethodCard";
+import { HiDotsVertical } from "react-icons/hi";
 
 const meta: Meta<typeof PaymentMethodCard> = {
   title: "Cards/PaymentMethodCard",
@@ -31,8 +32,8 @@ const meta: Meta<typeof PaymentMethodCard> = {
       description: "Handler for when the card is clicked",
       control: "none",
     },
-    drawerContent: {
-      description: "Content to show in the dropdown menu",
+    drawer: {
+      description: "Content to show as the dropdown menu",
       control: "none",
     },
   },
@@ -65,15 +66,21 @@ const MastercardIcon = () => (
   </svg>
 );
 
-const commonDrawerContent = (
-  <>
+const commonDrawer = (
+  <Dropdown
+    inline
+    arrowIcon={false}
+    label={
+      <HiDotsVertical className="h-6 w-6 text-gray-400 hover:text-gray-600" />
+    }
+  >
     <DropdownItem onClick={() => console.log("Edit")}>
       Edit payment method
     </DropdownItem>
     <DropdownItem onClick={() => console.log("Delete")}>
       Delete payment method
     </DropdownItem>
-  </>
+  </Dropdown>
 );
 
 // Basic Examples
@@ -111,7 +118,7 @@ export const Clickable: Story = {
 export const WithDrawer: Story = {
   args: {
     ...WithVisa.args,
-    drawerContent: commonDrawerContent,
+    drawer: commonDrawer,
   },
 };
 
@@ -119,7 +126,7 @@ export const ClickableWithDrawer: Story = {
   args: {
     ...WithVisa.args,
     onClick: () => console.log("Card clicked"),
-    drawerContent: commonDrawerContent,
+    drawer: commonDrawer,
   },
 };
 
@@ -142,7 +149,7 @@ export const FullFeatured: Story = {
     expiryDate: "12/24",
     lastUpdated: "Mar 15, 2024",
     onClick: () => console.log("Card clicked"),
-    drawerContent: commonDrawerContent,
+    drawer: commonDrawer,
     children: (
       <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
         Default payment method

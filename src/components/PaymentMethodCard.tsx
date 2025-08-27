@@ -1,6 +1,4 @@
 import { ReactNode } from "react";
-import { HiDotsVertical } from "react-icons/hi";
-import { Dropdown } from "flowbite-react";
 
 interface PaymentMethodCard {
   cardIcon?: ReactNode;
@@ -9,7 +7,7 @@ interface PaymentMethodCard {
   lastUpdated?: string;
   children?: ReactNode;
   onClick?: () => void;
-  drawerContent?: ReactNode;
+  drawer?: ReactNode;
 }
 
 const UnknownCardIcon = () => (
@@ -35,7 +33,7 @@ export const PaymentMethodCard = ({
   lastUpdated = "22 Aug 2017",
   children,
   onClick,
-  drawerContent,
+  drawer,
 }: PaymentMethodCard) => {
   const CardContent = (
     <>
@@ -55,20 +53,12 @@ export const PaymentMethodCard = ({
           {children}
         </div>
       </div>
-      {drawerContent && (
+      {drawer && (
         <div
           className="mt-4 sm:mt-0 sm:flex-shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
-          <Dropdown
-            inline
-            arrowIcon={false}
-            label={
-              <HiDotsVertical className="h-6 w-6 text-gray-400 hover:text-gray-600" />
-            }
-          >
-            {drawerContent}
-          </Dropdown>
+          {drawer}
         </div>
       )}
     </>

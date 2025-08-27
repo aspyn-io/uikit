@@ -7,7 +7,7 @@ import {
   HiPhone,
   HiChatAlt,
 } from "react-icons/hi";
-import { Spinner } from "flowbite-react";
+import { Spinner, Datepicker } from "flowbite-react";
 import { format } from "date-fns";
 
 export interface AppointmentAvailability {
@@ -101,6 +101,21 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
   const todayLocalISO = React.useMemo(() => {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().split("T")[0];
+  }, []);
+
+  // Helpers to convert between YYYY-MM-DD string and local Date for Datepicker
+  const parseLocalDateFromYYYYMMDD = React.useCallback((s: string): Date | null => {
+    if (!s) return null;
+    const [y, m, d] = s.split("-").map(Number);
+    if (!y || !m || !d) return null;
+    return new Date(y, m - 1, d);
+  }, []);
+
+  const toLocalISODate = React.useCallback((date: Date | null): string => {
+    if (!date) return "";
+    // Create a new Date using year, month, day to ensure local time
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     return d.toISOString().split("T")[0];
   }, []);
 
@@ -228,13 +243,19 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
             <label htmlFor="specific-date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Select Date
             </label>
-            <input
-              type="date"
+            <Datepicker
               id="specific-date"
-              value={specificDate}
-              onChange={(e) => handleSpecificDateChange(e.target.value)}
-              min={todayLocalISO}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full"
+              value={specificDate ? parseLocalDateFromYYYYMMDD(specificDate) : null}
+              onChange={(date) =>
+                handleSpecificDateChange(date ? toLocalISODate(date) : "")
+              }
+              // Limit selection to today or later
+              minDate={(() => {
+                const d = new Date();
+                d.setHours(0, 0, 0, 0);
+                return d;
+              })()}
             />
           </div>
 

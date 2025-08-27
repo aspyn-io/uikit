@@ -31,6 +31,13 @@ interface AvailabilitySelectorProps {
   schedulingType: "asap" | "specific";
   onSchedulingTypeChange: (type: "asap" | "specific") => void;
 
+  // UI behavior
+  /**
+   * When true, hides the ASAP/Specific toggle UI. The component will still
+   * render follow-up steps based on the current schedulingType value.
+   */
+  hideSchedulingTypeSelect?: boolean;
+
   // Date props
   specificDate: string;
   onSpecificDateChange: (date: string) => void;
@@ -55,6 +62,7 @@ interface AvailabilitySelectorProps {
 export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
   schedulingType,
   onSchedulingTypeChange,
+  hideSchedulingTypeSelect = false,
   specificDate,
   onSpecificDateChange,
   selectedTimeWindow,
@@ -88,6 +96,13 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
     onSpecificDateChange(date);
     handleTimeWindowChange(null); // Reset selected time window when date changes
   };
+
+  // Compute today's date in local time (avoids UTC off-by-one for input[type="date"])
+  const todayLocalISO = React.useMemo(() => {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().split("T")[0];
+  }, []);
 
   // Function to format selected time window for display
   const formatSelectedTimeWindow = (window: AppointmentAvailability) => {
@@ -142,77 +157,83 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
     <div className="space-y-6">
       {/* Scheduling Options */}
       <div className="space-y-4">
-        <h3 className="font-medium text-gray-900 dark:text-white">
+        <h3 id="scheduling-options-title" className="font-medium text-gray-900 dark:text-white">
           {currentConfig.title}
         </h3>
-
-        <div className="space-y-3">
-          {/* ASAP Option */}
-          <label
-            className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-colors ${
-              schedulingType === "asap"
-                ? "border-green-500 bg-green-50 dark:bg-green-900/20 dark:border-green-400"
-                : "border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
-            }`}
+        {!hideSchedulingTypeSelect && (
+          <div
+            className="space-y-3"
+            role="radiogroup"
+            aria-labelledby="scheduling-options-title"
           >
-            <input
-              type="radio"
-              name="schedulingType"
-              checked={schedulingType === "asap"}
-              onChange={() => updateSchedulingType("asap")}
-              className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500 dark:border-gray-600 dark:focus:ring-green-600"
-            />
-            <HiLightningBolt className="w-5 h-5 text-green-600" />
-            <div className="flex-1">
-              <span className="font-medium text-gray-900 dark:text-white">
-                {currentConfig.asapText}
-              </span>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {currentConfig.asapDescription}
-              </p>
-            </div>
-          </label>
+            {/* ASAP Option */}
+            <label
+              className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-colors ${
+                schedulingType === "asap"
+                  ? "border-green-500 bg-green-50 dark:bg-green-900/20 dark:border-green-400"
+                  : "border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+              }`}
+            >
+              <input
+                type="radio"
+                name="schedulingType"
+                checked={schedulingType === "asap"}
+                onChange={() => updateSchedulingType("asap")}
+                className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500 dark:border-gray-600 dark:focus:ring-green-600"
+              />
+              <HiLightningBolt className="w-5 h-5 text-green-600" />
+              <div className="flex-1">
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {currentConfig.asapText}
+                </span>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {currentConfig.asapDescription}
+                </p>
+              </div>
+            </label>
 
-          {/* Specific Date Option */}
-          <label
-            className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-colors ${
-              schedulingType === "specific"
-                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-400"
-                : "border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
-            }`}
-          >
-            <input
-              type="radio"
-              name="schedulingType"
-              checked={schedulingType === "specific"}
-              onChange={() => updateSchedulingType("specific")}
-              className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 dark:border-gray-600 dark:focus:ring-blue-600"
-            />
-            <HiCalendar className="w-5 h-5 text-blue-600" />
-            <div className="flex-1">
-              <span className="font-medium text-gray-900 dark:text-white">
-                Choose a specific date
-              </span>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Pick a date and see available times
-              </p>
-            </div>
-          </label>
-        </div>
+            {/* Specific Date Option */}
+            <label
+              className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-colors ${
+                schedulingType === "specific"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-400"
+                  : "border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+              }`}
+            >
+              <input
+                type="radio"
+                name="schedulingType"
+                checked={schedulingType === "specific"}
+                onChange={() => updateSchedulingType("specific")}
+                className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 dark:border-gray-600 dark:focus:ring-blue-600"
+              />
+              <HiCalendar className="w-5 h-5 text-blue-600" />
+              <div className="flex-1">
+                <span className="font-medium text-gray-900 dark:text-white">
+                  Choose a specific date
+                </span>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Pick a date and see available times
+                </p>
+              </div>
+            </label>
+          </div>
+        )}
       </div>
 
       {/* Conditional Details */}
       {schedulingType === "specific" && (
         <div className="border-1 border-blue-100 dark:bg-blue-900/20 rounded-lg p-4 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="specific-date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Select Date
             </label>
             <input
               type="date"
+              id="specific-date"
               value={specificDate}
               onChange={(e) => handleSpecificDateChange(e.target.value)}
-              min={new Date().toISOString().split("T")[0]}
+              min={todayLocalISO}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
@@ -263,7 +284,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                   </div>
 
                   {loading ? (
-                    <div className="flex justify-center py-6">
+                    <div className="flex justify-center py-6" role="status" aria-live="polite" aria-busy="true">
                       <div className="flex items-center">
                         <Spinner size="sm" className="mr-2" />
                         <span className="text-sm text-gray-600 dark:text-gray-400">

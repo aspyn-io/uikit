@@ -256,7 +256,6 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                 d.setHours(0, 0, 0, 0);
                 return d;
               })()}
-              label="Select Date"
             />
           </div>
 

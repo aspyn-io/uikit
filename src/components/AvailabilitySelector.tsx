@@ -97,6 +97,13 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
     handleTimeWindowChange(null); // Reset selected time window when date changes
   };
 
+  // Compute today's date in local time (avoids UTC off-by-one for input[type="date"])
+  const todayLocalISO = React.useMemo(() => {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().split("T")[0];
+  }, []);
+
   // Function to format selected time window for display
   const formatSelectedTimeWindow = (window: AppointmentAvailability) => {
     const startDate = new Date(window.window_start_at);
@@ -150,11 +157,15 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
     <div className="space-y-6">
       {/* Scheduling Options */}
       <div className="space-y-4">
-        <h3 className="font-medium text-gray-900 dark:text-white">
+        <h3 id="scheduling-options-title" className="font-medium text-gray-900 dark:text-white">
           {currentConfig.title}
         </h3>
         {!hideSchedulingTypeSelect && (
-          <div className="space-y-3">
+          <div
+            className="space-y-3"
+            role="radiogroup"
+            aria-labelledby="scheduling-options-title"
+          >
             {/* ASAP Option */}
             <label
               className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-colors ${
@@ -214,14 +225,15 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
       {schedulingType === "specific" && (
         <div className="border-1 border-blue-100 dark:bg-blue-900/20 rounded-lg p-4 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="specific-date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Select Date
             </label>
             <input
               type="date"
+              id="specific-date"
               value={specificDate}
               onChange={(e) => handleSpecificDateChange(e.target.value)}
-              min={new Date().toISOString().split("T")[0]}
+              min={todayLocalISO}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
@@ -272,7 +284,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                   </div>
 
                   {loading ? (
-                    <div className="flex justify-center py-6">
+                    <div className="flex justify-center py-6" role="status" aria-live="polite" aria-busy="true">
                       <div className="flex items-center">
                         <Spinner size="sm" className="mr-2" />
                         <span className="text-sm text-gray-600 dark:text-gray-400">

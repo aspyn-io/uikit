@@ -57,3 +57,8 @@ jobs:
         run: npm publish --tag unstable
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag as latest
+        run: npm dist-tag add @aspyn-io/sdk@$VERSION latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

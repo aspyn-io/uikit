@@ -248,7 +248,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
               className="w-full"
               value={specificDate ? parseLocalDateFromYYYYMMDD(specificDate) : null}
               onChange={(date) =>
-                handleSpecificDateChange(date ? format(date, "yyyy-MM-dd") : "")
+                handleSpecificDateChange(date ? toLocalISODate(date) : "")
               }
               // Limit selection to today or later
               minDate={(() => {

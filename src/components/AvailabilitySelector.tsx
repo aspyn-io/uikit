@@ -114,10 +114,8 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
 
   const toLocalISODate = React.useCallback((date: Date | null): string => {
     if (!date) return "";
-    const d = new Date(date);
-    // Normalize to local day to avoid timezone shifts
-    d.setHours(0, 0, 0, 0);
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    // Create a new Date using year, month, day to ensure local time
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     return d.toISOString().split("T")[0];
   }, []);
 

@@ -97,26 +97,12 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
     handleTimeWindowChange(null); // Reset selected time window when date changes
   };
 
-  // Compute today's date in local time (avoids UTC off-by-one for input[type="date"])
-  const todayLocalISO = React.useMemo(() => {
-    const d = new Date();
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().split("T")[0];
-  }, []);
-
   // Helpers to convert between YYYY-MM-DD string and local Date for Datepicker
   const parseLocalDateFromYYYYMMDD = React.useCallback((s: string): Date | null => {
     if (!s) return null;
     const [y, m, d] = s.split("-").map(Number);
     if (!y || !m || !d) return null;
     return new Date(y, m - 1, d);
-  }, []);
-
-  const toLocalISODate = React.useCallback((date: Date | null): string => {
-    if (!date) return "";
-    // Create a new Date using year, month, day to ensure local time
-    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    return d.toISOString().split("T")[0];
   }, []);
 
   // Function to format selected time window for display
@@ -248,7 +234,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
               className="w-full"
               value={specificDate ? parseLocalDateFromYYYYMMDD(specificDate) : null}
               onChange={(date) =>
-                handleSpecificDateChange(date ? toLocalISODate(date) : "")
+                handleSpecificDateChange(date ? format(date, "yyyy-MM-dd") : "")
               }
               // Limit selection to today or later
               minDate={(() => {

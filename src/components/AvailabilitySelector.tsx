@@ -80,28 +80,15 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
   showCsNumber = true,
   type = "create",
 }) => {
-  // Debug log to track timezone prop
-  React.useEffect(() => {
-    console.log(`[AvailabilitySelector] Rendered with timezone: ${timezone}`);
-  }, [timezone]);
-
   // Helper function to format time with timezone support
   const formatTime = React.useCallback(
     (dateString: string, formatPattern: string) => {
       try {
         const date = parseISO(dateString);
         if (timezone) {
-          const result = formatInTimeZone(date, timezone, formatPattern);
-          console.log(
-            `[AvailabilitySelector] formatTime: ${dateString} → ${result} (timezone: ${timezone})`
-          );
-          return result;
+          return formatInTimeZone(date, timezone, formatPattern);
         } else {
-          const result = format(date, formatPattern);
-          console.log(
-            `[AvailabilitySelector] formatTime: ${dateString} → ${result} (no timezone)`
-          );
-          return result;
+          return format(date, formatPattern);
         }
       } catch (error) {
         console.error("Error formatting time:", error);

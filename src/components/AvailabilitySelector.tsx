@@ -91,7 +91,12 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
           return format(date, formatPattern);
         }
       } catch (error) {
-        console.error("Error formatting time:", error);
+        console.error("Error formatting time:", {
+          dateString,
+          timezone,
+          formatPattern,
+          error,
+        });
         return format(new Date(dateString), formatPattern);
       }
     },

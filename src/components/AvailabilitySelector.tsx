@@ -97,7 +97,23 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
           formatPattern,
           error,
         });
-        return format(new Date(dateString), formatPattern);
+
+        // Try fallback with native Date constructor
+        try {
+          const fallbackDate = new Date(dateString);
+          if (isNaN(fallbackDate.getTime())) {
+            throw new Error("Invalid date string");
+          }
+          return format(fallbackDate, formatPattern);
+        } catch (fallbackError) {
+          console.error("Fallback date parsing also failed:", {
+            dateString,
+            formatPattern,
+            fallbackError,
+          });
+          // Return a safe default format using current time
+          return format(new Date(), formatPattern);
+        }
       }
     },
     [timezone]

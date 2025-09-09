@@ -106,11 +106,12 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
   }, []);
 
   // Function to format selected time window for display
-  const formatSelectedTimeWindow = (window: AppointmentAvailability) => {
+  const formatSelectedTimeWindow = (window: AppointmentAvailability, selectedDate: string) => {
     const startDate = new Date(window.window_start_at);
     const endDate = new Date(window.window_end_at);
 
-    const dateStr = format(startDate, "MMM dd, yyyy");
+    // Use the selected date instead of parsing from timestamp to avoid timezone issues
+    const dateStr = selectedDate ? format(parseLocalDateFromYYYYMMDD(selectedDate) || new Date(), "MMM dd, yyyy") : format(startDate, "MMM dd, yyyy");
     const startTime = format(startDate, "h:mm a");
     const endTime = format(endDate, "h:mm a");
 
@@ -262,7 +263,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                         </div>
                         <div className="flex items-center space-x-2">
                           <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {formatSelectedTimeWindow(selectedTimeWindow)}
+                            {formatSelectedTimeWindow(selectedTimeWindow, specificDate)}
                           </span>
                           <button
                             onClick={() => handleTimeWindowChange(null)}

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { HiSearch } from 'react-icons/hi';
-import { Dropdown, DropdownDivider, DropdownItem } from 'flowbite-react';
+import React, { useState, useEffect, useRef } from "react";
+import { Search } from "lucide-react";
+import { Dropdown, DropdownDivider, DropdownItem } from "flowbite-react";
 
 export interface SearchDropdownProps {
   items: string[];
@@ -11,8 +11,15 @@ export interface SearchDropdownProps {
   buttonBgColor?: string;
 }
 
-const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSelect, buttonText = "Select Item", buttonColor = "white", buttonBgColor = "#4f4f4f" }) => {
-  const [query, setQuery] = useState('');
+const SearchDropdown: React.FC<SearchDropdownProps> = ({
+  items,
+  onSearch,
+  onSelect,
+  buttonText = "Select Item",
+  buttonColor = "white",
+  buttonBgColor = "#4f4f4f",
+}) => {
+  const [query, setQuery] = useState("");
   const [filteredItems, setFilteredItems] = useState(items);
   const dropdownRef = useRef<HTMLButtonElement>(null);
 
@@ -20,7 +27,9 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
     if (onSearch) {
       onSearch(query);
     }
-    setFilteredItems(items.filter(item => item.toLowerCase().includes(query.toLowerCase())));
+    setFilteredItems(
+      items.filter((item) => item.toLowerCase().includes(query.toLowerCase()))
+    );
   }, [query, items, onSearch]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +37,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
   };
 
   return (
@@ -36,12 +45,12 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
       style={{ backgroundColor: `${buttonBgColor}`, color: `${buttonColor}` }}
       label={
         <button className="flex items-center">
-          <HiSearch className="mr-2" />
+          <Search className="mr-2" />
           <span>{buttonText}</span>
         </button>
       }
     >
-      <div className="p-3" onKeyDown={handleKeyDown}>  
+      <div className="p-3" onKeyDown={handleKeyDown}>
         <input
           type="text"
           value={query}
@@ -55,7 +64,9 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ items, onSearch, onSele
       <DropdownDivider />
       <div className="max-h-60 overflow-y-auto">
         {filteredItems.length === 0 ? (
-          <DropdownItem aria-readonly disabled>No items found</DropdownItem>
+          <DropdownItem aria-readonly disabled>
+            No items found
+          </DropdownItem>
         ) : (
           filteredItems.map((item: string, index: number) => (
             <DropdownItem key={index} onClick={() => onSelect(item)}>

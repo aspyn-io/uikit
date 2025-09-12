@@ -1,44 +1,46 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
-import React, { useState } from 'react';
-import { HiOutlineCode } from 'react-icons/hi';
-import JsonViewer from '../components/JsonViewer';
+import { Meta, StoryObj } from "@storybook/react-vite";
+import React, { useState } from "react";
+import { Code } from "lucide-react";
+import JsonViewer from "../components/JsonViewer";
 
 const meta: Meta<typeof JsonViewer> = {
-  title: 'Components/JsonViewer',
+  title: "Components/JsonViewer",
   component: JsonViewer,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     data: {
-      control: 'object',
-      description: 'JSON data to display',
+      control: "object",
+      description: "JSON data to display",
     },
     title: {
-      control: 'text',
-      description: 'Title for the modal',
+      control: "text",
+      description: "Title for the modal",
       required: true,
     },
     buttonLabel: {
-      control: 'text',
-      description: 'Text to display on the button',
+      control: "text",
+      description: "Text to display on the button",
     },
     buttonProps: {
-      control: 'object',
-      description: 'Props to pass to the button component',
+      control: "object",
+      description: "Props to pass to the button component",
     },
     show: {
-      control: 'boolean',
-      description: 'Optional controlled state for the modal. If not provided, the component manages its own state.',
+      control: "boolean",
+      description:
+        "Optional controlled state for the modal. If not provided, the component manages its own state.",
     },
     onClose: {
-      description: 'Optional callback fired when the modal closes. Required if show is provided.',
+      description:
+        "Optional callback fired when the modal closes. Required if show is provided.",
     },
     invalidDataMessage: {
-      control: 'text',
-      description: 'Custom message to display when data cannot be stringified',
+      control: "text",
+      description: "Custom message to display when data cannot be stringified",
     },
     allowCopy: {
-      control: 'boolean',
-      description: 'Whether to show the copy button',
+      control: "boolean",
+      description: "Whether to show the copy button",
       defaultValue: true,
     },
   },
@@ -48,11 +50,11 @@ export default meta;
 type Story = StoryObj<typeof JsonViewer>;
 
 const sampleData = {
-  id: '123',
-  name: 'Sample Data',
+  id: "123",
+  name: "Sample Data",
   items: [
-    { id: 1, value: 'test1' },
-    { id: 2, value: 'test2' },
+    { id: 1, value: "test1" },
+    { id: 2, value: "test2" },
   ],
 };
 
@@ -80,8 +82,8 @@ export const Default: Story = {
   render: (args) => <JsonViewerTemplate args={args} />,
   args: {
     data: sampleData,
-    title: 'Sample Data Viewer',
-    buttonLabel: 'View JSON',
+    title: "Sample Data Viewer",
+    buttonLabel: "View JSON",
   },
 };
 
@@ -96,7 +98,7 @@ export const ControlledState: Story = {
           onClose={() => setShow(false)}
           buttonProps={{
             onClick: () => setShow(true),
-            ...args.buttonProps
+            ...args.buttonProps,
           }}
         />
       </div>
@@ -104,8 +106,8 @@ export const ControlledState: Story = {
   },
   args: {
     data: sampleData,
-    title: 'Controlled Modal Example',
-    buttonLabel: 'Open Controlled Modal',
+    title: "Controlled Modal Example",
+    buttonLabel: "Open Controlled Modal",
   },
 };
 
@@ -113,11 +115,11 @@ export const WithIcon: Story = {
   render: (args) => <JsonViewerTemplate args={args} />,
   args: {
     data: sampleData,
-    title: 'Sample Data Viewer',
-    buttonLabel: <HiOutlineCode className="w-4 h-4" />,
+    title: "Sample Data Viewer",
+    buttonLabel: <Code className="w-4 h-4" />,
     buttonProps: {
-      color: 'gray',
-      size: 'sm',
+      color: "gray",
+      size: "sm",
     },
   },
 };
@@ -126,18 +128,18 @@ export const CustomButton: Story = {
   render: (args) => <JsonViewerTemplate args={args} />,
   args: {
     data: sampleData,
-    title: 'Sample Data Viewer',
+    title: "Sample Data Viewer",
     buttonProps: {
-      color: 'purple',
-      size: 'xl',
+      color: "purple",
+      size: "xl",
       outline: true,
     },
-    buttonLabel: 'View Raw Data',
+    buttonLabel: "View Raw Data",
   },
 };
 
 const circularObject: any = {
-  name: 'Circular Reference',
+  name: "Circular Reference",
 };
 circularObject.self = circularObject;
 
@@ -145,12 +147,13 @@ export const InvalidData: Story = {
   render: (args) => <JsonViewerTemplate args={args} />,
   args: {
     data: circularObject,
-    title: 'Invalid Data Modal',
-    buttonLabel: 'View Invalid Data',
+    title: "Invalid Data Modal",
+    buttonLabel: "View Invalid Data",
     buttonProps: {
-      color: 'failure',
+      color: "failure",
     },
-    invalidDataMessage: 'This data cannot be displayed due to circular references',
+    invalidDataMessage:
+      "This data cannot be displayed due to circular references",
   },
 };
 
@@ -158,8 +161,8 @@ export const WithoutCopyButton: Story = {
   render: (args) => <JsonViewerTemplate args={args} />,
   args: {
     data: sampleData,
-    title: 'View Without Copy Button',
-    buttonLabel: 'View JSON',
+    title: "View Without Copy Button",
+    buttonLabel: "View JSON",
     allowCopy: false,
   },
 };

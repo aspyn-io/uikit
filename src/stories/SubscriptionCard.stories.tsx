@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { SubscriptionCard } from "../components/SubscriptionCard";
-import { HiOutlineReceiptRefund } from "react-icons/hi";
+import { Receipt } from "lucide-react";
 import { BrowserRouter } from "react-router-dom";
 
 const meta: Meta<typeof SubscriptionCard> = {
@@ -65,7 +65,7 @@ export const WithCustomIcon: Story = {
   ),
   args: {
     ...subscriptionData,
-    icon: <HiOutlineReceiptRefund size={24} />,
+    icon: <Receipt size={24} />,
   },
 };
 

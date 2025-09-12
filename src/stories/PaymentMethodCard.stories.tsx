@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Dropdown, DropdownItem } from "flowbite-react";
 import PaymentMethodCard from "../components/PaymentMethodCard";
-import { HiDotsVertical } from "react-icons/hi";
+import { MoreVertical } from "lucide-react";
 
 const meta: Meta<typeof PaymentMethodCard> = {
   title: "Cards/PaymentMethodCard",
@@ -71,7 +71,7 @@ const commonDrawer = (
     inline
     arrowIcon={false}
     label={
-      <HiDotsVertical className="h-6 w-6 text-gray-400 hover:text-gray-600" />
+      <MoreVertical className="h-6 w-6 text-gray-400 hover:text-gray-600" />
     }
   >
     <DropdownItem onClick={() => console.log("Edit")}>

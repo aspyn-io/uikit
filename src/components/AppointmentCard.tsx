@@ -20,14 +20,14 @@ import {
 } from "flowbite-react";
 
 import {
-  HiOutlineCalendar,
-  HiOutlineClock,
-  HiOutlineUser,
-  HiOutlineChevronDown,
-  HiOutlineChevronUp,
-  HiOutlineDotsVertical,
-  HiOutlineClipboardList,
-} from "react-icons/hi";
+  Calendar,
+  Clock,
+  User,
+  ChevronDown,
+  ChevronUp,
+  MoreVertical,
+  ClipboardList,
+} from "lucide-react";
 
 interface WorkOrder {
   id: string;
@@ -125,7 +125,7 @@ export const AppointmentCard = ({
       <div className="grid grid-cols-[60%_40%] items-center p-4">
         <div className="flex items-center gap-6">
           <div className="p-3 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center">
-            <HiOutlineCalendar size={20} />
+            <Calendar size={20} />
           </div>
           <div className="flex flex-col items-center">
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -156,7 +156,7 @@ export const AppointmentCard = ({
                       : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                   }`}
                 >
-                  <HiOutlineCalendar size={20} />
+                  <Calendar size={20} />
                 </div>
                 <div
                   className={`p-2 rounded-full ${
@@ -165,7 +165,7 @@ export const AppointmentCard = ({
                       : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                   }`}
                 >
-                  <HiOutlineClock size={20} />
+                  <Clock size={20} />
                 </div>
                 <div
                   className={`p-2 rounded-full ${
@@ -174,7 +174,7 @@ export const AppointmentCard = ({
                       : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                   }`}
                 >
-                  <HiOutlineUser size={20} />
+                  <User size={20} />
                 </div>
               </>
             )}
@@ -197,7 +197,7 @@ export const AppointmentCard = ({
               }}
             >
               <div className="flex items-center gap-2">
-                <HiOutlineClipboardList
+                <ClipboardList
                   size={16}
                   className="text-gray-900 dark:text-white"
                 />
@@ -206,12 +206,12 @@ export const AppointmentCard = ({
                 </span>
               </div>
               {isExpanded ? (
-                <HiOutlineChevronUp
+                <ChevronUp
                   size={16}
                   className="ml-2 text-gray-900 dark:text-white"
                 />
               ) : (
-                <HiOutlineChevronDown
+                <ChevronDown
                   size={16}
                   className="ml-2 text-gray-900 dark:text-white"
                 />
@@ -228,7 +228,7 @@ export const AppointmentCard = ({
               <Dropdown
                 inline
                 arrowIcon={false}
-                label={<HiOutlineDotsVertical size={20} />}
+                label={<MoreVertical size={20} />}
                 className="overflow-hidden"
               >
                 {onRescheduleAppointment && (
@@ -324,7 +324,7 @@ export const AppointmentCard = ({
                         <Dropdown
                           inline
                           arrowIcon={false}
-                          label={<HiOutlineDotsVertical size={16} />}
+                          label={<MoreVertical size={16} />}
                           className="overflow-hidden"
                         >
                           {onRescheduleWorkOrder && (

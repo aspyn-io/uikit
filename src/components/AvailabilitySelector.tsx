@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  HiCalendar,
-  HiLightningBolt,
-  HiCheck,
-  HiPencil,
-  HiPhone,
-  HiChatAlt,
-} from "react-icons/hi";
+  Calendar,
+  Zap,
+  Check,
+  Pencil,
+  Phone,
+  MessageSquare,
+} from "lucide-react";
 import { Spinner } from "flowbite-react";
 import { format } from "date-fns";
 
@@ -157,7 +157,10 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
     <div className="space-y-6">
       {/* Scheduling Options */}
       <div className="space-y-4">
-        <h3 id="scheduling-options-title" className="font-medium text-gray-900 dark:text-white">
+        <h3
+          id="scheduling-options-title"
+          className="font-medium text-gray-900 dark:text-white"
+        >
           {currentConfig.title}
         </h3>
         {!hideSchedulingTypeSelect && (
@@ -181,7 +184,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                 onChange={() => updateSchedulingType("asap")}
                 className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500 dark:border-gray-600 dark:focus:ring-green-600"
               />
-              <HiLightningBolt className="w-5 h-5 text-green-600" />
+              <Zap className="w-5 h-5 text-green-600" />
               <div className="flex-1">
                 <span className="font-medium text-gray-900 dark:text-white">
                   {currentConfig.asapText}
@@ -207,7 +210,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                 onChange={() => updateSchedulingType("specific")}
                 className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 dark:border-gray-600 dark:focus:ring-blue-600"
               />
-              <HiCalendar className="w-5 h-5 text-blue-600" />
+              <Calendar className="w-5 h-5 text-blue-600" />
               <div className="flex-1">
                 <span className="font-medium text-gray-900 dark:text-white">
                   Choose a specific date
@@ -225,7 +228,10 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
       {schedulingType === "specific" && (
         <div className="border-1 border-blue-100 dark:bg-blue-900/20 rounded-lg p-4 space-y-4">
           <div>
-            <label htmlFor="specific-date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label
+              htmlFor="specific-date"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
               Select Date
             </label>
             <input
@@ -248,7 +254,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                   </label>
                   <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <HiCheck className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="font-medium text-gray-900 dark:text-white">
                           {selectedTimeWindow.name}
@@ -261,7 +267,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                             onClick={() => handleTimeWindowChange(null)}
                             className="inline-flex items-center space-x-1 px-2 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 border border-blue-200 dark:border-blue-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                           >
-                            <HiPencil className="w-3 h-3" />
+                            <Pencil className="w-3 h-3" />
                             <span>Change</span>
                           </button>
                         </div>
@@ -284,7 +290,12 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                   </div>
 
                   {loading ? (
-                    <div className="flex justify-center py-6" role="status" aria-live="polite" aria-busy="true">
+                    <div
+                      className="flex justify-center py-6"
+                      role="status"
+                      aria-live="polite"
+                      aria-busy="true"
+                    >
                       <div className="flex items-center">
                         <Spinner size="sm" className="mr-2" />
                         <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -295,7 +306,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                   ) : timeWindows.length === 0 ? (
                     <div className="my-8 flex flex-col items-center justify-center p-8 text-center border border-gray-200 rounded-lg dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                       {showCsNumber && (
-                        <HiPhone className="w-10 h-10 text-blue-500 dark:text-blue-400 mb-4" />
+                        <Phone className="w-10 h-10 text-blue-500 dark:text-blue-400 mb-4" />
                       )}
                       <p className="text-xl font-medium text-gray-900 dark:text-white mb-2">
                         No available time slots found
@@ -357,7 +368,7 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
       {showNotes && (
         <div className="space-y-3">
           <h3 className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
-            <HiChatAlt className="w-5 h-5" />
+            <MessageSquare className="w-5 h-5" />
             {type === "reschedule"
               ? "Any special requests?"
               : type === "reservice"

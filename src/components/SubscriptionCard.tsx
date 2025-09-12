@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { Badge, Dropdown, DropdownItem } from "flowbite-react";
-import { HiOutlineCreditCard, HiOutlineDotsVertical } from "react-icons/hi";
+import { CreditCard, MoreVertical } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { ReactNode } from "react";
@@ -35,7 +35,7 @@ export const SubscriptionCard = ({
   showCustomerInfo = false,
   customerEmail,
   customerName,
-  icon = <HiOutlineCreditCard size={24} />,
+  icon = <CreditCard size={24} />,
   routeTo,
 }: SubscriptionCardProps) => {
   const formattedDate = format(new Date(createdAt), "MMM d, yyyy h:mm a");
@@ -88,13 +88,11 @@ export const SubscriptionCard = ({
           <Dropdown
             inline
             arrowIcon={false}
-            label={<HiOutlineDotsVertical size={20} />}
+            label={<MoreVertical size={20} />}
             className="overflow-hidden"
           >
             <DropdownItem onClick={onEdit}>Edit Subscription</DropdownItem>
-            <DropdownItem onClick={onCancel}>
-              Cancel Subscription
-            </DropdownItem>
+            <DropdownItem onClick={onCancel}>Cancel Subscription</DropdownItem>
           </Dropdown>
         )}
       </div>

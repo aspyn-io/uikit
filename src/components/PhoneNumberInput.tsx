@@ -1,5 +1,5 @@
 import * as React from "react";
-import { HiCheck, HiChevronDown, HiSearch } from "react-icons/hi";
+import { Check, ChevronDown, Search } from "lucide-react";
 import * as RPNInput from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
 
@@ -57,7 +57,7 @@ const InputComponent = React.forwardRef<
       "PhoneInputInput [&_input]:rounded-e-lg [&_input]:rounded-s-none [&_input]:pl-10",
       className
     )}
-    icon={HiSearch}
+    icon={Search}
     {...props}
     ref={ref}
   />
@@ -126,7 +126,7 @@ const CountrySelect = ({
           country={selectedCountry}
           countryName={selectedCountry}
         />
-        <HiChevronDown
+        <ChevronDown
           className={twMerge(
             "-mr-2 size-4 opacity-50",
             disabled ? "hidden" : "opacity-100"
@@ -168,7 +168,7 @@ const CountrySelectOption = ({
       {country && (
         <span className="text-sm">{`+${getCountryCallingCode(country)}`}</span>
       )}
-      <HiCheck
+      <Check
         className={`ml-auto size-4 ${
           country === selectedCountry ? "opacity-100" : "opacity-0"
         }`}

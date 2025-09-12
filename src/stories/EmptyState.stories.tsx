@@ -1,16 +1,16 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
 import EmptyState from "../components/EmptyState";
 import {
-  HiDatabase,
-  HiUpload,
-  HiInbox,
-  HiSearch,
-  HiDocumentAdd,
-  HiPhotograph,
-  HiFolderOpen,
-  HiCube,
-  HiBell,
-} from "react-icons/hi";
+  Database,
+  Upload,
+  Inbox,
+  Search,
+  FileText,
+  Image,
+  FolderOpen,
+  Package,
+  Bell,
+} from "lucide-react";
 
 const meta: Meta<typeof EmptyState> = {
   title: "Cards/EmptyState",
@@ -30,7 +30,7 @@ export const Default: Story = {
     title: "No messages",
     description:
       "You don't have any messages in your inbox yet. When you do, they'll show up here.",
-    icon: <HiInbox size={32} />,
+    icon: <Inbox size={32} />,
     buttonText: "Compose message",
     onButtonClick: () => console.log("Compose clicked"),
   },
@@ -41,7 +41,7 @@ export const DashedButton: Story = {
   args: {
     layout: "dashed",
     title: "Create a new database",
-    icon: <HiDatabase size={48} />,
+    icon: <Database size={48} />,
     asButton: true,
     onClick: () => console.log("Create database clicked"),
     size: "sm",
@@ -54,7 +54,7 @@ export const DashedUploadZone: Story = {
     layout: "dashed",
     title: "Upload files",
     description: "or drag and drop them here",
-    icon: <HiUpload size={48} />,
+    icon: <Upload size={48} />,
     asButton: true,
     onClick: () => console.log("Upload zone clicked"),
     size: "sm",
@@ -68,7 +68,7 @@ export const LeftAligned: Story = {
     title: "No search results",
     description:
       "We couldn't find any results for your search. Try adjusting your keywords or filters.",
-    icon: <HiSearch size={32} />,
+    icon: <Search size={32} />,
     buttonText: "Clear filters",
     onButtonClick: () => console.log("Clear filters clicked"),
     secondaryButtonText: "New search",
@@ -83,7 +83,7 @@ export const CardLayout: Story = {
     size: "sm",
     title: "No files uploaded",
     description: "Drop your files here or click to upload",
-    icon: <HiDocumentAdd size={24} />,
+    icon: <FileText size={24} />,
     buttonText: "Upload files",
     onButtonClick: () => console.log("Upload clicked"),
   },
@@ -97,7 +97,7 @@ export const WithIllustration: Story = {
     description: "Add some images to your gallery to see them displayed here",
     illustration: (
       <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-8">
-        <HiPhotograph size={64} className="text-gray-400 dark:text-gray-500" />
+        <Image size={64} className="text-gray-400 dark:text-gray-500" />
       </div>
     ),
     buttonText: "Add images",
@@ -110,7 +110,7 @@ export const CustomStyling: Story = {
   args: {
     title: "No projects yet",
     description: "Create your first project to get started",
-    icon: <HiFolderOpen size={32} />,
+    icon: <FolderOpen size={32} />,
     buttonText: "Create project",
     onButtonClick: () => console.log("Create project clicked"),
     className: "bg-blue-50 dark:bg-blue-900",
@@ -126,7 +126,7 @@ export const Fullscreen: Story = {
     layout: "fullscreen",
     title: "Welcome to the app",
     description: "Get started by creating your first item",
-    icon: <HiCube size={48} />,
+    icon: <Package size={48} />,
     buttonText: "Create item",
     onButtonClick: () => console.log("Create item clicked"),
     className: "bg-gray-50 dark:bg-gray-900",
@@ -141,7 +141,7 @@ export const WithoutButtons: Story = {
   args: {
     title: "No notifications",
     description: "When you receive notifications, they will appear here.",
-    icon: <HiBell size={32} />,
+    icon: <Bell size={32} />,
   },
 };
 

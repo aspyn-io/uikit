@@ -1,13 +1,8 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { MemoryRouter } from "react-router-dom";
 import ContactCard from "../components/ContactCard";
-import {
-  HiOutlineChat,
-  HiOutlineUser,
-  HiOutlineBell,
-  HiOutlineCog,
-} from "react-icons/hi";
-import { HiCheckCircle } from "react-icons/hi";
+import { MessageCircle, User, Bell, Settings } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 const meta: Meta<typeof ContactCard> = {
   title: "Cards/ContactCard",
@@ -45,7 +40,7 @@ export const Default: Story = {
     status: {
       label: "Active",
       color: "green",
-      icon: () => <HiCheckCircle className="h-4 w-4" />,
+      icon: () => <CheckCircle className="h-4 w-4" />,
     },
   },
 };
@@ -111,7 +106,7 @@ export const WithStatus: Story = {
     status: {
       label: "Pending",
       color: "yellow",
-      icon: () => <HiCheckCircle className="h-4 w-4" />,
+      icon: () => <CheckCircle className="h-4 w-4" />,
     },
     actions: [
       { label: "Approve", onClick: () => console.log("Approve") },
@@ -127,22 +122,22 @@ export const CustomButtons: Story = {
       <>
         <ContactCard.Button
           to="#"
-          icon={<HiOutlineChat className="mr-2 h-5 w-5" />}
+          icon={<MessageCircle className="mr-2 h-5 w-5" />}
           label="Chat"
         />
         <ContactCard.Button
           to="#"
-          icon={<HiOutlineUser className="mr-2 h-5 w-5" />}
+          icon={<User className="mr-2 h-5 w-5" />}
           label="Profile"
         />
         <ContactCard.Button
           to="#"
-          icon={<HiOutlineBell className="mr-2 h-5 w-5" />}
+          icon={<Bell className="mr-2 h-5 w-5" />}
           label="Notifications"
         />
         <ContactCard.Button
           to="#"
-          icon={<HiOutlineCog className="mr-2 h-5 w-5" />}
+          icon={<Settings className="mr-2 h-5 w-5" />}
           label="Settings"
         />
       </>

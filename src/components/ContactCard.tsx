@@ -1,12 +1,7 @@
 import React from "react";
 import { Avatar, Badge, Button, Dropdown, DropdownItem } from "flowbite-react";
 import { Link } from "react-router-dom";
-import {
-  HiDotsVertical,
-  HiMail,
-  HiPhone,
-  HiLocationMarker,
-} from "react-icons/hi";
+import { MoreVertical, Mail, Phone, MapPin } from "lucide-react";
 
 interface ContactCardProps {
   avatar?: string;
@@ -28,7 +23,12 @@ interface ContactCardProps {
 }
 
 export const ContactCard: React.FC<ContactCardProps> & {
-  Button: React.FC<{ to: string; icon: React.ReactNode; label: string, className?: string }>;
+  Button: React.FC<{
+    to: string;
+    icon: React.ReactNode;
+    label: string;
+    className?: string;
+  }>;
 } = ({
   avatar,
   name,
@@ -99,7 +99,7 @@ export const ContactCard: React.FC<ContactCardProps> & {
               </h2>
               {address && (
                 <div className="flex items-center space-x-2">
-                  <HiLocationMarker className="text-gray-500 dark:text-gray-400 h-4 w-4" />
+                  <MapPin className="text-gray-500 dark:text-gray-400 h-4 w-4" />
                   <span className="text-sm text-gray-500 dark:text-gray-400">
                     {address}
                   </span>
@@ -122,7 +122,7 @@ export const ContactCard: React.FC<ContactCardProps> & {
               <Dropdown
                 label={
                   <div className="dropdown p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600">
-                    <HiDotsVertical className="text-gray-500 dark:text-gray-400" />
+                    <MoreVertical className="text-gray-500 dark:text-gray-400" />
                   </div>
                 }
                 inline
@@ -140,13 +140,13 @@ export const ContactCard: React.FC<ContactCardProps> & {
         </div>
         <div className="mt-4">
           <div className="flex items-center space-x-2">
-            <HiMail className="text-gray-500 dark:text-gray-400" />
+            <Mail className="text-gray-500 dark:text-gray-400" />
             <span className="text-sm text-gray-500 dark:text-gray-400 underline">
               {email}
             </span>
           </div>
           <div className="flex items-center space-x-2 mt-2">
-            <HiPhone className="text-gray-500 dark:text-gray-400" />
+            <Phone className="text-gray-500 dark:text-gray-400" />
             <span className="text-sm text-gray-500 dark:text-gray-400">
               {phone}
             </span>
@@ -161,13 +161,13 @@ export const ContactCard: React.FC<ContactCardProps> & {
             <>
               <ContactCard.Button
                 to={`tel:${phone}`}
-                icon={<HiPhone className="mr-2 h-5 w-5" />}
+                icon={<Phone className="mr-2 h-5 w-5" />}
                 label="Call"
                 className="border-r border-gray-200 dark:border-gray-700"
               />
               <ContactCard.Button
                 to={`mailto:${email}`}
-                icon={<HiMail className="mr-2 h-5 w-5" />}
+                icon={<Mail className="mr-2 h-5 w-5" />}
                 label="Mail"
               />
             </>
@@ -179,10 +179,7 @@ export const ContactCard: React.FC<ContactCardProps> & {
 };
 
 ContactCard.Button = ({ to, icon, label, className }) => (
-  <Link
-    to={to}
-    className={`w-1/2 ${className ? className : ""}`}
-  >
+  <Link to={to} className={`w-1/2 ${className ? className : ""}`}>
     <Button
       color="gray"
       className="w-full h-full flex items-center justify-center border-none rounded-none py-3"

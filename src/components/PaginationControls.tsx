@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Button, Select } from "flowbite-react";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type PaginationControlsProps = {
   handleNextPage: () => void;
@@ -66,7 +66,7 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
           disabled={!prevPage}
           className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <HiChevronLeft className="mr-1 self-center" />
+          <ChevronLeft className="mr-1 self-center" />
           <span>Previous</span>
         </Button>
         <Button
@@ -75,7 +75,7 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
           className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span>Next</span>
-          <HiChevronRight className="ml-1 self-center" />
+          <ChevronRight className="ml-1 self-center" />
         </Button>
       </div>
     </div>

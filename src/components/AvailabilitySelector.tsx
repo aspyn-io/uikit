@@ -7,8 +7,9 @@ import {
   Phone,
   MessageSquare,
 } from "lucide-react";
-import { Spinner } from "flowbite-react";
-import { format } from "date-fns";
+import { Spinner, Datepicker } from "flowbite-react";
+import { format, parseISO } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 
 export interface AppointmentAvailability {
   window_start_at: string;
@@ -50,6 +51,9 @@ interface AvailabilitySelectorProps {
   availabilityData: AppointmentAvailability[];
   loading: boolean;
 
+  // Timezone support
+  timezone?: string;
+
   // Notes props
   customerNote?: string;
   onCustomerNoteChange?: (note: string) => void;
@@ -69,12 +73,52 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
   onTimeWindowChange,
   availabilityData,
   loading,
+  timezone,
   customerNote = "",
   onCustomerNoteChange,
   showNotes = true,
   showCsNumber = true,
   type = "create",
 }) => {
+  // Helper function to format time with timezone support
+  const formatTime = React.useCallback(
+    (dateString: string, formatPattern: string) => {
+      try {
+        const date = parseISO(dateString);
+        if (timezone) {
+          return formatInTimeZone(date, timezone, formatPattern);
+        } else {
+          return format(date, formatPattern);
+        }
+      } catch (error) {
+        console.error("Error formatting time:", {
+          dateString,
+          timezone,
+          formatPattern,
+          error,
+        });
+
+        // Try fallback with native Date constructor
+        try {
+          const fallbackDate = new Date(dateString);
+          if (isNaN(fallbackDate.getTime())) {
+            throw new Error("Invalid date string");
+          }
+          return format(fallbackDate, formatPattern);
+        } catch (fallbackError) {
+          console.error("Fallback date parsing also failed:", {
+            dateString,
+            formatPattern,
+            fallbackError,
+          });
+          // Return a safe default format using current time
+          return format(new Date(), formatPattern);
+        }
+      }
+    },
+    [timezone]
+  );
+
   // Helper function to handle time window changes
   const handleTimeWindowChange = (window: AppointmentAvailability | null) => {
     if (onTimeWindowChange) {
@@ -97,21 +141,34 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
     handleTimeWindowChange(null); // Reset selected time window when date changes
   };
 
-  // Compute today's date in local time (avoids UTC off-by-one for input[type="date"])
-  const todayLocalISO = React.useMemo(() => {
-    const d = new Date();
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().split("T")[0];
-  }, []);
+  // Helpers to convert between YYYY-MM-DD string and local Date for Datepicker
+  const parseLocalDateFromYYYYMMDD = React.useCallback(
+    (s: string): Date | null => {
+      if (!s) return null;
+      const [y, m, d] = s.split("-").map(Number);
+      if (!y || !m || !d) return null;
+      return new Date(y, m - 1, d);
+    },
+    []
+  );
 
   // Function to format selected time window for display
-  const formatSelectedTimeWindow = (window: AppointmentAvailability) => {
+  const formatSelectedTimeWindow = (
+    window: AppointmentAvailability,
+    selectedDate: string
+  ) => {
     const startDate = new Date(window.window_start_at);
     const endDate = new Date(window.window_end_at);
 
-    const dateStr = format(startDate, "MMM dd, yyyy");
-    const startTime = format(startDate, "h:mm a");
-    const endTime = format(endDate, "h:mm a");
+    // Use the selected date instead of parsing from timestamp to avoid timezone issues
+    const dateStr = selectedDate
+      ? format(
+          parseLocalDateFromYYYYMMDD(selectedDate) || new Date(),
+          "MMM dd, yyyy"
+        )
+      : format(startDate, "MMM dd, yyyy");
+    const startTime = formatTime(window.window_start_at, "h:mm a");
+    const endTime = formatTime(window.window_end_at, "h:mm a");
 
     return `${dateStr} ${startTime} - ${endTime}`;
   };
@@ -125,12 +182,12 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
     return availabilityData.map((window, index) => ({
       ...window,
       id: `window-${index}-${window.window_start_at}-${window.window_end_at}`,
-      timeRange: `${format(
-        new Date(window.window_start_at),
+      timeRange: `${formatTime(
+        window.window_start_at,
         "h:mm a"
-      )} - ${format(new Date(window.window_end_at), "h:mm a")}`,
+      )} - ${formatTime(window.window_end_at, "h:mm a")}`,
     }));
-  }, [availabilityData]);
+  }, [availabilityData, formatTime]);
 
   // Dynamic content based on type
   const config = {
@@ -234,13 +291,21 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
             >
               Select Date
             </label>
-            <input
-              type="date"
+            <Datepicker
               id="specific-date"
-              value={specificDate}
-              onChange={(e) => handleSpecificDateChange(e.target.value)}
-              min={todayLocalISO}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full"
+              value={
+                specificDate ? parseLocalDateFromYYYYMMDD(specificDate) : null
+              }
+              onChange={(date) =>
+                handleSpecificDateChange(date ? format(date, "yyyy-MM-dd") : "")
+              }
+              // Limit selection to today or later
+              minDate={(() => {
+                const d = new Date();
+                d.setHours(0, 0, 0, 0);
+                return d;
+              })()}
             />
           </div>
 
@@ -261,7 +326,10 @@ export const AvailabilitySelector: React.FC<AvailabilitySelectorProps> = ({
                         </div>
                         <div className="flex items-center space-x-2">
                           <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {formatSelectedTimeWindow(selectedTimeWindow)}
+                            {formatSelectedTimeWindow(
+                              selectedTimeWindow,
+                              specificDate
+                            )}
                           </span>
                           <button
                             onClick={() => handleTimeWindowChange(null)}

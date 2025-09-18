@@ -10,6 +10,7 @@
   --gray-700: #374151;
   --gray-800: #1f2937;
   --gray-900: #111827;
+  --gray-950: #030712;
 
   /* Semantic colors */
   --primary: var(--gray-700);
@@ -57,4 +58,4 @@ body {
 
 .btn-secondary:hover {
   background-color: var(--secondary-hover);
-} 
+}

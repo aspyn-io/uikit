@@ -15,6 +15,14 @@ export {
   type AppointmentAvailability,
 } from "./components/AvailabilitySelector";
 
+export {
+  RescheduleSelector,
+  type WeekData,
+  type DayAvailability,
+  type TimeSlot as RescheduleTimeSlot,
+  type SelectedSlot,
+} from "./components/RescheduleSelector";
+
 export { InvoiceDetail } from "./components/InvoiceDetail";
 
 // Form Inputs

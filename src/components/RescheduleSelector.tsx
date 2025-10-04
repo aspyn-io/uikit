@@ -947,17 +947,70 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
             )}
           </div>
 
-          {/* Reserve Button */}
-          {onReserve && (
-            <Button
-              onClick={onReserve}
-              disabled={reserveButtonDisabled || !!reservedSlot}
-              className="w-full"
-              size="lg"
-            >
-              {reservedSlot ? "Appointment Reserved" : reserveButtonText}
-            </Button>
-          )}
+          {/* Selected Appointment Card */}
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-blue-50 dark:bg-blue-900/10 p-6">
+            <div className="flex items-center justify-between gap-6">
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                  Selected Appointment
+                </h3>
+                <div className="text-base text-gray-700 dark:text-gray-300 mb-3">
+                  {formatDate(
+                    parseISO(selectedSlot.date),
+                    "MMM d, yyyy, h:mm a zzz"
+                  )}{" "}
+                  at{" "}
+                  {selectedSlot.time_period.charAt(0).toUpperCase() +
+                    selectedSlot.time_period.slice(1).replace("_", " ")}
+                </div>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="h-4 w-4" />
+                    <span>
+                      Window:{" "}
+                      {selectedWindow
+                        ? windowOptions.find((w) => w.id === selectedWindow)
+                            ?.label
+                        : "None"}
+                    </span>
+                  </div>
+                  <span className="text-gray-300 dark:text-gray-600">•</span>
+                  <div className="flex items-center gap-1.5">
+                    <Users className="h-4 w-4" />
+                    <span>
+                      Team:{" "}
+                      {selectedTeam
+                        ? teamOptions.find((t) => t.id === selectedTeam)?.name
+                        : "None"}
+                    </span>
+                  </div>
+                  <span className="text-gray-300 dark:text-gray-600">•</span>
+                  <div className="flex items-center gap-1.5">
+                    <User className="h-4 w-4" />
+                    <span>
+                      Technician:{" "}
+                      {selectedTechnician
+                        ? technicianOptions.find(
+                            (t) => t.id === selectedTechnician
+                          )?.name
+                        : "None"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {onReserve && (
+                <Button
+                  onClick={onReserve}
+                  disabled={reserveButtonDisabled || !!reservedSlot}
+                  color="blue"
+                  size="md"
+                  className="shrink-0 px-6"
+                >
+                  {reservedSlot ? "Appointment Reserved" : reserveButtonText}
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

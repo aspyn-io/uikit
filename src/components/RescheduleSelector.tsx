@@ -714,7 +714,21 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                   </button>
                   {showTimeWindowDropdown && (
                     <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
-                      {getAvailableWindows.map((window) => (
+                      <button
+                        onClick={() => {
+                          onWindowChange?.("");
+                          setShowTimeWindowDropdown(false);
+                        }}
+                        className={`w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between border-b border-gray-100 dark:border-gray-700 ${
+                          !selectedWindow
+                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+                            : "text-gray-700 dark:text-gray-300"
+                        }`}
+                      >
+                        <span>No preference</span>
+                        {!selectedWindow && <Check className="h-4 w-4" />}
+                      </button>
+                      {getAvailableWindows.map((window, index) => (
                         <button
                           key={window.id}
                           onClick={() => {
@@ -722,10 +736,14 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                             setShowTimeWindowDropdown(false);
                           }}
                           disabled={!window.available}
-                          className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
-                            selectedWindow === window.id
-                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
+                          className={`w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
+                            index < getAvailableWindows.length - 1
+                              ? "border-b border-gray-100 dark:border-gray-700"
                               : ""
+                          } ${
+                            selectedWindow === window.id
+                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+                              : "text-gray-700 dark:text-gray-300"
                           } ${
                             !window.available
                               ? "opacity-50 cursor-not-allowed"
@@ -777,16 +795,16 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                           onTeamChange?.("");
                           setShowTeamDropdown(false);
                         }}
-                        className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
+                        className={`w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between border-b border-gray-100 dark:border-gray-700 ${
                           !selectedTeam
-                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
-                            : ""
+                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+                            : "text-gray-700 dark:text-gray-300"
                         }`}
                       >
                         <span>Any team</span>
                         {!selectedTeam && <Check className="h-4 w-4" />}
                       </button>
-                      {getAvailableTeams.map((team) => (
+                      {getAvailableTeams.map((team, index) => (
                         <button
                           key={team.id}
                           onClick={() => {
@@ -794,10 +812,14 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                             setShowTeamDropdown(false);
                           }}
                           disabled={!team.available}
-                          className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
-                            selectedTeam === team.id
-                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
+                          className={`w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
+                            index < getAvailableTeams.length - 1
+                              ? "border-b border-gray-100 dark:border-gray-700"
                               : ""
+                          } ${
+                            selectedTeam === team.id
+                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+                              : "text-gray-700 dark:text-gray-300"
                           } ${
                             !team.available
                               ? "opacity-50 cursor-not-allowed"
@@ -852,16 +874,16 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                           onTechnicianChange?.("");
                           setShowTechnicianDropdown(false);
                         }}
-                        className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
+                        className={`w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between border-b border-gray-100 dark:border-gray-700 ${
                           !selectedTechnician
-                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
-                            : ""
+                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+                            : "text-gray-700 dark:text-gray-300"
                         }`}
                       >
                         <span>Any technician</span>
                         {!selectedTechnician && <Check className="h-4 w-4" />}
                       </button>
-                      {getAvailableTechnicians.map((technician) => (
+                      {getAvailableTechnicians.map((technician, index) => (
                         <button
                           key={technician.id}
                           onClick={() => {
@@ -869,10 +891,14 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                             setShowTechnicianDropdown(false);
                           }}
                           disabled={!technician.available}
-                          className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                            selectedTechnician === technician.id
-                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
+                          className={`w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                            index < getAvailableTechnicians.length - 1
+                              ? "border-b border-gray-100 dark:border-gray-700"
                               : ""
+                          } ${
+                            selectedTechnician === technician.id
+                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium"
+                              : "text-gray-700 dark:text-gray-300"
                           } ${
                             !technician.available
                               ? "opacity-50 cursor-not-allowed"

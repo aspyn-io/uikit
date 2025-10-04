@@ -668,12 +668,6 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                             "afternoon",
                             timePeriodLabels.afternoon
                           )}
-                          {renderTimePeriodButton(
-                            date,
-                            dateString,
-                            "evening",
-                            timePeriodLabels.evening
-                          )}
                         </>
                       )}
                     </div>

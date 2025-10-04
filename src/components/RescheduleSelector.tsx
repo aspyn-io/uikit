@@ -682,238 +682,244 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
       {/* Preferences Section */}
       {selectedSlot && (
         <div className="space-y-4">
-          {/* Time Window Selector */}
-          {windowOptions.length > 0 && (
-            <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Clock className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Preferred Time Window
-                </label>
-              </div>
-              <div className="relative" ref={timeWindowRef}>
-                <button
-                  onClick={() =>
-                    setShowTimeWindowDropdown(!showTimeWindowDropdown)
-                  }
-                  className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <span>
-                    {selectedWindow
-                      ? windowOptions.find((w) => w.id === selectedWindow)
-                          ?.label || "Select a time window"
-                      : "Select a time window"}
-                  </span>
-                  <ChevronRight
-                    className={`h-4 w-4 transition-transform ${
-                      showTimeWindowDropdown ? "rotate-90" : ""
-                    }`}
-                  />
-                </button>
-                {showTimeWindowDropdown && (
-                  <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
-                    {getAvailableWindows.map((window) => (
-                      <button
-                        key={window.id}
-                        onClick={() => {
-                          onWindowChange?.(window.id);
-                          setShowTimeWindowDropdown(false);
-                        }}
-                        disabled={!window.available}
-                        className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
-                          selectedWindow === window.id
-                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
-                            : ""
-                        } ${
-                          !window.available
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                      >
-                        <span>{window.label}</span>
-                        {selectedWindow === window.id && (
-                          <Check className="h-4 w-4" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Team Selector */}
-          {teamOptions.length > 0 && (
-            <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Users className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Preferred Team
-                </label>
-              </div>
-              <div className="relative" ref={teamRef}>
-                <button
-                  onClick={() => setShowTeamDropdown(!showTeamDropdown)}
-                  className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <span>
-                    {selectedTeam
-                      ? teamOptions.find((t) => t.id === selectedTeam)?.name ||
-                        "Any team"
-                      : "Any team"}
-                  </span>
-                  <ChevronRight
-                    className={`h-4 w-4 transition-transform ${
-                      showTeamDropdown ? "rotate-90" : ""
-                    }`}
-                  />
-                </button>
-                {showTeamDropdown && (
-                  <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
-                    <button
-                      onClick={() => {
-                        onTeamChange?.("");
-                        setShowTeamDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
-                        !selectedTeam
-                          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
-                          : ""
+          {/* Preferences Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Time Window Selector */}
+            {windowOptions.length > 0 && (
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Clock className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Preferred Time Window
+                  </label>
+                </div>
+                <div className="relative" ref={timeWindowRef}>
+                  <button
+                    onClick={() =>
+                      setShowTimeWindowDropdown(!showTimeWindowDropdown)
+                    }
+                    className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <span>
+                      {selectedWindow
+                        ? windowOptions.find((w) => w.id === selectedWindow)
+                            ?.label || "Select a time window"
+                        : "Select a time window"}
+                    </span>
+                    <ChevronRight
+                      className={`h-4 w-4 transition-transform ${
+                        showTimeWindowDropdown ? "rotate-90" : ""
                       }`}
-                    >
-                      <span>Any team</span>
-                      {!selectedTeam && <Check className="h-4 w-4" />}
-                    </button>
-                    {getAvailableTeams.map((team) => (
-                      <button
-                        key={team.id}
-                        onClick={() => {
-                          onTeamChange?.(team.id);
-                          setShowTeamDropdown(false);
-                        }}
-                        disabled={!team.available}
-                        className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
-                          selectedTeam === team.id
-                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
-                            : ""
-                        } ${
-                          !team.available ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
-                      >
-                        <span>{team.name}</span>
-                        {selectedTeam === team.id && (
-                          <Check className="h-4 w-4" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Technician Selector */}
-          {technicianOptions.length > 0 && (
-            <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <User className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Preferred Technician
-                </label>
-              </div>
-              <div className="relative" ref={technicianRef}>
-                <button
-                  onClick={() =>
-                    setShowTechnicianDropdown(!showTechnicianDropdown)
-                  }
-                  className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <span>
-                    {selectedTechnician
-                      ? technicianOptions.find(
-                          (t) => t.id === selectedTechnician
-                        )?.name || "Any technician"
-                      : "Any technician"}
-                  </span>
-                  <ChevronRight
-                    className={`h-4 w-4 transition-transform ${
-                      showTechnicianDropdown ? "rotate-90" : ""
-                    }`}
-                  />
-                </button>
-                {showTechnicianDropdown && (
-                  <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
-                    <button
-                      onClick={() => {
-                        onTechnicianChange?.("");
-                        setShowTechnicianDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
-                        !selectedTechnician
-                          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
-                          : ""
-                      }`}
-                    >
-                      <span>Any technician</span>
-                      {!selectedTechnician && <Check className="h-4 w-4" />}
-                    </button>
-                    {getAvailableTechnicians.map((technician) => (
-                      <button
-                        key={technician.id}
-                        onClick={() => {
-                          onTechnicianChange?.(technician.id);
-                          setShowTechnicianDropdown(false);
-                        }}
-                        disabled={!technician.available}
-                        className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                          selectedTechnician === technician.id
-                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
-                            : ""
-                        } ${
-                          !technician.available
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            {technician.avatar && (
-                              <img
-                                src={technician.avatar}
-                                alt={technician.name}
-                                className="h-6 w-6 rounded-full"
-                              />
-                            )}
-                            <div>
-                              <div className="font-medium">
-                                {technician.name}
-                              </div>
-                              {(technician.rating || technician.experience) && (
-                                <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                                  {technician.rating && (
-                                    <span className="flex items-center gap-1">
-                                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                      {technician.rating}
-                                    </span>
-                                  )}
-                                  {technician.experience && (
-                                    <span>{technician.experience}</span>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          {selectedTechnician === technician.id && (
+                    />
+                  </button>
+                  {showTimeWindowDropdown && (
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
+                      {getAvailableWindows.map((window) => (
+                        <button
+                          key={window.id}
+                          onClick={() => {
+                            onWindowChange?.(window.id);
+                            setShowTimeWindowDropdown(false);
+                          }}
+                          disabled={!window.available}
+                          className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
+                            selectedWindow === window.id
+                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
+                              : ""
+                          } ${
+                            !window.available
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                        >
+                          <span>{window.label}</span>
+                          {selectedWindow === window.id && (
                             <Check className="h-4 w-4" />
                           )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Team Selector */}
+            {teamOptions.length > 0 && (
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Users className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Preferred Team
+                  </label>
+                </div>
+                <div className="relative" ref={teamRef}>
+                  <button
+                    onClick={() => setShowTeamDropdown(!showTeamDropdown)}
+                    className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <span>
+                      {selectedTeam
+                        ? teamOptions.find((t) => t.id === selectedTeam)
+                            ?.name || "Any team"
+                        : "Any team"}
+                    </span>
+                    <ChevronRight
+                      className={`h-4 w-4 transition-transform ${
+                        showTeamDropdown ? "rotate-90" : ""
+                      }`}
+                    />
+                  </button>
+                  {showTeamDropdown && (
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
+                      <button
+                        onClick={() => {
+                          onTeamChange?.("");
+                          setShowTeamDropdown(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
+                          !selectedTeam
+                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
+                            : ""
+                        }`}
+                      >
+                        <span>Any team</span>
+                        {!selectedTeam && <Check className="h-4 w-4" />}
+                      </button>
+                      {getAvailableTeams.map((team) => (
+                        <button
+                          key={team.id}
+                          onClick={() => {
+                            onTeamChange?.(team.id);
+                            setShowTeamDropdown(false);
+                          }}
+                          disabled={!team.available}
+                          className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
+                            selectedTeam === team.id
+                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
+                              : ""
+                          } ${
+                            !team.available
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                        >
+                          <span>{team.name}</span>
+                          {selectedTeam === team.id && (
+                            <Check className="h-4 w-4" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Technician Selector */}
+            {technicianOptions.length > 0 && (
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <User className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Preferred Technician
+                  </label>
+                </div>
+                <div className="relative" ref={technicianRef}>
+                  <button
+                    onClick={() =>
+                      setShowTechnicianDropdown(!showTechnicianDropdown)
+                    }
+                    className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <span>
+                      {selectedTechnician
+                        ? technicianOptions.find(
+                            (t) => t.id === selectedTechnician
+                          )?.name || "Any technician"
+                        : "Any technician"}
+                    </span>
+                    <ChevronRight
+                      className={`h-4 w-4 transition-transform ${
+                        showTechnicianDropdown ? "rotate-90" : ""
+                      }`}
+                    />
+                  </button>
+                  {showTechnicianDropdown && (
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
+                      <button
+                        onClick={() => {
+                          onTechnicianChange?.("");
+                          setShowTechnicianDropdown(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between ${
+                          !selectedTechnician
+                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
+                            : ""
+                        }`}
+                      >
+                        <span>Any technician</span>
+                        {!selectedTechnician && <Check className="h-4 w-4" />}
+                      </button>
+                      {getAvailableTechnicians.map((technician) => (
+                        <button
+                          key={technician.id}
+                          onClick={() => {
+                            onTechnicianChange?.(technician.id);
+                            setShowTechnicianDropdown(false);
+                          }}
+                          disabled={!technician.available}
+                          className={`w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                            selectedTechnician === technician.id
+                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400"
+                              : ""
+                          } ${
+                            !technician.available
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              {technician.avatar && (
+                                <img
+                                  src={technician.avatar}
+                                  alt={technician.name}
+                                  className="h-6 w-6 rounded-full"
+                                />
+                              )}
+                              <div>
+                                <div className="font-medium">
+                                  {technician.name}
+                                </div>
+                                {(technician.rating ||
+                                  technician.experience) && (
+                                  <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                    {technician.rating && (
+                                      <span className="flex items-center gap-1">
+                                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                        {technician.rating}
+                                      </span>
+                                    )}
+                                    {technician.experience && (
+                                      <span>{technician.experience}</span>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            {selectedTechnician === technician.id && (
+                              <Check className="h-4 w-4" />
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Reserve Button */}
           {onReserve && (

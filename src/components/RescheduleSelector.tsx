@@ -948,24 +948,21 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
           </div>
 
           {/* Selected Appointment Card */}
-          <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-blue-50 dark:bg-blue-900/10 p-6">
-            <div className="flex items-center justify-between gap-6">
+          <div className="shadow-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-300 rounded-lg p-6">
+            <div className="flex items-center justify-between">
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                <h4 className="text-lg text-blue-900 dark:text-blue-500">
                   Selected Appointment
-                </h3>
-                <div className="text-base text-gray-700 dark:text-gray-300 mb-3">
-                  {formatDate(
-                    parseISO(selectedSlot.date),
-                    "MMM d, yyyy, h:mm a zzz"
-                  )}{" "}
-                  at{" "}
+                </h4>
+                <p className="text-blue-700 dark:text-blue-400">
+                  {formatDate(parseISO(selectedSlot.date), "MMM d, yyyy")}
+                  {" - "}
                   {selectedSlot.time_period.charAt(0).toUpperCase() +
                     selectedSlot.time_period.slice(1).replace("_", " ")}
-                </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="h-4 w-4" />
+                </p>
+                <div className="mt-2 text-blue-600 dark:text-blue-400">
+                  <p className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
                     <span>
                       Window:{" "}
                       {selectedWindow
@@ -973,20 +970,16 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                             ?.label
                         : "None"}
                     </span>
-                  </div>
-                  <span className="text-gray-300 dark:text-gray-600">•</span>
-                  <div className="flex items-center gap-1.5">
-                    <Users className="h-4 w-4" />
+                    <span>•</span>
+                    <Users className="h-3 w-3" />
                     <span>
                       Team:{" "}
                       {selectedTeam
                         ? teamOptions.find((t) => t.id === selectedTeam)?.name
                         : "None"}
                     </span>
-                  </div>
-                  <span className="text-gray-300 dark:text-gray-600">•</span>
-                  <div className="flex items-center gap-1.5">
-                    <User className="h-4 w-4" />
+                    <span>•</span>
+                    <User className="h-3 w-3" />
                     <span>
                       Technician:{" "}
                       {selectedTechnician
@@ -995,19 +988,20 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                           )?.name
                         : "None"}
                     </span>
-                  </div>
+                  </p>
                 </div>
               </div>
               {onReserve && (
-                <Button
-                  onClick={onReserve}
-                  disabled={reserveButtonDisabled || !!reservedSlot}
-                  color="blue"
-                  size="md"
-                  className="shrink-0 px-6"
-                >
-                  {reservedSlot ? "Appointment Reserved" : reserveButtonText}
-                </Button>
+                <div className="flex items-center">
+                  <Button
+                    size="md"
+                    onClick={onReserve}
+                    disabled={reserveButtonDisabled || !!reservedSlot}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {reservedSlot ? "Appointment Reserved" : reserveButtonText}
+                  </Button>
+                </div>
               )}
             </div>
           </div>

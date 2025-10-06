@@ -16,15 +16,6 @@ export {
 } from "./components/AvailabilitySelector";
 
 export {
-  RescheduleSelector,
-  type WeekData,
-  type DayAvailability,
-  type TimeSlot as RescheduleTimeSlot,
-  type SelectedSlot,
-} from "./components/RescheduleSelector";
-
-// New modular scheduling selector (same as RescheduleSelector but with better organization)
-export {
   SchedulingSelector,
   type TimePeriod,
   type WindowOption,

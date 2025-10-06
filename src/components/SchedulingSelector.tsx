@@ -20,6 +20,3 @@ export type {
   TechnicianOption,
   Labels,
 } from "./scheduling/types";
-
-// Re-export for backward compatibility as RescheduleSelector
-export { SchedulingSelector as RescheduleSelector } from "./scheduling";

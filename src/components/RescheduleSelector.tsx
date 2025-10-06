@@ -542,7 +542,7 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                   </Button>
 
                   {showDatepicker && (
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-50">
                       <Datepicker
                         inline
                         minDate={minDate || new Date()}
@@ -608,14 +608,10 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                 return (
                   <div
                     key={dateString}
-                    className={`border rounded-lg p-2 bg-white dark:bg-gray-800 ${
-                      isToday
-                        ? "border-blue-500 dark:border-blue-400"
-                        : "border-gray-200 dark:border-gray-700"
-                    }`}
+                    className="p-2 bg-white dark:bg-gray-800"
                   >
                     {/* Date Header Skeleton */}
-                    <div className="text-center mb-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <div className="text-center mb-2 pb-2">
                       <div className="mx-auto h-7 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                     </div>
 

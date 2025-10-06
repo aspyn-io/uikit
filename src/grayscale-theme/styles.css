@@ -59,3 +59,77 @@ body {
 .btn-secondary:hover {
   background-color: var(--secondary-hover);
 }
+
+/* Datepicker fixes for light/dark mode */
+
+/* Fix the datepicker popup background and text colors */
+[class*="flowbite-datepicker"] [class*="inline-block"] {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+.dark [class*="flowbite-datepicker"] [class*="inline-block"] {
+  background-color: #374151 !important;
+  color: white !important;
+}
+
+/* Fix header text and buttons */
+[class*="flowbite-datepicker"] [class*="text-center"][class*="font-semibold"] {
+  color: #111827 !important;
+}
+
+.dark [class*="flowbite-datepicker"] [class*="text-center"][class*="font-semibold"] {
+  color: white !important;
+}
+
+/* Fix day names */
+[class*="flowbite-datepicker"] [class*="text-gray-500"] {
+  color: #6b7280 !important;
+}
+
+.dark [class*="flowbite-datepicker"] [class*="text-gray-500"] {
+  color: #9ca3af !important;
+}
+
+/* Fix day numbers in light mode */
+[class*="flowbite-datepicker"] [class*="text-gray-900"] {
+  color: #111827 !important;
+}
+
+/* Fix header buttons background */
+[class*="flowbite-datepicker"] button[class*="bg-white"] {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+.dark [class*="flowbite-datepicker"] button[class*="bg-white"],
+.dark [class*="flowbite-datepicker"] button[class*="dark:bg-gray-700"] {
+  background-color: #374151 !important;
+  color: white !important;
+}
+
+/* Ensure Today button is visible and properly styled */
+[class*="flowbite-datepicker"] [class*="footer"] {
+  display: flex !important;
+  margin-top: 0.5rem !important;
+}
+
+[class*="flowbite-datepicker"] [class*="footer"] button {
+  display: inline-block !important;
+  visibility: visible !important;
+  background-color: #374151 !important;
+  color: white !important;
+}
+
+[class*="flowbite-datepicker"] [class*="footer"] button:hover {
+  background-color: #1f2937 !important;
+}
+
+.dark [class*="flowbite-datepicker"] [class*="footer"] button {
+  background-color: #4b5563 !important;
+  color: white !important;
+}
+
+.dark [class*="flowbite-datepicker"] [class*="footer"] button:hover {
+  background-color: #374151 !important;
+}

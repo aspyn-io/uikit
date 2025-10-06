@@ -1,6 +1,7 @@
 import "../src/index.css";
 import { Preview } from "@storybook/react-vite";
 import React from "react";
+import { ThemeProvider } from "../src/grayscale-theme/ThemeProvider";
 
 /** @type { import('@storybook/react-vite').Preview } */
 const preview: Preview = {
@@ -26,9 +27,11 @@ const preview: Preview = {
       document.documentElement.classList.toggle("dark", isDark);
 
       return (
-        <div className={`${isDark ? "dark bg-gray-900" : "bg-white"}`}>
-          <Story />
-        </div>
+        <ThemeProvider>
+          <div className={`${isDark ? "dark bg-gray-900" : "bg-white"}`}>
+            <Story />
+          </div>
+        </ThemeProvider>
       );
     },
   ],

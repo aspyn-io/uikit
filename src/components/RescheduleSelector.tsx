@@ -19,14 +19,7 @@ import {
   Globe,
   Star,
 } from "lucide-react";
-import {
-  format,
-  addWeeks,
-  startOfWeek,
-  endOfWeek,
-  addDays,
-  parseISO,
-} from "date-fns";
+import { format, addWeeks, startOfWeek, endOfWeek, parseISO } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 
 // Time period types
@@ -120,7 +113,6 @@ interface RescheduleSelectorProps {
 
   // Reserved slot (for showing locked state)
   reservedSlot?: SelectedSlot | null;
-  onCancelReservation?: () => void;
 
   // Action button
   onReserve?: () => void;
@@ -162,7 +154,6 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
   timezone = "America/New_York",
   timezoneDisplay,
   reservedSlot,
-  onCancelReservation,
   onReserve,
   reserveButtonText = "Reserve Appointment",
   reserveButtonDisabled = false,

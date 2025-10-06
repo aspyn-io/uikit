@@ -23,6 +23,16 @@ export {
   type SelectedSlot,
 } from "./components/RescheduleSelector";
 
+// New modular scheduling selector (same as RescheduleSelector but with better organization)
+export {
+  SchedulingSelector,
+  type TimePeriod,
+  type WindowOption,
+  type TeamOption,
+  type TechnicianOption,
+  type Labels,
+} from "./components/SchedulingSelector";
+
 export { InvoiceDetail } from "./components/InvoiceDetail";
 
 // Form Inputs

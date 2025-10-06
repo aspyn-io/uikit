@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import {
-  RescheduleSelector,
+  SchedulingSelector,
   WeekData,
   SelectedSlot,
-} from "../components/RescheduleSelector";
+} from "../components/SchedulingSelector";
 import { addDays, format, startOfWeek, endOfWeek } from "date-fns";
 
-const meta: Meta<typeof RescheduleSelector> = {
-  title: "Components/RescheduleSelector",
-  component: RescheduleSelector,
+const meta: Meta<typeof SchedulingSelector> = {
+  title: "Components/SchedulingSelector",
+  component: SchedulingSelector,
   parameters: {
     layout: "padded",
   },
@@ -17,7 +17,7 @@ const meta: Meta<typeof RescheduleSelector> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof RescheduleSelector>;
+type Story = StoryObj<typeof SchedulingSelector>;
 
 // Helper function to generate mock week data
 const generateMockWeekData = (weekStart: Date): WeekData => {
@@ -78,7 +78,6 @@ const generateMockWeekData = (weekStart: Date): WeekData => {
             any_time: undefined,
             morning: undefined,
             afternoon: undefined,
-            evening: undefined,
           },
     });
   }
@@ -100,63 +99,76 @@ const mockWindowOptions = [
 
 const mockTeamOptions = [
   { id: "team-1", name: "Team Alpha" },
-  { id: "team-2", name: "Team Beta" },
-  { id: "team-3", name: "Team Gamma" },
+  { id: "team-2", name: "Team Bravo" },
+  { id: "team-3", name: "Team Charlie" },
 ];
 
 const mockTechnicianOptions = [
-  { id: "tech-1", name: "John Smith" },
-  { id: "tech-2", name: "Jane Doe" },
-  { id: "tech-3", name: "Bob Johnson" },
+  {
+    id: "tech-1",
+    name: "John Smith",
+    rating: "4.8",
+    experience: "5+ years",
+    avatar: "https://i.pravatar.cc/150?img=12",
+  },
+  {
+    id: "tech-2",
+    name: "Sarah Johnson",
+    rating: "4.9",
+    experience: "3+ years",
+    avatar: "https://i.pravatar.cc/150?img=47",
+  },
+  {
+    id: "tech-3",
+    name: "Mike Wilson",
+    rating: "4.7",
+    experience: "7+ years",
+    avatar: "https://i.pravatar.cc/150?img=33",
+  },
 ];
 
 // Interactive wrapper component
-const InteractiveRescheduleSelector = (args: any) => {
-  const [currentWeekStart] = useState(() =>
-    startOfWeek(new Date(), { weekStartsOn: 0 })
-  );
-  const [weekData, setWeekData] = useState<WeekData | null>(() =>
-    generateMockWeekData(currentWeekStart)
-  );
-  const [loading, setLoading] = useState(false);
+const SchedulingSelectorWrapper = (args: any) => {
   const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
   const [selectedWindow, setSelectedWindow] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<string>("");
   const [selectedTechnician, setSelectedTechnician] = useState<string>("");
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(
+    startOfWeek(new Date(), { weekStartsOn: 0 })
+  );
+  const [loading, setLoading] = useState(false);
+  const [weekData, setWeekData] = useState<WeekData | null>(
+    generateMockWeekData(currentWeekStart)
+  );
 
   const handleWeekChange = (weekStart: string, weekEnd: string) => {
     setLoading(true);
+    setCurrentWeekStart(new Date(weekStart));
     // Simulate API call
     setTimeout(() => {
-      const newWeekData = generateMockWeekData(new Date(weekStart));
-      setWeekData(newWeekData);
+      setWeekData(generateMockWeekData(new Date(weekStart)));
       setLoading(false);
-      setSelectedSlot(null);
-    }, 1000);
-  };
-
-  const handleSlotSelect = (slot: SelectedSlot) => {
-    setSelectedSlot(slot);
+    }, 500);
   };
 
   const handleReserve = () => {
-    alert(
-      `Reserving appointment:\nDate: ${selectedSlot?.date}\nTime: ${
-        selectedSlot?.time_period
-      }\nWindow: ${selectedWindow || "None"}\nTeam: ${
-        selectedTeam || "Any"
-      }\nTechnician: ${selectedTechnician || "Any"}`
-    );
+    console.log("Reserving appointment:", {
+      selectedSlot,
+      selectedWindow,
+      selectedTeam,
+      selectedTechnician,
+    });
+    alert("Appointment reserved!");
   };
 
   return (
-    <RescheduleSelector
+    <SchedulingSelector
       {...args}
       weekData={weekData}
       loading={loading}
       onWeekChange={handleWeekChange}
       selectedSlot={selectedSlot}
-      onSlotSelect={handleSlotSelect}
+      onSlotSelect={setSelectedSlot}
       selectedWindow={selectedWindow}
       selectedTeam={selectedTeam}
       selectedTechnician={selectedTechnician}
@@ -169,119 +181,83 @@ const InteractiveRescheduleSelector = (args: any) => {
 };
 
 export const Default: Story = {
-  render: (args) => <InteractiveRescheduleSelector {...args} />,
+  render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
     windowOptions: mockWindowOptions,
     teamOptions: mockTeamOptions,
     technicianOptions: mockTechnicianOptions,
     timezone: "America/New_York",
-    reserveButtonText: "Reserve Appointment",
-    reserveButtonDisabled: false,
-  },
-};
-
-export const Loading: Story = {
-  render: (args) => <InteractiveRescheduleSelector {...args} />,
-  args: {
-    ...Default.args,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "Shows the loading state when fetching availability data.",
-      },
-    },
+    showDateJumper: true,
+    showTimezoneInfo: true,
+    disablePastNavigation: true,
   },
 };
 
 export const WithoutPreferences: Story = {
-  render: (args) => <InteractiveRescheduleSelector {...args} />,
+  render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
     windowOptions: [],
     teamOptions: [],
     technicianOptions: [],
-    timezone: "America/Los_Angeles",
-    reserveButtonText: "Confirm Reschedule",
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "Shows the component without any preference options.",
-      },
-    },
+    timezone: "America/New_York",
+    showDateJumper: true,
+    showTimezoneInfo: true,
+    disablePastNavigation: true,
   },
 };
 
-export const PacificTimezone: Story = {
-  render: (args) => <InteractiveRescheduleSelector {...args} />,
+export const WindowsOnly: Story = {
+  render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
-    ...Default.args,
-    timezone: "America/Los_Angeles",
+    windowOptions: mockWindowOptions,
+    teamOptions: [],
+    technicianOptions: [],
+    timezone: "America/New_York",
+    showDateJumper: true,
+    showTimezoneInfo: true,
+    disablePastNavigation: true,
   },
-  parameters: {
-    docs: {
-      description: {
-        story: "Shows the component with Pacific timezone.",
-      },
+};
+
+export const CustomLabels: Story = {
+  render: (args) => <SchedulingSelectorWrapper {...args} />,
+  args: {
+    windowOptions: mockWindowOptions,
+    teamOptions: mockTeamOptions,
+    technicianOptions: mockTechnicianOptions,
+    timezone: "America/Los_Angeles",
+    timezoneDisplay: "PST (UTC-8)",
+    showDateJumper: true,
+    showTimezoneInfo: true,
+    labels: {
+      anyTime: "Flexible",
+      morning: "AM",
+      afternoon: "PM",
+      unavailable: "Not Available",
+      past: "Expired",
     },
   },
 };
 
-export const WithSelection: Story = {
-  render: () => {
-    const [currentWeekStart] = useState(() =>
-      startOfWeek(new Date(), { weekStartsOn: 0 })
-    );
-    const [weekData] = useState<WeekData | null>(() =>
-      generateMockWeekData(currentWeekStart)
-    );
-    const [loading] = useState(false);
-    const today = format(addDays(currentWeekStart, 1), "yyyy-MM-dd"); // Monday
-    const [selectedSlot] = useState<SelectedSlot>({
-      date: today,
-      time_period: "evening",
-      slot: {
-        start_at: `${today}T17:00:00Z`,
-        end_at: `${today}T20:00:00Z`,
-        calendar_id: "cal-1",
-        calendar: {
-          id: "cal-1",
-          name: "Main Calendar",
-        },
-      },
-    });
-    const [selectedWindow] = useState<string>("window-1");
-    const [selectedTeam] = useState<string>("team-1");
-    const [selectedTechnician] = useState<string>("tech-1");
+export const Loading: Story = {
+  render: (args) => {
+    const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
 
     return (
-      <RescheduleSelector
-        weekData={weekData}
-        loading={loading}
+      <SchedulingSelector
+        {...args}
+        weekData={null}
+        loading={true}
         onWeekChange={() => {}}
         selectedSlot={selectedSlot}
-        onSlotSelect={() => {}}
-        selectedWindow={selectedWindow}
-        selectedTeam={selectedTeam}
-        selectedTechnician={selectedTechnician}
-        onWindowChange={() => {}}
-        onTeamChange={() => {}}
-        onTechnicianChange={() => {}}
-        windowOptions={mockWindowOptions}
-        teamOptions={mockTeamOptions}
-        technicianOptions={mockTechnicianOptions}
-        timezone="America/New_York"
-        reserveButtonText="Reserve Appointment"
-        onReserve={() => alert("Appointment reserved!")}
+        onSlotSelect={setSelectedSlot}
       />
     );
   },
-  parameters: {
-    docs: {
-      description: {
-        story: "Shows the component with a pre-selected slot and preferences.",
-      },
-    },
+  args: {
+    windowOptions: mockWindowOptions,
+    teamOptions: mockTeamOptions,
+    technicianOptions: mockTechnicianOptions,
   },
 };
 
@@ -323,7 +299,7 @@ export const WithReserveLoading: Story = {
     };
 
     return (
-      <RescheduleSelector
+      <SchedulingSelector
         weekData={weekData}
         loading={loading}
         onWeekChange={() => {}}

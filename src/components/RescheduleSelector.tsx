@@ -533,7 +533,7 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                 <div className="relative" ref={datepickerRef}>
                   <Button
                     size="xs"
-                    color="gray"
+                    color="light"
                     onClick={() => setShowDatepicker(!showDatepicker)}
                     className="p-1.5"
                     disabled={!!reservedSlot}
@@ -717,8 +717,8 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                     <span>
                       {selectedWindow
                         ? windowOptions.find((w) => w.id === selectedWindow)
-                            ?.label || "Select a time window"
-                        : "Select a time window"}
+                            ?.label || "Any time window"
+                        : "Any time window"}
                     </span>
                     <ChevronRight
                       className={`h-4 w-4 transition-transform ${
@@ -739,7 +739,7 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                             : "text-gray-700 dark:text-gray-300"
                         }`}
                       >
-                        <span>No preference</span>
+                        <span>Any time window</span>
                         {!selectedWindow && <Check className="h-4 w-4" />}
                       </button>
                       {getAvailableWindows.map((window, index) => (
@@ -974,36 +974,55 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                   {selectedSlot.time_period.charAt(0).toUpperCase() +
                     selectedSlot.time_period.slice(1).replace("_", " ")}
                 </p>
-                <div className="mt-2 text-blue-600 dark:text-blue-400">
-                  <p className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    <span>
-                      Window:{" "}
-                      {selectedWindow
-                        ? windowOptions.find((w) => w.id === selectedWindow)
-                            ?.label
-                        : "None"}
-                    </span>
-                    <span>•</span>
-                    <Users className="h-3 w-3" />
-                    <span>
-                      Team:{" "}
-                      {selectedTeam
-                        ? teamOptions.find((t) => t.id === selectedTeam)?.name
-                        : "None"}
-                    </span>
-                    <span>•</span>
-                    <User className="h-3 w-3" />
-                    <span>
-                      Technician:{" "}
-                      {selectedTechnician
-                        ? technicianOptions.find(
-                            (t) => t.id === selectedTechnician
-                          )?.name
-                        : "None"}
-                    </span>
-                  </p>
-                </div>
+                {(windowOptions.length > 0 ||
+                  teamOptions.length > 0 ||
+                  technicianOptions.length > 0) && (
+                  <div className="mt-2 text-blue-600 dark:text-blue-400">
+                    <p className="flex items-center gap-1">
+                      {windowOptions.length > 0 && (
+                        <>
+                          <Clock className="h-3 w-3" />
+                          <span>
+                            Window:{" "}
+                            {selectedWindow
+                              ? windowOptions.find(
+                                  (w) => w.id === selectedWindow
+                                )?.label
+                              : "Any"}
+                          </span>
+                          {(teamOptions.length > 0 ||
+                            technicianOptions.length > 0) && <span>•</span>}
+                        </>
+                      )}
+                      {teamOptions.length > 0 && (
+                        <>
+                          <Users className="h-3 w-3" />
+                          <span>
+                            Team:{" "}
+                            {selectedTeam
+                              ? teamOptions.find((t) => t.id === selectedTeam)
+                                  ?.name
+                              : "Any"}
+                          </span>
+                          {technicianOptions.length > 0 && <span>•</span>}
+                        </>
+                      )}
+                      {technicianOptions.length > 0 && (
+                        <>
+                          <User className="h-3 w-3" />
+                          <span>
+                            Technician:{" "}
+                            {selectedTechnician
+                              ? technicianOptions.find(
+                                  (t) => t.id === selectedTechnician
+                                )?.name
+                              : "Any"}
+                          </span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                )}
               </div>
               {onReserve && (
                 <div className="flex items-center">

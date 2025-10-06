@@ -99,7 +99,7 @@ export const grayscaleTheme = createTheme({
         button: {
           base: "w-full rounded-lg px-5 py-2 text-center text-sm font-medium focus:ring-4 focus:ring-gray-300",
           today:
-            "bg-gray-700 text-white hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-700",
+            "border border-gray-300 bg-white hover:bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-700",
           clear:
             "border border-gray-300 bg-white text-gray-900 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600",
         },
@@ -117,7 +117,7 @@ export const grayscaleTheme = createTheme({
           item: {
             base: "block flex-1 cursor-pointer rounded-lg border-0 text-center text-sm font-semibold leading-9 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-600",
             selected: "bg-gray-700 text-white hover:bg-gray-600",
-            disabled: "text-gray-500",
+            disabled: "text-gray-400",
           },
         },
       },

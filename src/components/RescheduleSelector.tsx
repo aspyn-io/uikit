@@ -30,7 +30,7 @@ import {
 import { formatInTimeZone } from "date-fns-tz";
 
 // Time period types
-export type TimePeriod = "any_time" | "morning" | "afternoon" | "evening";
+export type TimePeriod = "any_time" | "morning" | "afternoon";
 
 export interface TimeSlot {
   start_at: string;
@@ -48,7 +48,6 @@ export interface DayAvailability {
     any_time?: TimeSlot[];
     morning?: TimeSlot[];
     afternoon?: TimeSlot[];
-    evening?: TimeSlot[];
   };
   is_available: boolean;
 }
@@ -140,7 +139,6 @@ interface RescheduleSelectorProps {
     anyTime?: string;
     morning?: string;
     afternoon?: string;
-    evening?: string;
     unavailable?: string;
     past?: string;
   };
@@ -200,7 +198,6 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
     any_time: labels.anyTime || "Any time",
     morning: labels.morning || "Morning",
     afternoon: labels.afternoon || "Afternoon",
-    evening: labels.evening || "Evening",
   };
 
   // Close dropdowns when clicking outside
@@ -445,10 +442,6 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
       const isDisabled = (hasActiveReservation && !isReserved) || !isAvailable;
 
       const slot = dayData?.slots[timePeriod]?.[0];
-
-      if (!slot) {
-        return null;
-      }
 
       return (
         <button
@@ -701,12 +694,6 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                             dateString,
                             "afternoon",
                             timePeriodLabels.afternoon
-                          )}
-                          {renderTimePeriodButton(
-                            date,
-                            dateString,
-                            "evening",
-                            timePeriodLabels.evening
                           )}
                         </>
                       )}

@@ -147,7 +147,7 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
                   <div
                     className={`text-lg font-bold py-1 rounded-lg ${
                       isToday
-                        ? "bg-blue-200 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400"
+                        ? "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400"
                         : isPast
                         ? "text-gray-400 dark:text-gray-600"
                         : "text-gray-900 dark:text-gray-100"

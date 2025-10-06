@@ -48,7 +48,7 @@ export const SelectedAppointmentCard: React.FC<
   cancelLoading = false,
 }) => {
   return (
-    <div className="shadow-sm bg-blue-50 border border-blue-200 dark:border-blue-300 rounded-lg p-6">
+    <div className="shadow-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-300 rounded-lg p-6">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <h4 className="text-lg text-blue-900 dark:text-blue-500">

@@ -549,6 +549,8 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                         autoHide={false}
                         onChange={handleDateJump}
                         weekStart={0}
+                        showTodayButton={true}
+                        showClearButton={false}
                       />
                     </div>
                   )}
@@ -559,7 +561,7 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
               {showTimezoneInfo && (
                 <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
                   <Globe className="h-3 w-3" />
-                  <span>@ {getTimezoneDisplay}</span>
+                  <span>{getTimezoneDisplay}</span>
                 </div>
               )}
             </div>
@@ -639,24 +641,13 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                   format(new Date(), "yyyy-MM-dd");
 
                 return (
-                  <div
-                    key={dateString}
-                    className={`border rounded-lg p-2 ${
-                      isPast
-                        ? "bg-gray-50 dark:bg-gray-800/50"
-                        : "bg-white dark:bg-gray-800"
-                    } ${
-                      isToday
-                        ? "border-blue-500 dark:border-blue-400"
-                        : "border-gray-200 dark:border-gray-700"
-                    }`}
-                  >
+                  <div key={dateString} className="p-1">
                     {/* Date Header */}
-                    <div className="text-center mb-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <div className="text-center pb-2">
                       <div
-                        className={`text-lg font-bold ${
+                        className={`text-lg font-bold py-1 rounded-lg ${
                           isToday
-                            ? "text-blue-600 dark:text-blue-400"
+                            ? "bg-blue-200 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400"
                             : isPast
                             ? "text-gray-400 dark:text-gray-600"
                             : "text-gray-900 dark:text-gray-100"

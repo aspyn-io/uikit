@@ -140,6 +140,9 @@ const SchedulingSelectorWrapper = (args: any) => {
   const [weekData, setWeekData] = useState<WeekData | null>(
     generateMockWeekData(currentWeekStart)
   );
+  const [reservedSlot, setReservedSlot] = useState<SelectedSlot | null>(null);
+  const [reserveLoading, setReserveLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   const handleWeekChange = (weekStart: string, weekEnd: string) => {
     setLoading(true);
@@ -152,13 +155,32 @@ const SchedulingSelectorWrapper = (args: any) => {
   };
 
   const handleReserve = () => {
-    console.log("Reserving appointment:", {
-      selectedSlot,
-      selectedWindow,
-      selectedTeam,
-      selectedTechnician,
-    });
-    alert("Appointment reserved!");
+    setReserveLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      console.log("Reserving appointment:", {
+        selectedSlot,
+        selectedWindow,
+        selectedTeam,
+        selectedTechnician,
+      });
+      setReservedSlot(selectedSlot);
+      setReserveLoading(false);
+      alert("Appointment reserved!");
+    }, 1000);
+  };
+
+  const handleCancelReservation = () => {
+    if (window.confirm("Are you sure you want to cancel this reservation?")) {
+      setCancelLoading(true);
+      // Simulate API call
+      setTimeout(() => {
+        console.log("Cancelling reservation:", reservedSlot);
+        setReservedSlot(null);
+        setCancelLoading(false);
+        alert("Reservation cancelled!");
+      }, 1000);
+    }
   };
 
   return (
@@ -176,6 +198,10 @@ const SchedulingSelectorWrapper = (args: any) => {
       onTeamChange={setSelectedTeam}
       onTechnicianChange={setSelectedTechnician}
       onReserve={handleReserve}
+      reservedSlot={reservedSlot}
+      reserveLoading={reserveLoading}
+      onCancelReservation={handleCancelReservation}
+      cancelLoading={cancelLoading}
     />
   );
 };
@@ -326,6 +352,110 @@ export const WithReserveLoading: Story = {
       description: {
         story:
           "Shows the reserve button loading state. Click the reserve button to see the loading state for 2 seconds before completing.",
+      },
+    },
+  },
+};
+
+export const WithReservationAndCancel: Story = {
+  render: () => {
+    const [currentWeekStart] = useState(() =>
+      startOfWeek(new Date(), { weekStartsOn: 0 })
+    );
+    const [weekData] = useState<WeekData | null>(() =>
+      generateMockWeekData(currentWeekStart)
+    );
+    const [loading] = useState(false);
+    const [reserveLoading, setReserveLoading] = useState(false);
+    const [cancelLoading, setCancelLoading] = useState(false);
+    const today = format(addDays(currentWeekStart, 1), "yyyy-MM-dd"); // Monday
+    const [selectedSlot] = useState<SelectedSlot>({
+      date: today,
+      time_period: "morning",
+      slot: {
+        start_at: `${today}T08:00:00Z`,
+        end_at: `${today}T12:00:00Z`,
+        calendar_id: "cal-1",
+        calendar: {
+          id: "cal-1",
+          name: "Main Calendar",
+        },
+      },
+    });
+    const [selectedWindow] = useState<string>("window-2");
+    const [selectedTeam] = useState<string>("team-2");
+    const [selectedTechnician] = useState<string>("tech-2");
+    const [reservedSlot, setReservedSlot] = useState<SelectedSlot | null>(
+      // Start with the slot already reserved
+      {
+        date: today,
+        time_period: "morning",
+        slot: {
+          start_at: `${today}T08:00:00Z`,
+          end_at: `${today}T12:00:00Z`,
+          calendar_id: "cal-1",
+          calendar: {
+            id: "cal-1",
+            name: "Main Calendar",
+          },
+        },
+      }
+    );
+
+    const handleReserve = () => {
+      setReserveLoading(true);
+      // Simulate API call
+      setTimeout(() => {
+        setReserveLoading(false);
+        setReservedSlot(selectedSlot);
+        alert("Appointment reserved successfully!");
+      }, 1000);
+    };
+
+    const handleCancel = () => {
+      if (window.confirm("Are you sure you want to cancel this reservation?")) {
+        setCancelLoading(true);
+        // Simulate API call
+        setTimeout(() => {
+          setReservedSlot(null);
+          setCancelLoading(false);
+          alert("Reservation cancelled successfully!");
+        }, 1000);
+      }
+    };
+
+    return (
+      <SchedulingSelector
+        weekData={weekData}
+        loading={loading}
+        onWeekChange={() => {}}
+        selectedSlot={selectedSlot}
+        onSlotSelect={() => {}}
+        selectedWindow={selectedWindow}
+        selectedTeam={selectedTeam}
+        selectedTechnician={selectedTechnician}
+        onWindowChange={() => {}}
+        onTeamChange={() => {}}
+        onTechnicianChange={() => {}}
+        windowOptions={mockWindowOptions}
+        teamOptions={mockTeamOptions}
+        technicianOptions={mockTechnicianOptions}
+        timezone="America/New_York"
+        reserveButtonText="Reserve Appointment"
+        reserveLoading={reserveLoading}
+        onReserve={handleReserve}
+        reservedSlot={reservedSlot}
+        onCancelReservation={handleCancel}
+        cancelButtonText="Cancel Reservation"
+        cancelLoading={cancelLoading}
+      />
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Shows a reserved appointment with the ability to cancel it. The appointment starts in a reserved state, and clicking the cancel button will prompt for confirmation before cancelling.",
       },
     },
   },

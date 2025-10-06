@@ -22,6 +22,9 @@ interface SelectedAppointmentCardProps {
   reserveButtonDisabled?: boolean;
   reserveLoading?: boolean;
   reservedSlot?: SelectedSlot | null;
+  onCancelReservation?: () => void;
+  cancelButtonText?: string;
+  cancelLoading?: boolean;
 }
 
 export const SelectedAppointmentCard: React.FC<
@@ -40,6 +43,9 @@ export const SelectedAppointmentCard: React.FC<
   reserveButtonDisabled = false,
   reserveLoading = false,
   reservedSlot,
+  onCancelReservation,
+  cancelButtonText = "Cancel Reservation",
+  cancelLoading = false,
 }) => {
   return (
     <div className="shadow-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-300 rounded-lg p-6">
@@ -102,27 +108,43 @@ export const SelectedAppointmentCard: React.FC<
             </div>
           )}
         </div>
-        {onReserve && (
+        {(onReserve || (reservedSlot && onCancelReservation)) && (
           <div className="flex items-center">
-            <Button
-              size="md"
-              onClick={onReserve}
-              disabled={
-                reserveButtonDisabled || !!reservedSlot || reserveLoading
-              }
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              {reserveLoading ? (
-                <div className="flex items-center gap-2">
-                  <Spinner size="sm" />
-                  <span>Processing...</span>
-                </div>
-              ) : reservedSlot ? (
-                "Appointment Reserved"
-              ) : (
-                reserveButtonText
-              )}
-            </Button>
+            {reservedSlot && onCancelReservation ? (
+              <Button
+                size="md"
+                color="red"
+                onClick={onCancelReservation}
+                disabled={cancelLoading}
+              >
+                {cancelLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Spinner size="sm" />
+                    <span>Cancelling...</span>
+                  </div>
+                ) : (
+                  cancelButtonText
+                )}
+              </Button>
+            ) : (
+              onReserve && (
+                <Button
+                  size="md"
+                  onClick={onReserve}
+                  disabled={reserveButtonDisabled || reserveLoading}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  {reserveLoading ? (
+                    <div className="flex items-center gap-2">
+                      <Spinner size="sm" />
+                      <span>Processing...</span>
+                    </div>
+                  ) : (
+                    reserveButtonText
+                  )}
+                </Button>
+              )
+            )}
           </div>
         )}
       </div>

@@ -58,6 +58,11 @@ interface SchedulingSelectorProps {
   reserveButtonDisabled?: boolean;
   reserveLoading?: boolean;
 
+  // Cancel reservation
+  onCancelReservation?: () => void;
+  cancelButtonText?: string;
+  cancelLoading?: boolean;
+
   // UI customization
   showDateJumper?: boolean;
   showTimezoneInfo?: boolean;
@@ -90,6 +95,9 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   reserveButtonText = "Reserve Appointment",
   reserveButtonDisabled = false,
   reserveLoading = false,
+  onCancelReservation,
+  cancelButtonText = "Cancel Reservation",
+  cancelLoading = false,
   showDateJumper = true,
   showTimezoneInfo = true,
   disablePastNavigation = true,
@@ -292,6 +300,9 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
             reserveButtonDisabled={reserveButtonDisabled}
             reserveLoading={reserveLoading}
             reservedSlot={reservedSlot}
+            onCancelReservation={onCancelReservation}
+            cancelButtonText={cancelButtonText}
+            cancelLoading={cancelLoading}
           />
         </div>
       )}

@@ -15,9 +15,14 @@ export {
   type AppointmentAvailability,
 } from "./components/AvailabilitySelector";
 
+// Scheduling
 export {
   SchedulingSelector,
   type TimePeriod,
+  type TimeSlot,
+  type DayAvailability,
+  type WeekData,
+  type SelectedSlot,
   type WindowOption,
   type TeamOption,
   type TechnicianOption,

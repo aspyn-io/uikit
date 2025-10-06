@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { format } from "date-fns";
 import { Minus } from "lucide-react";
 import { TimeSlotButton } from "./TimeSlotButton";
@@ -37,75 +37,62 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
     afternoon: labels.afternoon || "Afternoon",
   };
 
-  // Check if a time slot is available
-  const isTimeSlotAvailable = useCallback(
-    (dateString: string, timePeriod: TimePeriod): boolean => {
-      const dayData = getAvailabilityForDate(dateString);
-      if (!dayData || !dayData.is_available) return false;
+  // Simple helper functions - no need to memoize
+  const isTimeSlotAvailable = (
+    dateString: string,
+    timePeriod: TimePeriod
+  ): boolean => {
+    const dayData = getAvailabilityForDate(dateString);
+    if (!dayData || !dayData.is_available) return false;
 
-      const slots = dayData.slots[timePeriod];
-      return slots !== undefined && slots.length > 0;
-    },
-    [getAvailabilityForDate]
-  );
+    const slots = dayData.slots[timePeriod];
+    return slots !== undefined && slots.length > 0;
+  };
 
-  // Check if a slot is selected
-  const isSlotSelected = useCallback(
-    (date: string, timePeriod: TimePeriod) => {
-      if (!selectedSlot) return false;
-      return (
-        selectedSlot.date === date && selectedSlot.time_period === timePeriod
-      );
-    },
-    [selectedSlot]
-  );
+  const isSlotSelected = (date: string, timePeriod: TimePeriod) => {
+    if (!selectedSlot) return false;
+    return (
+      selectedSlot.date === date && selectedSlot.time_period === timePeriod
+    );
+  };
 
-  // Check if a slot is reserved
-  const isSlotReserved = useCallback(
-    (date: string, timePeriod: TimePeriod) => {
-      if (!reservedSlot) return false;
-      return (
-        reservedSlot.date === date && reservedSlot.time_period === timePeriod
-      );
-    },
-    [reservedSlot]
-  );
+  const isSlotReserved = (date: string, timePeriod: TimePeriod) => {
+    if (!reservedSlot) return false;
+    return (
+      reservedSlot.date === date && reservedSlot.time_period === timePeriod
+    );
+  };
 
-  // Render time period button
-  const renderTimePeriodButton = useCallback(
-    (date: Date, dateString: string, timePeriod: TimePeriod, label: string) => {
-      const dayData = getAvailabilityForDate(dateString);
-      const isAvailable = isTimeSlotAvailable(dateString, timePeriod);
-      const isSelected = isSlotSelected(dateString, timePeriod);
-      const isReserved = isSlotReserved(dateString, timePeriod);
-      const hasActiveReservation = !!reservedSlot;
+  // Render helper - kept as function to avoid duplication in JSX
+  const renderTimePeriodButton = (
+    date: Date,
+    dateString: string,
+    timePeriod: TimePeriod,
+    label: string
+  ) => {
+    const dayData = getAvailabilityForDate(dateString);
+    const isAvailable = isTimeSlotAvailable(dateString, timePeriod);
+    const isSelected = isSlotSelected(dateString, timePeriod);
+    const isReserved = isSlotReserved(dateString, timePeriod);
+    const hasActiveReservation = !!reservedSlot;
 
-      const slot = dayData?.slots[timePeriod]?.[0];
+    const slot = dayData?.slots[timePeriod]?.[0];
 
-      return (
-        <TimeSlotButton
-          key={timePeriod}
-          date={dateString}
-          timePeriod={timePeriod}
-          label={label}
-          isAvailable={isAvailable}
-          isSelected={isSelected}
-          isReserved={isReserved}
-          hasActiveReservation={hasActiveReservation}
-          slot={slot}
-          onClick={onSlotClick}
-        />
-      );
-    },
-    [
-      getAvailabilityForDate,
-      isTimeSlotAvailable,
-      isSlotSelected,
-      isSlotReserved,
-      reservedSlot,
-      onSlotClick,
-    ]
-  );
+    return (
+      <TimeSlotButton
+        key={timePeriod}
+        date={dateString}
+        timePeriod={timePeriod}
+        label={label}
+        isAvailable={isAvailable}
+        isSelected={isSelected}
+        isReserved={isReserved}
+        hasActiveReservation={hasActiveReservation}
+        slot={slot}
+        onClick={onSlotClick}
+      />
+    );
+  };
 
   return (
     <div className="p-3">

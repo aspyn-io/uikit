@@ -127,6 +127,7 @@ interface RescheduleSelectorProps {
   onReserve?: () => void;
   reserveButtonText?: string;
   reserveButtonDisabled?: boolean;
+  reserveLoading?: boolean;
 
   // UI customization
   showDateJumper?: boolean;
@@ -167,6 +168,7 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
   onReserve,
   reserveButtonText = "Reserve Appointment",
   reserveButtonDisabled = false,
+  reserveLoading = false,
   showDateJumper = true,
   showTimezoneInfo = true,
   disablePastNavigation = true,
@@ -1024,10 +1026,21 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                   <Button
                     size="md"
                     onClick={onReserve}
-                    disabled={reserveButtonDisabled || !!reservedSlot}
+                    disabled={
+                      reserveButtonDisabled || !!reservedSlot || reserveLoading
+                    }
                     className="bg-blue-600 hover:bg-blue-700"
                   >
-                    {reservedSlot ? "Appointment Reserved" : reserveButtonText}
+                    {reserveLoading ? (
+                      <div className="flex items-center gap-2">
+                        <Spinner size="sm" />
+                        <span>Processing...</span>
+                      </div>
+                    ) : reservedSlot ? (
+                      "Appointment Reserved"
+                    ) : (
+                      reserveButtonText
+                    )}
                   </Button>
                 </div>
               )}

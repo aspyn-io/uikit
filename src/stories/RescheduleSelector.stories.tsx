@@ -295,3 +295,73 @@ export const WithSelection: Story = {
     },
   },
 };
+
+export const WithReserveLoading: Story = {
+  render: () => {
+    const [currentWeekStart] = useState(() =>
+      startOfWeek(new Date(), { weekStartsOn: 0 })
+    );
+    const [weekData] = useState<WeekData | null>(() =>
+      generateMockWeekData(currentWeekStart)
+    );
+    const [loading] = useState(false);
+    const [reserveLoading, setReserveLoading] = useState(false);
+    const today = format(addDays(currentWeekStart, 1), "yyyy-MM-dd"); // Monday
+    const [selectedSlot] = useState<SelectedSlot>({
+      date: today,
+      time_period: "morning",
+      slot: {
+        start_at: `${today}T08:00:00Z`,
+        end_at: `${today}T12:00:00Z`,
+        calendar_id: "cal-1",
+        calendar: {
+          id: "cal-1",
+          name: "Main Calendar",
+        },
+      },
+    });
+    const [selectedWindow] = useState<string>("window-2");
+    const [selectedTeam] = useState<string>("team-2");
+    const [selectedTechnician] = useState<string>("tech-2");
+
+    const handleReserve = () => {
+      setReserveLoading(true);
+      // Simulate API call
+      setTimeout(() => {
+        setReserveLoading(false);
+        alert("Appointment reserved successfully!");
+      }, 2000);
+    };
+
+    return (
+      <RescheduleSelector
+        weekData={weekData}
+        loading={loading}
+        onWeekChange={() => {}}
+        selectedSlot={selectedSlot}
+        onSlotSelect={() => {}}
+        selectedWindow={selectedWindow}
+        selectedTeam={selectedTeam}
+        selectedTechnician={selectedTechnician}
+        onWindowChange={() => {}}
+        onTeamChange={() => {}}
+        onTechnicianChange={() => {}}
+        windowOptions={mockWindowOptions}
+        teamOptions={mockTeamOptions}
+        technicianOptions={mockTechnicianOptions}
+        timezone="America/New_York"
+        reserveButtonText="Reserve Appointment"
+        reserveLoading={reserveLoading}
+        onReserve={handleReserve}
+      />
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Shows the reserve button loading state. Click the reserve button to see the loading state for 2 seconds before completing.",
+      },
+    },
+  },
+};

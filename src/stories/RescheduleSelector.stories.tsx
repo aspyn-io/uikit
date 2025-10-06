@@ -73,17 +73,6 @@ const generateMockWeekData = (weekStart: Date): WeekData => {
                       },
                     },
                   ],
-            evening: [
-              {
-                start_at: `${dateString}T17:00:00Z`,
-                end_at: `${dateString}T20:00:00Z`,
-                calendar_id: "cal-1",
-                calendar: {
-                  id: "cal-1",
-                  name: "Main Calendar",
-                },
-              },
-            ],
           }
         : {
             any_time: undefined,

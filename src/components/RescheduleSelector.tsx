@@ -446,6 +446,10 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
 
       const slot = dayData?.slots[timePeriod]?.[0];
 
+      if (!slot) {
+        return null;
+      }
+
       return (
         <button
           key={timePeriod}
@@ -697,6 +701,12 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
                             dateString,
                             "afternoon",
                             timePeriodLabels.afternoon
+                          )}
+                          {renderTimePeriodButton(
+                            date,
+                            dateString,
+                            "evening",
+                            timePeriodLabels.evening
                           )}
                         </>
                       )}

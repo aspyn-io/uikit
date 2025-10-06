@@ -597,8 +597,36 @@ export const RescheduleSelector: React.FC<RescheduleSelectorProps> = ({
 
           {/* Loading State */}
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Spinner size="xl" />
+            <div className="grid grid-cols-7 gap-1 mt-2">
+              {weekDates.map((date) => {
+                const dateString = format(date, "yyyy-MM-dd");
+                const isToday =
+                  format(date, "yyyy-MM-dd") ===
+                  format(new Date(), "yyyy-MM-dd");
+
+                return (
+                  <div
+                    key={dateString}
+                    className={`border rounded-lg p-2 bg-white dark:bg-gray-800 ${
+                      isToday
+                        ? "border-blue-500 dark:border-blue-400"
+                        : "border-gray-200 dark:border-gray-700"
+                    }`}
+                  >
+                    {/* Date Header Skeleton */}
+                    <div className="text-center mb-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                      <div className="mx-auto h-7 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </div>
+
+                    {/* Time Period Buttons Skeleton */}
+                    <div className="space-y-2">
+                      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           ) : (
             /* Week Grid */

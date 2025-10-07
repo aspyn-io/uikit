@@ -30,6 +30,7 @@ export type {
   DayAvailability,
   WeekData,
   SelectedSlot,
+  SchedulableSlot,
   WindowOption,
   TeamOption,
   TechnicianOption,

@@ -25,6 +25,9 @@ interface SelectedAppointmentCardProps {
   onCancelReservation?: () => void;
   cancelButtonText?: string;
   cancelLoading?: boolean;
+  displayWindowOptions?: boolean;
+  displayTeamOptions?: boolean;
+  displayTechnicianOptions?: boolean;
 }
 
 export const SelectedAppointmentCard: React.FC<
@@ -46,6 +49,9 @@ export const SelectedAppointmentCard: React.FC<
   onCancelReservation,
   cancelButtonText = "Cancel Reservation",
   cancelLoading = false,
+  displayWindowOptions = false,
+  displayTeamOptions = false,
+  displayTechnicianOptions = false,
 }) => {
   return (
     <div className="shadow-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-300 rounded-lg p-6">
@@ -60,12 +66,12 @@ export const SelectedAppointmentCard: React.FC<
             {selectedSlot.time_period.charAt(0).toUpperCase() +
               selectedSlot.time_period.slice(1).replace("_", " ")}
           </p>
-          {(windowOptions.length > 0 ||
-            teamOptions.length > 0 ||
-            technicianOptions.length > 0) && (
+          {((displayWindowOptions && windowOptions.length > 0) ||
+            (displayTeamOptions && teamOptions.length > 0) ||
+            (displayTechnicianOptions && technicianOptions.length > 0)) && (
             <div className="mt-2 text-blue-600 dark:text-blue-400">
               <p className="flex items-center gap-1">
-                {windowOptions.length > 0 && (
+                {displayWindowOptions && windowOptions.length > 0 && (
                   <>
                     <Clock className="h-3 w-3" />
                     <span>
@@ -75,11 +81,12 @@ export const SelectedAppointmentCard: React.FC<
                             ?.label
                         : "Any"}
                     </span>
-                    {(teamOptions.length > 0 ||
-                      technicianOptions.length > 0) && <span>•</span>}
+                    {((displayTeamOptions && teamOptions.length > 0) ||
+                      (displayTechnicianOptions &&
+                        technicianOptions.length > 0)) && <span>•</span>}
                   </>
                 )}
-                {teamOptions.length > 0 && (
+                {displayTeamOptions && teamOptions.length > 0 && (
                   <>
                     <Users className="h-3 w-3" />
                     <span>
@@ -88,10 +95,11 @@ export const SelectedAppointmentCard: React.FC<
                         ? teamOptions.find((t) => t.id === selectedTeam)?.name
                         : "Any"}
                     </span>
-                    {technicianOptions.length > 0 && <span>•</span>}
+                    {displayTechnicianOptions &&
+                      technicianOptions.length > 0 && <span>•</span>}
                   </>
                 )}
-                {technicianOptions.length > 0 && (
+                {displayTechnicianOptions && technicianOptions.length > 0 && (
                   <>
                     <User className="h-3 w-3" />
                     <span>

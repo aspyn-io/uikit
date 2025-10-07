@@ -34,7 +34,12 @@ export interface WeekData {
 export interface SelectedSlot {
   date: string;
   time_period: TimePeriod;
-  slot?: TimeSlot;
+  openings?: TimeSlot[]; // All available openings for this date/time_period
+}
+
+export interface SchedulableSlot {
+  selectedSlot: SelectedSlot;
+  timeSlot: TimeSlot; // The specific TimeSlot to schedule based on filters
 }
 
 export interface WindowOption {

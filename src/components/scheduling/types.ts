@@ -5,7 +5,11 @@ export interface TimeSlot {
   start_at: string;
   end_at: string;
   calendar_id: string;
-  calendar?: {
+  user?: {
+    id: string;
+    name: string;
+  };
+  team?: {
     id: string;
     name: string;
   };

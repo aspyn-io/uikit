@@ -409,9 +409,6 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
           <SelectedAppointmentCard
             selectedSlot={selectedSlot}
             formatDate={formatDate}
-            windowOptions={windowOptions}
-            teamOptions={teamOptions}
-            technicianOptions={technicianOptions}
             selectedWindow={selectedWindow}
             selectedTeam={selectedTeam}
             selectedTechnician={selectedTechnician}

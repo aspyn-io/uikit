@@ -1,19 +1,11 @@
 import React from "react";
 import { Button, Spinner } from "flowbite-react";
 import { Clock, Users, User } from "lucide-react";
-import {
-  SelectedSlot,
-  WindowOption,
-  TeamOption,
-  TechnicianOption,
-} from "./types";
+import { SelectedSlot } from "./types";
 
 interface SelectedAppointmentCardProps {
   selectedSlot: SelectedSlot;
   formatDate: (date: Date | string, format: string) => string;
-  windowOptions: WindowOption[];
-  teamOptions: TeamOption[];
-  technicianOptions: TechnicianOption[];
   selectedWindow?: string;
   selectedTeam?: string;
   selectedTechnician?: string;
@@ -35,9 +27,6 @@ export const SelectedAppointmentCard: React.FC<
 > = ({
   selectedSlot,
   formatDate,
-  windowOptions,
-  teamOptions,
-  technicianOptions,
   selectedWindow,
   selectedTeam,
   selectedTechnician,
@@ -66,50 +55,31 @@ export const SelectedAppointmentCard: React.FC<
             {selectedSlot.time_period.charAt(0).toUpperCase() +
               selectedSlot.time_period.slice(1).replace("_", " ")}
           </p>
-          {((displayWindowOptions && windowOptions.length > 0) ||
-            (displayTeamOptions && teamOptions.length > 0) ||
-            (displayTechnicianOptions && technicianOptions.length > 0)) && (
+          {(displayWindowOptions ||
+            displayTeamOptions ||
+            displayTechnicianOptions) && (
             <div className="mt-2 text-blue-600 dark:text-blue-400">
               <p className="flex items-center gap-1">
-                {displayWindowOptions && windowOptions.length > 0 && (
+                {displayWindowOptions && (
                   <>
                     <Clock className="h-3 w-3" />
-                    <span>
-                      Window:{" "}
-                      {selectedWindow
-                        ? windowOptions.find((w) => w.id === selectedWindow)
-                            ?.label
-                        : "Any"}
-                    </span>
-                    {((displayTeamOptions && teamOptions.length > 0) ||
-                      (displayTechnicianOptions &&
-                        technicianOptions.length > 0)) && <span>•</span>}
+                    <span>Window: {selectedWindow || "Any"}</span>
+                    {(displayTeamOptions || displayTechnicianOptions) && (
+                      <span>•</span>
+                    )}
                   </>
                 )}
-                {displayTeamOptions && teamOptions.length > 0 && (
+                {displayTeamOptions && (
                   <>
                     <Users className="h-3 w-3" />
-                    <span>
-                      Team:{" "}
-                      {selectedTeam
-                        ? teamOptions.find((t) => t.id === selectedTeam)?.name
-                        : "Any"}
-                    </span>
-                    {displayTechnicianOptions &&
-                      technicianOptions.length > 0 && <span>•</span>}
+                    <span>Team: {selectedTeam || "Any"}</span>
+                    {displayTechnicianOptions && <span>•</span>}
                   </>
                 )}
-                {displayTechnicianOptions && technicianOptions.length > 0 && (
+                {displayTechnicianOptions && (
                   <>
                     <User className="h-3 w-3" />
-                    <span>
-                      Technician:{" "}
-                      {selectedTechnician
-                        ? technicianOptions.find(
-                            (t) => t.id === selectedTechnician
-                          )?.name
-                        : "Any"}
-                    </span>
+                    <span>Technician: {selectedTechnician || "Any"}</span>
                   </>
                 )}
               </p>

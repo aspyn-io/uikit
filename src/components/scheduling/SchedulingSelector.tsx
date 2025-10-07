@@ -12,6 +12,7 @@ import {
   SelectedSlot,
   SchedulableSlot,
   WindowOption,
+  WindowOptionWithAvailability,
   TeamOption,
   TechnicianOption,
   Labels,
@@ -38,6 +39,9 @@ interface SchedulingSelectorProps {
   displayWindowOptions?: boolean;
   displayTeamOptions?: boolean;
   displayTechnicianOptions?: boolean;
+
+  // Window options - passed as prop
+  windowOptions?: WindowOption[];
 
   // Selected preferences - controlled
   selectedWindow?: string;
@@ -87,6 +91,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   displayWindowOptions = false,
   displayTeamOptions = false,
   displayTechnicianOptions = false,
+  windowOptions = [],
   selectedWindow,
   selectedTeam,
   selectedTechnician,
@@ -140,28 +145,61 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     return weekData.days.find((day) => day.date === dateString) || null;
   };
 
-  // Derive window, team, and technician options from selected slot's available TimeSlots
-  const { windowOptions, teamOptions, technicianOptions } = useMemo(() => {
-    if (!selectedSlot?.openings) {
-      return { windowOptions: [], teamOptions: [], technicianOptions: [] };
+  // Update window options availability based on selectedSlot openings
+  const availableWindowOptions: WindowOptionWithAvailability[] = useMemo(() => {
+    if (!selectedSlot?.openings || windowOptions.length === 0) {
+      // If no slot selected, return windows with available=false
+      return windowOptions.map((window) => ({
+        ...window,
+        available: false,
+      }));
     }
 
-    const slots = selectedSlot.openings;
+    const openings = selectedSlot.openings;
 
-    // Extract unique windows (based on start_at/end_at)
-    const windowMap = new Map<string, WindowOption>();
-    slots.forEach((slot) => {
-      const key = `${slot.start_at}-${slot.end_at}`;
-      if (!windowMap.has(key)) {
-        windowMap.set(key, {
-          id: key,
-          label: `${slot.start_at} - ${slot.end_at}`,
-          start_time: slot.start_at,
-          end_time: slot.end_at,
-          available: true,
+    // For each window, check if any openings fall within its time range
+    return windowOptions.map((window) => {
+      const hasAvailableSlots = openings.some((slot) => {
+        const slotStartTime = slot.start_at;
+        const windowStartTime = window.start_time;
+        const windowEndTime = window.end_time || "23:59:59";
+
+        return (
+          slotStartTime >= windowStartTime && slotStartTime <= windowEndTime
+        );
+      });
+
+      return { ...window, available: hasAvailableSlots };
+    });
+  }, [selectedSlot, windowOptions]);
+
+  // Derive team and technician options from selected slot's available TimeSlots
+  // Filter openings by window if windowOptions are provided
+  const { teamOptions, technicianOptions, filteredOpenings } = useMemo(() => {
+    if (!selectedSlot?.openings) {
+      return { teamOptions: [], technicianOptions: [], filteredOpenings: [] };
+    }
+
+    let slots = selectedSlot.openings;
+
+    // If windowOptions are provided and a window is selected, filter openings by window
+    if (windowOptions.length > 0 && selectedWindow) {
+      const selectedWindowOption = availableWindowOptions.find(
+        (w) => w.id === selectedWindow
+      );
+      if (selectedWindowOption) {
+        // Filter slots where the start_at falls within the window's time range
+        slots = slots.filter((slot) => {
+          const slotStartTime = slot.start_at;
+          const windowStartTime = selectedWindowOption.start_time;
+          const windowEndTime = selectedWindowOption.end_time || "23:59:59";
+
+          return (
+            slotStartTime >= windowStartTime && slotStartTime <= windowEndTime
+          );
         });
       }
-    });
+    }
 
     // Extract unique teams
     const teamMap = new Map<string, TeamOption>();
@@ -192,26 +230,18 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     });
 
     return {
-      windowOptions: Array.from(windowMap.values()),
       teamOptions: Array.from(teamMap.values()),
       technicianOptions: Array.from(technicianMap.values()),
+      filteredOpenings: slots,
     };
-  }, [selectedSlot]);
+  }, [selectedSlot, availableWindowOptions, selectedWindow]);
 
   // Get the specific TimeSlot to schedule based on selected preferences
   const schedulableTimeSlot = useMemo(() => {
-    if (!selectedSlot?.openings) return undefined;
+    if (!filteredOpenings || filteredOpenings.length === 0) return undefined;
 
-    const slots = selectedSlot.openings;
-
-    // Filter slots based on selected preferences
-    const filtered = slots.filter((slot) => {
-      // Filter by window (time range)
-      if (selectedWindow) {
-        const windowKey = `${slot.start_at}-${slot.end_at}`;
-        if (windowKey !== selectedWindow) return false;
-      }
-
+    // Further filter by team and technician preferences
+    const filtered = filteredOpenings.filter((slot) => {
       // Filter by team
       if (selectedTeam && slot.team?.id !== selectedTeam) return false;
 
@@ -224,7 +254,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
 
     // Return the first matching slot, or undefined if none match
     return filtered[0];
-  }, [selectedSlot, selectedWindow, selectedTeam, selectedTechnician]);
+  }, [filteredOpenings, selectedTeam, selectedTechnician]);
 
   // Notify parent when schedulable slot changes
   useEffect(() => {
@@ -378,9 +408,9 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
           {/* Preferences Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Time Window Selector */}
-            {displayWindowOptions && windowOptions.length > 0 && (
+            {displayWindowOptions && availableWindowOptions.length > 0 && (
               <TimeWindowSelector
-                options={windowOptions}
+                options={availableWindowOptions}
                 selectedWindow={selectedWindow}
                 onWindowChange={onWindowChange}
               />

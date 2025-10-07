@@ -1,10 +1,10 @@
 import React from "react";
 import { Clock } from "lucide-react";
-import { WindowOption } from "../types";
+import { WindowOptionWithAvailability } from "../types";
 import { Dropdown, DropdownItem } from "./Dropdown";
 
 interface TimeWindowSelectorProps {
-  options: WindowOption[];
+  options: WindowOptionWithAvailability[];
   selectedWindow?: string;
   onWindowChange?: (windowId: string) => void;
 }

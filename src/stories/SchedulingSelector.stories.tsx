@@ -20,6 +20,35 @@ const meta: Meta<typeof SchedulingSelector> = {
 export default meta;
 type Story = StoryObj<typeof SchedulingSelector>;
 
+// Mock window options for time periods
+// Note: The 'available' property is calculated dynamically based on selectedSlot openings
+const mockWindowOptions = [
+  {
+    id: "8-10",
+    label: "8:00 AM - 10:00 AM",
+    start_time: "08:00:00",
+    end_time: "10:00:00",
+  },
+  {
+    id: "10-12",
+    label: "10:00 AM - 12:00 PM",
+    start_time: "10:00:00",
+    end_time: "12:00:00",
+  },
+  {
+    id: "12-2",
+    label: "12:00 PM - 2:00 PM",
+    start_time: "12:00:00",
+    end_time: "14:00:00",
+  },
+  {
+    id: "2-4",
+    label: "2:00 PM - 4:00 PM",
+    start_time: "14:00:00",
+    end_time: "16:00:00",
+  },
+];
+
 // Helper function to generate mock week data
 const generateMockWeekData = (weekStart: Date): WeekData => {
   const weekEnd = endOfWeek(weekStart, { weekStartsOn: 0 });
@@ -166,6 +195,7 @@ const SchedulingSelectorWrapper = (args: any) => {
       onWeekChange={handleWeekChange}
       selectedSlot={selectedSlot}
       onSlotSelect={setSelectedSlot}
+      windowOptions={args.windowOptions || mockWindowOptions}
       selectedWindow={selectedWindow}
       selectedTeam={selectedTeam}
       selectedTechnician={selectedTechnician}
@@ -184,6 +214,7 @@ const SchedulingSelectorWrapper = (args: any) => {
 export const Default: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
+    windowOptions: mockWindowOptions,
     displayWindowOptions: true,
     displayTeamOptions: true,
     displayTechnicianOptions: true,
@@ -210,6 +241,7 @@ export const WithoutPreferences: Story = {
 export const WindowsOnly: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
+    windowOptions: mockWindowOptions,
     displayWindowOptions: true,
     displayTeamOptions: false,
     displayTechnicianOptions: false,
@@ -223,6 +255,7 @@ export const WindowsOnly: Story = {
 export const CustomLabels: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
+    windowOptions: mockWindowOptions,
     displayWindowOptions: true,
     displayTeamOptions: true,
     displayTechnicianOptions: true,
@@ -256,6 +289,7 @@ export const Loading: Story = {
     );
   },
   args: {
+    windowOptions: mockWindowOptions,
     displayWindowOptions: true,
     displayTeamOptions: true,
     displayTechnicianOptions: true,
@@ -313,6 +347,7 @@ export const WithReserveLoading: Story = {
         onWeekChange={() => {}}
         selectedSlot={selectedSlot}
         onSlotSelect={() => {}}
+        windowOptions={mockWindowOptions}
         selectedWindow={selectedWindow}
         selectedTeam={selectedTeam}
         selectedTechnician={selectedTechnician}
@@ -426,6 +461,7 @@ export const WithReservationAndCancel: Story = {
         onWeekChange={() => {}}
         selectedSlot={selectedSlot}
         onSlotSelect={() => {}}
+        windowOptions={mockWindowOptions}
         selectedWindow={selectedWindow}
         selectedTeam={selectedTeam}
         selectedTechnician={selectedTechnician}

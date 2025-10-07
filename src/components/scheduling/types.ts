@@ -45,9 +45,12 @@ export interface SchedulableSlot {
 export interface WindowOption {
   id: string;
   label: string;
-  start_time?: string;
+  start_time: string;
   end_time?: string;
-  available?: boolean;
+}
+
+export interface WindowOptionWithAvailability extends WindowOption {
+  available: boolean;
 }
 
 export interface TeamOption {

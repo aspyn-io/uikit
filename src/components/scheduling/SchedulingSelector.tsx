@@ -162,7 +162,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
       const hasAvailableSlots = openings.some((slot) => {
         const slotStartTime = slot.start_at;
         const windowStartTime = window.start_time;
-        const windowEndTime = window.end_time || "23:59:59";
+        const windowEndTime = window.end_time;
 
         return (
           slotStartTime >= windowStartTime && slotStartTime <= windowEndTime
@@ -192,7 +192,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
         slots = slots.filter((slot) => {
           const slotStartTime = slot.start_at;
           const windowStartTime = selectedWindowOption.start_time;
-          const windowEndTime = selectedWindowOption.end_time || "23:59:59";
+          const windowEndTime = selectedWindowOption.end_time;
 
           return (
             slotStartTime >= windowStartTime && slotStartTime <= windowEndTime

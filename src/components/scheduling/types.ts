@@ -46,7 +46,7 @@ export interface WindowOption {
   id: string;
   label: string;
   start_time: string;
-  end_time?: string;
+  end_time: string;
 }
 
 export interface WindowOptionWithAvailability extends WindowOption {

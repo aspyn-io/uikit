@@ -308,6 +308,7 @@ const SchedulingSelectorWrapper = (args: WrapperArgs) => {
   const [reservedSlot, setReservedSlot] = useState<SelectedSlot | null>(null);
   const [reserveLoading, setReserveLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [preferencesLoading, setPreferencesLoading] = useState(false);
 
   // Use the business logic utilities to compute options and schedulable slot
   const {
@@ -343,6 +344,14 @@ const SchedulingSelectorWrapper = (args: WrapperArgs) => {
       setSelectedWindow("");
       setSelectedTeam("");
       setSelectedTechnician("");
+
+      // Simulate loading preferences when a new slot is selected
+      if (slot && args.windowOptions && args.windowOptions.length > 0) {
+        setPreferencesLoading(true);
+        setTimeout(() => {
+          setPreferencesLoading(false);
+        }, 1000);
+      }
     }
   };
 
@@ -417,6 +426,7 @@ const SchedulingSelectorWrapper = (args: WrapperArgs) => {
       reserveLoading={reserveLoading}
       onCancelReservation={handleCancelReservation}
       cancelLoading={cancelLoading}
+      preferencesLoading={preferencesLoading}
     />
   );
 };
@@ -772,6 +782,62 @@ export const WithReservationAndCancel: Story = {
       description: {
         story:
           "Shows a reserved appointment with the ability to cancel it. The appointment starts in a reserved state, and clicking the cancel button will prompt for confirmation before cancelling.",
+      },
+    },
+  },
+};
+
+export const PreferencesLoading: Story = {
+  render: () => {
+    const [currentWeekStart] = useState(() =>
+      startOfWeek(new Date(), { weekStartsOn: 0 })
+    );
+    const [weekData] = useState<WeekData | null>(() =>
+      generateMockWeekData(currentWeekStart)
+    );
+    const [loading] = useState(false);
+    const [preferencesLoading] = useState(true);
+    const today = format(addDays(currentWeekStart, 1), "yyyy-MM-dd"); // Monday
+    const [selectedSlot] = useState<SelectedSlot>({
+      date: today,
+      time_period: "morning",
+      openings: [
+        {
+          start_at: `${today}T08:00:00Z`,
+          end_at: `${today}T12:00:00Z`,
+          calendar_id: "cal-1",
+          user: {
+            id: "user-2",
+            name: "Sarah Johnson",
+          },
+          team: {
+            id: "team-2",
+            name: "Team Bravo",
+          },
+        },
+      ],
+    });
+
+    return (
+      <SchedulingSelector
+        weekData={weekData}
+        loading={loading}
+        onWeekChange={() => {}}
+        selectedSlot={selectedSlot}
+        onSlotSelect={() => {}}
+        windowOptions={[]}
+        teamOptions={[]}
+        technicianOptions={[]}
+        timezone="America/New_York"
+        preferencesLoading={preferencesLoading}
+      />
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Shows the skeleton loading state for preferences and appointment card when a slot is selected but the parent is still computing available options. This is useful when fetching additional data after slot selection.",
       },
     },
   },

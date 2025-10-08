@@ -72,6 +72,7 @@ interface SchedulingSelectorProps {
   showTimezoneInfo?: boolean;
   disablePastNavigation?: boolean;
   minDate?: Date;
+  preferencesLoading?: boolean; // Loading state for preferences and appointment card
 
   // Custom labels
   labels?: Labels;
@@ -107,6 +108,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   showTimezoneInfo = true,
   disablePastNavigation = true,
   minDate,
+  preferencesLoading = false,
   labels = {},
 }) => {
   // Current week being displayed
@@ -266,54 +268,110 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
       {selectedSlot && (
         <div className="space-y-4">
           {/* Preferences Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Time Window Selector */}
-            {windowOptions && windowOptions.length > 0 && (
-              <TimeWindowSelector
-                options={windowOptions}
+          {preferencesLoading ? (
+            <>
+              {/* Skeleton Loading State for Preferences */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                </div>
+              </div>
+
+              {/* Skeleton Loading State for Appointment Card */}
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 bg-white dark:bg-gray-800">
+                <div className="space-y-4">
+                  {/* Date and Time Period Skeleton */}
+                  <div className="space-y-2">
+                    <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  </div>
+
+                  {/* Details Skeleton */}
+                  <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="h-4 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="h-4 w-36 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                      <div className="h-4 w-44 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+
+                  {/* Button Skeleton */}
+                  <div className="pt-4">
+                    <div className="h-11 w-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Time Window Selector */}
+                {windowOptions && windowOptions.length > 0 && (
+                  <TimeWindowSelector
+                    options={windowOptions}
+                    selectedWindow={selectedWindow}
+                    onWindowChange={onWindowChange}
+                  />
+                )}
+
+                {/* Team Selector */}
+                {teamOptions && teamOptions.length > 0 && (
+                  <TeamSelector
+                    options={teamOptions}
+                    selectedTeam={selectedTeam}
+                    onTeamChange={onTeamChange}
+                  />
+                )}
+
+                {/* Technician Selector */}
+                {technicianOptions && technicianOptions.length > 0 && (
+                  <TechnicianSelector
+                    options={technicianOptions}
+                    selectedTechnician={selectedTechnician}
+                    onTechnicianChange={onTechnicianChange}
+                  />
+                )}
+              </div>
+
+              {/* Selected Appointment Card */}
+              <SelectedAppointmentCard
+                selectedSlot={selectedSlot}
+                formatDate={formatDate}
                 selectedWindow={selectedWindow}
-                onWindowChange={onWindowChange}
-              />
-            )}
-
-            {/* Team Selector */}
-            {teamOptions && teamOptions.length > 0 && (
-              <TeamSelector
-                options={teamOptions}
                 selectedTeam={selectedTeam}
-                onTeamChange={onTeamChange}
-              />
-            )}
-
-            {/* Technician Selector */}
-            {technicianOptions && technicianOptions.length > 0 && (
-              <TechnicianSelector
-                options={technicianOptions}
                 selectedTechnician={selectedTechnician}
-                onTechnicianChange={onTechnicianChange}
+                teamOptions={teamOptions || []}
+                technicianOptions={technicianOptions || []}
+                windowOptions={windowOptions || []}
+                onReserve={onReserve}
+                reserveButtonText={reserveButtonText}
+                reserveButtonDisabled={
+                  reserveButtonDisabled || !schedulableSlot
+                }
+                reserveLoading={reserveLoading}
+                reservedSlot={reservedSlot}
+                onCancelReservation={onCancelReservation}
+                cancelButtonText={cancelButtonText}
+                cancelLoading={cancelLoading}
               />
-            )}
-          </div>
-
-          {/* Selected Appointment Card */}
-          <SelectedAppointmentCard
-            selectedSlot={selectedSlot}
-            formatDate={formatDate}
-            selectedWindow={selectedWindow}
-            selectedTeam={selectedTeam}
-            selectedTechnician={selectedTechnician}
-            teamOptions={teamOptions || []}
-            technicianOptions={technicianOptions || []}
-            windowOptions={windowOptions || []}
-            onReserve={onReserve}
-            reserveButtonText={reserveButtonText}
-            reserveButtonDisabled={reserveButtonDisabled || !schedulableSlot}
-            reserveLoading={reserveLoading}
-            reservedSlot={reservedSlot}
-            onCancelReservation={onCancelReservation}
-            cancelButtonText={cancelButtonText}
-            cancelLoading={cancelLoading}
-          />
+            </>
+          )}
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Spinner } from "flowbite-react";
 import { Clock, Users, User } from "lucide-react";
-import { SelectedSlot } from "./types";
+import { SelectedSlot, TeamOption, TechnicianOption } from "./types";
 
 interface SelectedAppointmentCardProps {
   selectedSlot: SelectedSlot;
@@ -9,6 +9,8 @@ interface SelectedAppointmentCardProps {
   selectedWindow?: string;
   selectedTeam?: string;
   selectedTechnician?: string;
+  teamOptions?: TeamOption[];
+  technicianOptions?: TechnicianOption[];
   onReserve?: () => void;
   reserveButtonText?: string;
   reserveButtonDisabled?: boolean;
@@ -30,6 +32,8 @@ export const SelectedAppointmentCard: React.FC<
   selectedWindow,
   selectedTeam,
   selectedTechnician,
+  teamOptions = [],
+  technicianOptions = [],
   onReserve,
   reserveButtonText = "Reserve Appointment",
   reserveButtonDisabled = false,
@@ -42,6 +46,16 @@ export const SelectedAppointmentCard: React.FC<
   displayTeamOptions = false,
   displayTechnicianOptions = false,
 }) => {
+  // Get display names for selected team and technician
+  const selectedTeamName = selectedTeam
+    ? teamOptions.find((team) => team.id === selectedTeam)?.name || selectedTeam
+    : "Any";
+
+  const selectedTechnicianName = selectedTechnician
+    ? technicianOptions.find((tech) => tech.id === selectedTechnician)?.name ||
+      selectedTechnician
+    : "Any";
+
   return (
     <div className="shadow-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-300 rounded-lg p-6">
       <div className="flex items-center justify-between">
@@ -72,14 +86,14 @@ export const SelectedAppointmentCard: React.FC<
                 {displayTeamOptions && (
                   <>
                     <Users className="h-3 w-3" />
-                    <span>Team: {selectedTeam || "Any"}</span>
+                    <span>Team: {selectedTeamName}</span>
                     {displayTechnicianOptions && <span>•</span>}
                   </>
                 )}
                 {displayTechnicianOptions && (
                   <>
                     <User className="h-3 w-3" />
-                    <span>Technician: {selectedTechnician || "Any"}</span>
+                    <span>Technician: {selectedTechnicianName}</span>
                   </>
                 )}
               </p>

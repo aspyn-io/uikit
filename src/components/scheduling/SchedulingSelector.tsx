@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { format, addWeeks, startOfWeek, endOfWeek, parseISO } from "date-fns";
 import { CalendarHeader } from "./CalendarHeader";
 import { WeekGrid } from "./WeekGrid";
@@ -11,7 +11,6 @@ import {
   WeekData,
   SelectedSlot,
   SchedulableSlot,
-  WindowOption,
   WindowOptionWithAvailability,
   TeamOption,
   TechnicianOption,
@@ -32,16 +31,15 @@ interface SchedulingSelectorProps {
   selectedSlot: SelectedSlot | null;
   onSlotSelect: (slot: SelectedSlot | null) => void;
 
-  // Callback when schedulable slot changes (when filters are applied)
-  onSchedulableSlotChange?: (schedulableSlot: SchedulableSlot | null) => void;
-
   // Display flags for preference sections
   displayWindowOptions?: boolean;
   displayTeamOptions?: boolean;
   displayTechnicianOptions?: boolean;
 
-  // Window options - passed as prop
-  windowOptions?: WindowOption[];
+  // Computed options - passed from parent after slot selection
+  windowOptions?: WindowOptionWithAvailability[];
+  teamOptions?: TeamOption[];
+  technicianOptions?: TechnicianOption[];
 
   // Selected preferences - controlled
   selectedWindow?: string;
@@ -60,8 +58,11 @@ interface SchedulingSelectorProps {
   // Reserved slot (for showing locked state)
   reservedSlot?: SelectedSlot | null;
 
+  // Computed schedulable slot - passed from parent
+  schedulableSlot?: SchedulableSlot | null;
+
   // Action button
-  onReserve?: (schedulableSlot: SchedulableSlot) => void;
+  onReserve?: () => void;
   reserveButtonText?: string;
   reserveButtonDisabled?: boolean;
   reserveLoading?: boolean;
@@ -87,11 +88,12 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   onWeekChange,
   selectedSlot,
   onSlotSelect,
-  onSchedulableSlotChange,
   displayWindowOptions = false,
   displayTeamOptions = false,
   displayTechnicianOptions = false,
   windowOptions = [],
+  teamOptions = [],
+  technicianOptions = [],
   selectedWindow,
   selectedTeam,
   selectedTechnician,
@@ -101,6 +103,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   timezone = "America/New_York",
   timezoneDisplay,
   reservedSlot,
+  schedulableSlot,
   onReserve,
   reserveButtonText = "Reserve Appointment",
   reserveButtonDisabled = false,
@@ -144,131 +147,6 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     if (!weekData?.days) return null;
     return weekData.days.find((day) => day.date === dateString) || null;
   };
-
-  // Update window options availability based on selectedSlot openings
-  const availableWindowOptions: WindowOptionWithAvailability[] = useMemo(() => {
-    if (!selectedSlot?.openings || windowOptions.length === 0) {
-      // If no slot selected, return windows with available=false
-      return windowOptions.map((window) => ({
-        ...window,
-        available: false,
-      }));
-    }
-
-    const openings = selectedSlot.openings;
-
-    // For each window, check if any openings fall within its time range
-    return windowOptions.map((window) => {
-      const hasAvailableSlots = openings.some((slot) => {
-        const slotStartTime = slot.start_at;
-        const windowStartTime = window.start_time;
-        const windowEndTime = window.end_time;
-
-        return (
-          slotStartTime >= windowStartTime && slotStartTime <= windowEndTime
-        );
-      });
-
-      return { ...window, available: hasAvailableSlots };
-    });
-  }, [selectedSlot, windowOptions]);
-
-  // Derive team and technician options from selected slot's available TimeSlots
-  // Filter openings by window if windowOptions are provided
-  const { teamOptions, technicianOptions, filteredOpenings } = useMemo(() => {
-    if (!selectedSlot?.openings) {
-      return { teamOptions: [], technicianOptions: [], filteredOpenings: [] };
-    }
-
-    let slots = selectedSlot.openings;
-
-    // If windowOptions are provided and a window is selected, filter openings by window
-    if (windowOptions.length > 0 && selectedWindow) {
-      const selectedWindowOption = availableWindowOptions.find(
-        (w) => w.id === selectedWindow
-      );
-      if (selectedWindowOption) {
-        // Filter slots where the start_at falls within the window's time range
-        slots = slots.filter((slot) => {
-          const slotStartTime = slot.start_at;
-          const windowStartTime = selectedWindowOption.start_time;
-          const windowEndTime = selectedWindowOption.end_time;
-
-          return (
-            slotStartTime >= windowStartTime && slotStartTime <= windowEndTime
-          );
-        });
-      }
-    }
-
-    // Extract unique teams
-    const teamMap = new Map<string, TeamOption>();
-    slots.forEach((slot) => {
-      if (slot.team) {
-        if (!teamMap.has(slot.team.id)) {
-          teamMap.set(slot.team.id, {
-            id: slot.team.id,
-            name: slot.team.name,
-            available: true,
-          });
-        }
-      }
-    });
-
-    // Extract unique technicians (users)
-    const technicianMap = new Map<string, TechnicianOption>();
-    slots.forEach((slot) => {
-      if (slot.user) {
-        if (!technicianMap.has(slot.user.id)) {
-          technicianMap.set(slot.user.id, {
-            id: slot.user.id,
-            name: slot.user.name,
-            available: true,
-          });
-        }
-      }
-    });
-
-    return {
-      teamOptions: Array.from(teamMap.values()),
-      technicianOptions: Array.from(technicianMap.values()),
-      filteredOpenings: slots,
-    };
-  }, [selectedSlot, availableWindowOptions, selectedWindow]);
-
-  // Get the specific TimeSlot to schedule based on selected preferences
-  const schedulableTimeSlot = useMemo(() => {
-    if (!filteredOpenings || filteredOpenings.length === 0) return undefined;
-
-    // Further filter by team and technician preferences
-    const filtered = filteredOpenings.filter((slot) => {
-      // Filter by team
-      if (selectedTeam && slot.team?.id !== selectedTeam) return false;
-
-      // Filter by technician
-      if (selectedTechnician && slot.user?.id !== selectedTechnician)
-        return false;
-
-      return true;
-    });
-
-    // Return the first matching slot, or undefined if none match
-    return filtered[0];
-  }, [filteredOpenings, selectedTeam, selectedTechnician]);
-
-  // Notify parent when schedulable slot changes
-  useEffect(() => {
-    if (onSchedulableSlotChange) {
-      if (selectedSlot && schedulableTimeSlot) {
-        onSchedulableSlotChange({
-          selectedSlot,
-          timeSlot: schedulableTimeSlot,
-        });
-      } else {
-        onSchedulableSlotChange(null);
-      }
-    }
-  }, [selectedSlot, schedulableTimeSlot, onSchedulableSlotChange]);
 
   // Check if date is in the past - simple utility function
   const isDateInPast = (date: Date): boolean => {
@@ -352,7 +230,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
       const dayAvailability = getAvailabilityForDate(date);
       const openings = dayAvailability?.slots[timePeriod] || [];
 
-      // Don't pass the slot here - it will be determined by filters
+      // Pass the openings to parent - parent will handle filtering and option generation
       onSlotSelect({
         date,
         time_period: timePeriod,
@@ -361,16 +239,6 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     },
     [onSlotSelect, reservedSlot, weekData]
   );
-
-  // Wrap onReserve to pass the schedulable slot
-  const handleReserve = useCallback(() => {
-    if (onReserve && selectedSlot && schedulableTimeSlot) {
-      onReserve({
-        selectedSlot,
-        timeSlot: schedulableTimeSlot,
-      });
-    }
-  }, [onReserve, selectedSlot, schedulableTimeSlot]);
 
   return (
     <div className="space-y-6">
@@ -408,16 +276,18 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
           {/* Preferences Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Time Window Selector */}
-            {displayWindowOptions && availableWindowOptions.length > 0 && (
-              <TimeWindowSelector
-                options={availableWindowOptions}
-                selectedWindow={selectedWindow}
-                onWindowChange={onWindowChange}
-              />
-            )}
+            {displayWindowOptions &&
+              windowOptions &&
+              windowOptions.length > 0 && (
+                <TimeWindowSelector
+                  options={windowOptions}
+                  selectedWindow={selectedWindow}
+                  onWindowChange={onWindowChange}
+                />
+              )}
 
             {/* Team Selector */}
-            {displayTeamOptions && teamOptions.length > 0 && (
+            {displayTeamOptions && teamOptions && teamOptions.length > 0 && (
               <TeamSelector
                 options={teamOptions}
                 selectedTeam={selectedTeam}
@@ -426,13 +296,15 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
             )}
 
             {/* Technician Selector */}
-            {displayTechnicianOptions && technicianOptions.length > 0 && (
-              <TechnicianSelector
-                options={technicianOptions}
-                selectedTechnician={selectedTechnician}
-                onTechnicianChange={onTechnicianChange}
-              />
-            )}
+            {displayTechnicianOptions &&
+              technicianOptions &&
+              technicianOptions.length > 0 && (
+                <TechnicianSelector
+                  options={technicianOptions}
+                  selectedTechnician={selectedTechnician}
+                  onTechnicianChange={onTechnicianChange}
+                />
+              )}
           </div>
 
           {/* Selected Appointment Card */}
@@ -442,13 +314,11 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
             selectedWindow={selectedWindow}
             selectedTeam={selectedTeam}
             selectedTechnician={selectedTechnician}
-            teamOptions={teamOptions}
-            technicianOptions={technicianOptions}
-            onReserve={onReserve ? handleReserve : undefined}
+            teamOptions={teamOptions || []}
+            technicianOptions={technicianOptions || []}
+            onReserve={onReserve}
             reserveButtonText={reserveButtonText}
-            reserveButtonDisabled={
-              reserveButtonDisabled || !schedulableTimeSlot
-            }
+            reserveButtonDisabled={reserveButtonDisabled || !schedulableSlot}
             reserveLoading={reserveLoading}
             reservedSlot={reservedSlot}
             onCancelReservation={onCancelReservation}

@@ -4,8 +4,13 @@ import {
   SchedulingSelector,
   WeekData,
   SelectedSlot,
+  WindowOption,
+  WindowOptionWithAvailability,
+  TeamOption,
+  TechnicianOption,
   SchedulableSlot,
-} from "../components/SchedulingSelector";
+  TimeSlot,
+} from "../components/scheduling";
 import { addDays, format, startOfWeek, endOfWeek } from "date-fns";
 
 const meta: Meta<typeof SchedulingSelector> = {
@@ -20,9 +25,147 @@ const meta: Meta<typeof SchedulingSelector> = {
 export default meta;
 type Story = StoryObj<typeof SchedulingSelector>;
 
+// Helper function to process slot selection and compute available options
+interface ProcessSlotSelectionParams {
+  selectedSlot: SelectedSlot | null;
+  windowOptions: WindowOption[];
+  selectedWindow: string;
+  selectedTeam: string;
+  selectedTechnician: string;
+}
+
+interface ProcessSlotSelectionResult {
+  windowOptionsWithAvailability: WindowOptionWithAvailability[];
+  teamOptions: TeamOption[];
+  technicianOptions: TechnicianOption[];
+  schedulableSlot: SchedulableSlot | null;
+}
+
+const processSlotSelection = ({
+  selectedSlot,
+  windowOptions,
+  selectedWindow,
+  selectedTeam,
+  selectedTechnician,
+}: ProcessSlotSelectionParams): ProcessSlotSelectionResult => {
+  // If no slot selected, return empty options
+  if (!selectedSlot || !selectedSlot.openings) {
+    return {
+      windowOptionsWithAvailability: [],
+      teamOptions: [],
+      technicianOptions: [],
+      schedulableSlot: null,
+    };
+  }
+
+  const availableSlots = selectedSlot.openings;
+
+  // Step 1: Filter slots by selected window (if window options exist and one is selected)
+  let filteredByWindow = availableSlots;
+  if (windowOptions.length > 0 && selectedWindow) {
+    const selectedWindowOption = windowOptions.find(
+      (w) => w.id === selectedWindow
+    );
+    if (selectedWindowOption) {
+      filteredByWindow = availableSlots.filter((slot) => {
+        // Extract time portion from ISO string
+        const slotStart = slot.start_at.substring(11, 19);
+        const slotEnd = slot.end_at.substring(11, 19);
+
+        // Check if slot overlaps with selected window
+        return (
+          slotStart < selectedWindowOption.end_time &&
+          slotEnd > selectedWindowOption.start_time
+        );
+      });
+    }
+  }
+
+  // Step 2: Compute window options with availability
+  const windowOptionsWithAvailability: WindowOptionWithAvailability[] =
+    windowOptions.map((option) => {
+      const available = availableSlots.some((slot) => {
+        // Parse times from ISO strings - these are in UTC
+        const slotStartDate = new Date(slot.start_at);
+        const slotEndDate = new Date(slot.end_at);
+
+        // Get the time portion in HH:MM:SS format from the ISO string
+        // Extract just the time part (ignoring timezone for comparison with window times)
+        const slotStart = slot.start_at.substring(11, 19);
+        const slotEnd = slot.end_at.substring(11, 19);
+
+        // Check if the slot overlaps with the window option
+        // A slot is available for a window if the slot's time range overlaps with the window
+        return slotStart < option.end_time && slotEnd > option.start_time;
+      });
+      return { ...option, available };
+    });
+
+  // Step 3: Extract unique teams from filtered slots
+  const teamMap = new Map<string, TeamOption>();
+  filteredByWindow.forEach((slot) => {
+    if (slot.team) {
+      if (!teamMap.has(slot.team.id)) {
+        teamMap.set(slot.team.id, {
+          id: slot.team.id,
+          name: slot.team.name,
+          available: true,
+        });
+      }
+    }
+  });
+  const teamOptions = Array.from(teamMap.values());
+
+  // Step 4: Filter by selected team
+  let filteredByTeam = filteredByWindow;
+  if (selectedTeam) {
+    filteredByTeam = filteredByWindow.filter(
+      (slot) => slot.team?.id === selectedTeam
+    );
+  }
+
+  // Step 5: Extract unique technicians from team-filtered slots
+  const technicianMap = new Map<string, TechnicianOption>();
+  filteredByTeam.forEach((slot) => {
+    if (slot.user) {
+      if (!technicianMap.has(slot.user.id)) {
+        technicianMap.set(slot.user.id, {
+          id: slot.user.id,
+          name: slot.user.name,
+          available: true,
+        });
+      }
+    }
+  });
+  const technicianOptions = Array.from(technicianMap.values());
+
+  // Step 6: Filter by selected technician
+  let filteredByTechnician = filteredByTeam;
+  if (selectedTechnician) {
+    filteredByTechnician = filteredByTeam.filter(
+      (slot) => slot.user?.id === selectedTechnician
+    );
+  }
+
+  // Step 7: Compute schedulable slot (pick first matching slot)
+  const schedulableSlot: SchedulableSlot | null =
+    filteredByTechnician.length > 0
+      ? {
+          selectedSlot,
+          timeSlot: filteredByTechnician[0],
+        }
+      : null;
+
+  return {
+    windowOptionsWithAvailability,
+    teamOptions,
+    technicianOptions,
+    schedulableSlot,
+  };
+};
+
 // Mock window options for time periods
-// Note: The 'available' property is calculated dynamically based on selectedSlot openings
-const mockWindowOptions = [
+const mockWindowOptions: WindowOption[] = [
   {
     id: "8-10",
     label: "8:00 AM - 10:00 AM",
@@ -148,6 +291,20 @@ const SchedulingSelectorWrapper = (args: any) => {
   const [reserveLoading, setReserveLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
 
+  // Use the business logic utilities to compute options and schedulable slot
+  const {
+    windowOptionsWithAvailability,
+    teamOptions,
+    technicianOptions,
+    schedulableSlot,
+  } = processSlotSelection({
+    selectedSlot,
+    windowOptions: args.displayWindowOptions ? mockWindowOptions : [],
+    selectedWindow,
+    selectedTeam,
+    selectedTechnician,
+  });
+
   const handleWeekChange = (weekStart: string, weekEnd: string) => {
     setLoading(true);
     setCurrentWeekStart(new Date(weekStart));
@@ -158,7 +315,39 @@ const SchedulingSelectorWrapper = (args: any) => {
     }, 500);
   };
 
-  const handleReserve = (schedulableSlot: SchedulableSlot) => {
+  const handleSlotSelect = (slot: SelectedSlot | null) => {
+    setSelectedSlot(slot);
+    // Reset preferences when slot changes
+    if (
+      slot?.date !== selectedSlot?.date ||
+      slot?.time_period !== selectedSlot?.time_period
+    ) {
+      setSelectedWindow("");
+      setSelectedTeam("");
+      setSelectedTechnician("");
+    }
+  };
+
+  const handleWindowChange = (windowId: string) => {
+    setSelectedWindow(windowId);
+    // Reset dependent preferences
+    setSelectedTeam("");
+    setSelectedTechnician("");
+  };
+
+  const handleTeamChange = (teamId: string) => {
+    setSelectedTeam(teamId);
+    // Reset dependent preferences
+    setSelectedTechnician("");
+  };
+
+  const handleTechnicianChange = (technicianId: string) => {
+    setSelectedTechnician(technicianId);
+  };
+
+  const handleReserve = () => {
+    if (!schedulableSlot) return;
+
     setReserveLoading(true);
     // Simulate API call
     setTimeout(() => {
@@ -194,14 +383,17 @@ const SchedulingSelectorWrapper = (args: any) => {
       loading={loading}
       onWeekChange={handleWeekChange}
       selectedSlot={selectedSlot}
-      onSlotSelect={setSelectedSlot}
-      windowOptions={args.windowOptions || mockWindowOptions}
+      onSlotSelect={handleSlotSelect}
+      windowOptions={windowOptionsWithAvailability}
+      teamOptions={teamOptions}
+      technicianOptions={technicianOptions}
       selectedWindow={selectedWindow}
       selectedTeam={selectedTeam}
       selectedTechnician={selectedTechnician}
-      onWindowChange={setSelectedWindow}
-      onTeamChange={setSelectedTeam}
-      onTechnicianChange={setSelectedTechnician}
+      onWindowChange={handleWindowChange}
+      onTeamChange={handleTeamChange}
+      onTechnicianChange={handleTechnicianChange}
+      schedulableSlot={schedulableSlot}
       onReserve={handleReserve}
       reservedSlot={reservedSlot}
       reserveLoading={reserveLoading}
@@ -214,7 +406,6 @@ const SchedulingSelectorWrapper = (args: any) => {
 export const Default: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
-    windowOptions: mockWindowOptions,
     displayWindowOptions: true,
     displayTeamOptions: true,
     displayTechnicianOptions: true,
@@ -241,7 +432,6 @@ export const WithoutPreferences: Story = {
 export const WindowsOnly: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
-    windowOptions: mockWindowOptions,
     displayWindowOptions: true,
     displayTeamOptions: false,
     displayTechnicianOptions: false,
@@ -255,7 +445,6 @@ export const WindowsOnly: Story = {
 export const CustomLabels: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
-    windowOptions: mockWindowOptions,
     displayWindowOptions: true,
     displayTeamOptions: true,
     displayTechnicianOptions: true,
@@ -276,6 +465,18 @@ export const CustomLabels: Story = {
 export const Loading: Story = {
   render: (args) => {
     const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
+    const {
+      windowOptionsWithAvailability,
+      teamOptions,
+      technicianOptions,
+      schedulableSlot,
+    } = processSlotSelection({
+      selectedSlot,
+      windowOptions: [],
+      selectedWindow: "",
+      selectedTeam: "",
+      selectedTechnician: "",
+    });
 
     return (
       <SchedulingSelector
@@ -285,11 +486,14 @@ export const Loading: Story = {
         onWeekChange={() => {}}
         selectedSlot={selectedSlot}
         onSlotSelect={setSelectedSlot}
+        windowOptions={windowOptionsWithAvailability}
+        teamOptions={teamOptions}
+        technicianOptions={technicianOptions}
+        schedulableSlot={schedulableSlot}
       />
     );
   },
   args: {
-    windowOptions: mockWindowOptions,
     displayWindowOptions: true,
     displayTeamOptions: true,
     displayTechnicianOptions: true,
@@ -326,11 +530,25 @@ export const WithReserveLoading: Story = {
         },
       ],
     });
-    const [selectedWindow] = useState<string>("window-2");
+    const [selectedWindow] = useState<string>("8-10");
     const [selectedTeam] = useState<string>("team-2");
-    const [selectedTechnician] = useState<string>("tech-2");
+    const [selectedTechnician] = useState<string>("user-2");
 
-    const handleReserve = (schedulableSlot: SchedulableSlot) => {
+    // Use business logic to compute options
+    const {
+      windowOptionsWithAvailability,
+      teamOptions,
+      technicianOptions,
+      schedulableSlot,
+    } = processSlotSelection({
+      selectedSlot,
+      windowOptions: mockWindowOptions,
+      selectedWindow,
+      selectedTeam,
+      selectedTechnician,
+    });
+
+    const handleReserve = () => {
       setReserveLoading(true);
       // Simulate API call
       setTimeout(() => {
@@ -347,7 +565,9 @@ export const WithReserveLoading: Story = {
         onWeekChange={() => {}}
         selectedSlot={selectedSlot}
         onSlotSelect={() => {}}
-        windowOptions={mockWindowOptions}
+        windowOptions={windowOptionsWithAvailability}
+        teamOptions={teamOptions}
+        technicianOptions={technicianOptions}
         selectedWindow={selectedWindow}
         selectedTeam={selectedTeam}
         selectedTechnician={selectedTechnician}
@@ -360,6 +580,7 @@ export const WithReserveLoading: Story = {
         timezone="America/New_York"
         reserveButtonText="Reserve Appointment"
         reserveLoading={reserveLoading}
+        schedulableSlot={schedulableSlot}
         onReserve={handleReserve}
       />
     );
@@ -405,9 +626,9 @@ export const WithReservationAndCancel: Story = {
         },
       ],
     });
-    const [selectedWindow] = useState<string>("window-2");
+    const [selectedWindow] = useState<string>("8-10");
     const [selectedTeam] = useState<string>("team-2");
-    const [selectedTechnician] = useState<string>("tech-2");
+    const [selectedTechnician] = useState<string>("user-2");
     const [reservedSlot, setReservedSlot] = useState<SelectedSlot | null>(
       // Start with the slot already reserved
       {
@@ -431,7 +652,21 @@ export const WithReservationAndCancel: Story = {
       }
     );
 
-    const handleReserve = (schedulableSlot: SchedulableSlot) => {
+    // Use business logic to compute options
+    const {
+      windowOptionsWithAvailability,
+      teamOptions,
+      technicianOptions,
+      schedulableSlot,
+    } = processSlotSelection({
+      selectedSlot,
+      windowOptions: mockWindowOptions,
+      selectedWindow,
+      selectedTeam,
+      selectedTechnician,
+    });
+
+    const handleReserve = () => {
       setReserveLoading(true);
       // Simulate API call
       setTimeout(() => {
@@ -461,7 +696,9 @@ export const WithReservationAndCancel: Story = {
         onWeekChange={() => {}}
         selectedSlot={selectedSlot}
         onSlotSelect={() => {}}
-        windowOptions={mockWindowOptions}
+        windowOptions={windowOptionsWithAvailability}
+        teamOptions={teamOptions}
+        technicianOptions={technicianOptions}
         selectedWindow={selectedWindow}
         selectedTeam={selectedTeam}
         selectedTechnician={selectedTechnician}
@@ -474,6 +711,7 @@ export const WithReservationAndCancel: Story = {
         timezone="America/New_York"
         reserveButtonText="Reserve Appointment"
         reserveLoading={reserveLoading}
+        schedulableSlot={schedulableSlot}
         onReserve={handleReserve}
         reservedSlot={reservedSlot}
         onCancelReservation={handleCancel}

@@ -19,15 +19,18 @@ export {
 export {
   SchedulingSelector,
   type TimePeriod,
+  type TimePeriodConfig,
   type TimeSlot,
   type DayAvailability,
   type WeekData,
   type SelectedSlot,
+  type SchedulableSlot,
   type WindowOption,
+  type WindowOptionWithAvailability,
   type TeamOption,
   type TechnicianOption,
-  type Labels,
-} from "./components/SchedulingSelector";
+  type CustomLabels,
+} from "./components/scheduling";
 
 export { InvoiceDetail } from "./components/InvoiceDetail";
 

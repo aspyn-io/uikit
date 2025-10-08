@@ -10,6 +10,7 @@ import {
   TechnicianOption,
   SchedulableSlot,
   TimeSlot,
+  TimePeriodConfig,
 } from "../components/scheduling";
 import { addDays, format, startOfWeek, endOfWeek } from "date-fns";
 
@@ -39,9 +40,17 @@ interface WrapperArgs
     | "technicianOptions"
   > {
   windowOptions?: WindowOption[];
+  timePeriods?: TimePeriodConfig[];
 }
 
 type Story = StoryObj<WrapperArgs>;
+
+// Default time periods configuration
+const defaultTimePeriods: TimePeriodConfig[] = [
+  { id: "any_time", label: "Any time", order: 0 },
+  { id: "morning", label: "Morning", order: 1 },
+  { id: "afternoon", label: "Afternoon", order: 2 },
+];
 
 // Helper function to process slot selection and compute available options
 interface ProcessSlotSelectionParams {
@@ -211,7 +220,10 @@ const mockWindowOptions: WindowOption[] = [
 ];
 
 // Helper function to generate mock week data
-const generateMockWeekData = (weekStart: Date): WeekData => {
+const generateMockWeekData = (
+  weekStart: Date,
+  timePeriods: TimePeriodConfig[] = defaultTimePeriods
+): WeekData => {
   const weekEnd = endOfWeek(weekStart, { weekStartsOn: 0 });
   const days = [];
 
@@ -222,66 +234,60 @@ const generateMockWeekData = (weekStart: Date): WeekData => {
     // Make some days unavailable
     const isAvailable = i !== 0 && i !== 6; // Sunday and Saturday unavailable
 
+    // Build slots dynamically based on timePeriods configuration
+    const slots: Record<string, TimeSlot[] | undefined> = {};
+
+    if (isAvailable) {
+      timePeriods.forEach((period, index) => {
+        // Skip afternoon on Wednesday (i === 2) for demo purposes
+        if (period.id === "afternoon" && i === 2) {
+          slots[period.id] = undefined;
+          return;
+        }
+
+        // Generate different time ranges based on period ID
+        let startHour = 8;
+        let endHour = 17;
+
+        if (period.id === "morning") {
+          startHour = 8;
+          endHour = 12;
+        } else if (period.id === "afternoon") {
+          startHour = 12;
+          endHour = 17;
+        }
+
+        // Use different users/teams for variety
+        const userIndex = (index % 3) + 1;
+        const teamIndex = (index % 3) + 1;
+
+        slots[period.id] = [
+          {
+            start_at: `${dateString}T${String(startHour).padStart(
+              2,
+              "0"
+            )}:00:00Z`,
+            end_at: `${dateString}T${String(endHour).padStart(2, "0")}:00:00Z`,
+            calendar_id: "cal-1",
+            user: {
+              id: `user-${userIndex}`,
+              name: ["John Smith", "Sarah Johnson", "Mike Wilson"][
+                userIndex - 1
+              ],
+            },
+            team: {
+              id: `team-${teamIndex}`,
+              name: ["Team Alpha", "Team Bravo", "Team Charlie"][teamIndex - 1],
+            },
+          },
+        ];
+      });
+    }
+
     days.push({
       date: dateString,
       is_available: isAvailable,
-      slots: isAvailable
-        ? {
-            any_time: [
-              {
-                start_at: `${dateString}T08:00:00Z`,
-                end_at: `${dateString}T17:00:00Z`,
-                calendar_id: "cal-1",
-                user: {
-                  id: "user-1",
-                  name: "John Smith",
-                },
-                team: {
-                  id: "team-1",
-                  name: "Team Alpha",
-                },
-              },
-            ],
-            morning: [
-              {
-                start_at: `${dateString}T08:00:00Z`,
-                end_at: `${dateString}T12:00:00Z`,
-                calendar_id: "cal-1",
-                user: {
-                  id: "user-2",
-                  name: "Sarah Johnson",
-                },
-                team: {
-                  id: "team-2",
-                  name: "Team Bravo",
-                },
-              },
-            ],
-            afternoon:
-              i === 2
-                ? undefined
-                : [
-                    // Wednesday has no afternoon slots
-                    {
-                      start_at: `${dateString}T12:00:00Z`,
-                      end_at: `${dateString}T17:00:00Z`,
-                      calendar_id: "cal-1",
-                      user: {
-                        id: "user-3",
-                        name: "Mike Wilson",
-                      },
-                      team: {
-                        id: "team-3",
-                        name: "Team Charlie",
-                      },
-                    },
-                  ],
-          }
-        : {
-            any_time: undefined,
-            morning: undefined,
-            afternoon: undefined,
-          },
+      slots,
     });
   }
 
@@ -294,6 +300,8 @@ const generateMockWeekData = (weekStart: Date): WeekData => {
 
 // Interactive wrapper component
 const SchedulingSelectorWrapper = (args: WrapperArgs) => {
+  const timePeriods = args.timePeriods || defaultTimePeriods;
+
   const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
   const [selectedWindow, setSelectedWindow] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<string>("");
@@ -303,7 +311,7 @@ const SchedulingSelectorWrapper = (args: WrapperArgs) => {
   );
   const [loading, setLoading] = useState(false);
   const [weekData, setWeekData] = useState<WeekData | null>(
-    generateMockWeekData(currentWeekStart)
+    generateMockWeekData(currentWeekStart, timePeriods)
   );
   const [reservedSlot, setReservedSlot] = useState<SelectedSlot | null>(null);
   const [reserveLoading, setReserveLoading] = useState(false);
@@ -329,7 +337,7 @@ const SchedulingSelectorWrapper = (args: WrapperArgs) => {
     setCurrentWeekStart(new Date(weekStart));
     // Simulate API call
     setTimeout(() => {
-      setWeekData(generateMockWeekData(new Date(weekStart)));
+      setWeekData(generateMockWeekData(new Date(weekStart), timePeriods));
       setLoading(false);
     }, 500);
   };
@@ -406,6 +414,7 @@ const SchedulingSelectorWrapper = (args: WrapperArgs) => {
   return (
     <SchedulingSelector
       {...args}
+      timePeriods={timePeriods}
       weekData={weekData}
       loading={loading}
       onWeekChange={handleWeekChange}
@@ -434,6 +443,7 @@ const SchedulingSelectorWrapper = (args: WrapperArgs) => {
 export const Default: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
+    timePeriods: defaultTimePeriods,
     windowOptions: mockWindowOptions,
     timezone: "America/New_York",
     showDateJumper: true,
@@ -444,13 +454,15 @@ export const Default: Story = {
 
 export const WithoutPreferences: Story = {
   render: (args) => {
+    const timePeriods = args.timePeriods || defaultTimePeriods;
+
     const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
     const [currentWeekStart, setCurrentWeekStart] = useState<Date>(
       startOfWeek(new Date(), { weekStartsOn: 0 })
     );
     const [loading, setLoading] = useState(false);
     const [weekData, setWeekData] = useState<WeekData | null>(
-      generateMockWeekData(currentWeekStart)
+      generateMockWeekData(currentWeekStart, timePeriods)
     );
 
     const handleWeekChange = (weekStart: string, weekEnd: string) => {
@@ -458,7 +470,7 @@ export const WithoutPreferences: Story = {
       setCurrentWeekStart(new Date(weekStart));
       // Simulate API call
       setTimeout(() => {
-        setWeekData(generateMockWeekData(new Date(weekStart)));
+        setWeekData(generateMockWeekData(new Date(weekStart), timePeriods));
         setLoading(false);
       }, 500);
     };
@@ -478,6 +490,7 @@ export const WithoutPreferences: Story = {
     return (
       <SchedulingSelector
         {...args}
+        timePeriods={timePeriods}
         weekData={weekData}
         loading={loading}
         onWeekChange={handleWeekChange}
@@ -491,6 +504,7 @@ export const WithoutPreferences: Story = {
     );
   },
   args: {
+    timePeriods: defaultTimePeriods,
     timezone: "America/New_York",
     showDateJumper: true,
     showTimezoneInfo: true,
@@ -501,6 +515,7 @@ export const WithoutPreferences: Story = {
 export const WindowsOnly: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
+    timePeriods: defaultTimePeriods,
     windowOptions: mockWindowOptions,
     timezone: "America/New_York",
     showDateJumper: true,
@@ -512,15 +527,17 @@ export const WindowsOnly: Story = {
 export const CustomLabels: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
+    timePeriods: [
+      { id: "any_time", label: "Flexible", order: 0 },
+      { id: "morning", label: "AM", order: 1 },
+      { id: "afternoon", label: "PM", order: 2 },
+    ],
     windowOptions: mockWindowOptions,
     timezone: "America/Los_Angeles",
     timezoneDisplay: "PST (UTC-8)",
     showDateJumper: true,
     showTimezoneInfo: true,
     labels: {
-      anyTime: "Flexible",
-      morning: "AM",
-      afternoon: "PM",
       unavailable: "Not Available",
       past: "Expired",
     },
@@ -529,6 +546,7 @@ export const CustomLabels: Story = {
 
 export const Loading: Story = {
   render: (args) => {
+    const timePeriods = args.timePeriods || defaultTimePeriods;
     const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
     const {
       windowOptionsWithAvailability,
@@ -546,6 +564,7 @@ export const Loading: Story = {
     return (
       <SchedulingSelector
         {...args}
+        timePeriods={timePeriods}
         weekData={null}
         loading={true}
         onWeekChange={() => {}}
@@ -559,17 +578,19 @@ export const Loading: Story = {
     );
   },
   args: {
+    timePeriods: defaultTimePeriods,
     windowOptions: mockWindowOptions,
   },
 };
 
 export const WithReserveLoading: Story = {
   render: () => {
+    const timePeriods = defaultTimePeriods;
     const [currentWeekStart] = useState(() =>
       startOfWeek(new Date(), { weekStartsOn: 0 })
     );
     const [weekData] = useState<WeekData | null>(() =>
-      generateMockWeekData(currentWeekStart)
+      generateMockWeekData(currentWeekStart, timePeriods)
     );
     const [loading] = useState(false);
     const [reserveLoading, setReserveLoading] = useState(false);
@@ -623,6 +644,7 @@ export const WithReserveLoading: Story = {
 
     return (
       <SchedulingSelector
+        timePeriods={timePeriods}
         weekData={weekData}
         loading={loading}
         onWeekChange={() => {}}
@@ -657,11 +679,12 @@ export const WithReserveLoading: Story = {
 
 export const WithReservationAndCancel: Story = {
   render: () => {
+    const timePeriods = defaultTimePeriods;
     const [currentWeekStart] = useState(() =>
       startOfWeek(new Date(), { weekStartsOn: 0 })
     );
     const [weekData] = useState<WeekData | null>(() =>
-      generateMockWeekData(currentWeekStart)
+      generateMockWeekData(currentWeekStart, timePeriods)
     );
     const [loading] = useState(false);
     const [reserveLoading, setReserveLoading] = useState(false);
@@ -751,6 +774,7 @@ export const WithReservationAndCancel: Story = {
 
     return (
       <SchedulingSelector
+        timePeriods={timePeriods}
         weekData={weekData}
         loading={loading}
         onWeekChange={() => {}}
@@ -789,11 +813,12 @@ export const WithReservationAndCancel: Story = {
 
 export const PreferencesLoading: Story = {
   render: () => {
+    const timePeriods = defaultTimePeriods;
     const [currentWeekStart] = useState(() =>
       startOfWeek(new Date(), { weekStartsOn: 0 })
     );
     const [weekData] = useState<WeekData | null>(() =>
-      generateMockWeekData(currentWeekStart)
+      generateMockWeekData(currentWeekStart, timePeriods)
     );
     const [loading] = useState(false);
     const [preferencesLoading] = useState(true);
@@ -820,6 +845,7 @@ export const PreferencesLoading: Story = {
 
     return (
       <SchedulingSelector
+        timePeriods={timePeriods}
         weekData={weekData}
         loading={loading}
         onWeekChange={() => {}}
@@ -838,6 +864,32 @@ export const PreferencesLoading: Story = {
       description: {
         story:
           "Shows the skeleton loading state for preferences and appointment card when a slot is selected but the parent is still computing available options. This is useful when fetching additional data after slot selection.",
+      },
+    },
+  },
+};
+
+export const CustomTimePeriods: Story = {
+  render: (args) => <SchedulingSelectorWrapper {...args} />,
+  args: {
+    timePeriods: [
+      { id: "early_morning", label: "Early Bird (6-9 AM)", order: 0 },
+      { id: "mid_morning", label: "Mid Morning (9-12 PM)", order: 1 },
+      { id: "lunch", label: "Lunch Time (12-2 PM)", order: 2 },
+      { id: "afternoon", label: "Afternoon (2-5 PM)", order: 3 },
+      { id: "evening", label: "Evening (5-8 PM)", order: 4 },
+    ],
+    windowOptions: mockWindowOptions,
+    timezone: "America/New_York",
+    showDateJumper: true,
+    showTimezoneInfo: true,
+    disablePastNavigation: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Demonstrates the flexibility of custom time periods. Instead of the default 'Any time', 'Morning', 'Afternoon', this story uses 5 custom time periods with different labels. You can define any number of time periods with any labels to fit your business needs.",
       },
     },
   },

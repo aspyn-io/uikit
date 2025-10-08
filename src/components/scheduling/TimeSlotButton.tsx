@@ -40,7 +40,7 @@ export const TimeSlotButton: React.FC<TimeSlotButtonProps> = ({
           : "bg-gray-50 hover:bg-blue-50 text-gray-700 hover:text-blue-700 border-2 border-gray-200 hover:border-blue-300 cursor-pointer dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 dark:hover:border-blue-700"
       }`}
     >
-      {!isAvailable && timePeriod !== "any_time" ? `${label} (N/A)` : label}
+      {!isAvailable ? `${label} (N/A)` : label}
     </button>
   );
 };

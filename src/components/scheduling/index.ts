@@ -1,6 +1,7 @@
 export { SchedulingSelector } from "./SchedulingSelector";
 export type {
   TimePeriod,
+  TimePeriodConfig,
   TimeSlot,
   DayAvailability,
   WeekData,

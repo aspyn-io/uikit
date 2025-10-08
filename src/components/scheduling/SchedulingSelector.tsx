@@ -17,6 +17,7 @@ import {
   Labels,
   TimePeriod,
   TimeSlot,
+  TimePeriodConfig,
 } from "./types";
 
 interface SchedulingSelectorProps {
@@ -30,6 +31,9 @@ interface SchedulingSelectorProps {
   // Selection state - controlled
   selectedSlot: SelectedSlot | null;
   onSlotSelect: (slot: SelectedSlot | null) => void;
+
+  // Time period configuration - defines which time periods to display
+  timePeriods?: TimePeriodConfig[];
 
   // Computed options - passed from parent after slot selection
   windowOptions?: WindowOptionWithAvailability[];
@@ -84,6 +88,11 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   onWeekChange,
   selectedSlot,
   onSlotSelect,
+  timePeriods = [
+    { id: "any_time", label: "Any time" },
+    { id: "morning", label: "Morning" },
+    { id: "afternoon", label: "Afternoon" },
+  ],
   windowOptions = [],
   teamOptions = [],
   technicianOptions = [],
@@ -260,6 +269,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
           selectedSlot={selectedSlot}
           reservedSlot={reservedSlot || null}
           onSlotClick={handleSlotClick}
+          timePeriods={timePeriods}
           labels={labels}
         />
       </div>

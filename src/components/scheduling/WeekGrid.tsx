@@ -8,6 +8,7 @@ import {
   TimePeriod,
   TimeSlot,
   Labels,
+  TimePeriodConfig,
 } from "./types";
 
 interface WeekGridProps {
@@ -18,6 +19,7 @@ interface WeekGridProps {
   selectedSlot: SelectedSlot | null;
   reservedSlot: SelectedSlot | null;
   onSlotClick: (date: string, timePeriod: TimePeriod, slot?: TimeSlot) => void;
+  timePeriods: TimePeriodConfig[];
   labels: Labels;
 }
 
@@ -29,13 +31,18 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
   selectedSlot,
   reservedSlot,
   onSlotClick,
+  timePeriods,
   labels,
 }) => {
-  const timePeriodLabels = {
-    any_time: labels.anyTime || "Any time",
-    morning: labels.morning || "Morning",
-    afternoon: labels.afternoon || "Afternoon",
-  };
+  // Sort time periods by order (if specified) or maintain definition order
+  const sortedTimePeriods = [...timePeriods].sort((a, b) => {
+    if (a.order !== undefined && b.order !== undefined) {
+      return a.order - b.order;
+    }
+    if (a.order !== undefined) return -1;
+    if (b.order !== undefined) return 1;
+    return 0;
+  });
 
   // Simple helper functions - no need to memoize
   const isTimeSlotAvailable = (
@@ -164,27 +171,21 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
                       <div className="rounded-full bg-gray-200 dark:bg-gray-700 p-2 mb-2">
                         <Minus className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                       </div>
-                      <span>{isPast ? "Past" : "Unavailable"}</span>
+                      <span>
+                        {isPast
+                          ? labels.past || "Past"
+                          : labels.unavailable || "Unavailable"}
+                      </span>
                     </div>
                   ) : (
                     <>
-                      {renderTimePeriodButton(
-                        date,
-                        dateString,
-                        "any_time",
-                        timePeriodLabels.any_time
-                      )}
-                      {renderTimePeriodButton(
-                        date,
-                        dateString,
-                        "morning",
-                        timePeriodLabels.morning
-                      )}
-                      {renderTimePeriodButton(
-                        date,
-                        dateString,
-                        "afternoon",
-                        timePeriodLabels.afternoon
+                      {sortedTimePeriods.map((timePeriod) =>
+                        renderTimePeriodButton(
+                          date,
+                          dateString,
+                          timePeriod.id,
+                          timePeriod.label
+                        )
                       )}
                     </>
                   )}

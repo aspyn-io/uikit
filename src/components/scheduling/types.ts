@@ -1,5 +1,11 @@
 // Time period types
-export type TimePeriod = "any_time" | "morning" | "afternoon";
+export type TimePeriod = string;
+
+export interface TimePeriodConfig {
+  id: string;
+  label: string;
+  order?: number; // Optional order for display, defaults to definition order
+}
 
 export interface TimeSlot {
   start_at: string;
@@ -17,11 +23,7 @@ export interface TimeSlot {
 
 export interface DayAvailability {
   date: string; // YYYY-MM-DD format
-  slots: {
-    any_time?: TimeSlot[];
-    morning?: TimeSlot[];
-    afternoon?: TimeSlot[];
-  };
+  slots: Record<string, TimeSlot[] | undefined>;
   is_available: boolean;
 }
 
@@ -68,6 +70,7 @@ export interface TechnicianOption {
   avatar?: string;
 }
 
+// Deprecated: Use TimePeriodConfig instead
 export interface Labels {
   anyTime?: string;
   morning?: string;

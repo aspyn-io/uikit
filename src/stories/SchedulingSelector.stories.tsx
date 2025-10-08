@@ -433,9 +433,54 @@ export const Default: Story = {
 };
 
 export const WithoutPreferences: Story = {
-  render: (args) => <SchedulingSelectorWrapper {...args} />,
+  render: (args) => {
+    const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
+    const [currentWeekStart, setCurrentWeekStart] = useState<Date>(
+      startOfWeek(new Date(), { weekStartsOn: 0 })
+    );
+    const [loading, setLoading] = useState(false);
+    const [weekData, setWeekData] = useState<WeekData | null>(
+      generateMockWeekData(currentWeekStart)
+    );
+
+    const handleWeekChange = (weekStart: string, weekEnd: string) => {
+      setLoading(true);
+      setCurrentWeekStart(new Date(weekStart));
+      // Simulate API call
+      setTimeout(() => {
+        setWeekData(generateMockWeekData(new Date(weekStart)));
+        setLoading(false);
+      }, 500);
+    };
+
+    const handleSlotSelect = (slot: SelectedSlot | null) => {
+      setSelectedSlot(slot);
+    };
+
+    // Compute schedulable slot directly from selected slot without preferences
+    const schedulableSlot: SchedulableSlot | null = selectedSlot?.openings?.[0]
+      ? {
+          selectedSlot,
+          timeSlot: selectedSlot.openings[0],
+        }
+      : null;
+
+    return (
+      <SchedulingSelector
+        {...args}
+        weekData={weekData}
+        loading={loading}
+        onWeekChange={handleWeekChange}
+        selectedSlot={selectedSlot}
+        onSlotSelect={handleSlotSelect}
+        windowOptions={[]}
+        teamOptions={[]}
+        technicianOptions={[]}
+        schedulableSlot={schedulableSlot}
+      />
+    );
+  },
   args: {
-    windowOptions: [],
     timezone: "America/New_York",
     showDateJumper: true,
     showTimezoneInfo: true,

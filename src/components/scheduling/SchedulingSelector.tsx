@@ -31,11 +31,6 @@ interface SchedulingSelectorProps {
   selectedSlot: SelectedSlot | null;
   onSlotSelect: (slot: SelectedSlot | null) => void;
 
-  // Display flags for preference sections
-  displayWindowOptions?: boolean;
-  displayTeamOptions?: boolean;
-  displayTechnicianOptions?: boolean;
-
   // Computed options - passed from parent after slot selection
   windowOptions?: WindowOptionWithAvailability[];
   teamOptions?: TeamOption[];
@@ -88,9 +83,6 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   onWeekChange,
   selectedSlot,
   onSlotSelect,
-  displayWindowOptions = false,
-  displayTeamOptions = false,
-  displayTechnicianOptions = false,
   windowOptions = [],
   teamOptions = [],
   technicianOptions = [],
@@ -276,18 +268,16 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
           {/* Preferences Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Time Window Selector */}
-            {displayWindowOptions &&
-              windowOptions &&
-              windowOptions.length > 0 && (
-                <TimeWindowSelector
-                  options={windowOptions}
-                  selectedWindow={selectedWindow}
-                  onWindowChange={onWindowChange}
-                />
-              )}
+            {windowOptions && windowOptions.length > 0 && (
+              <TimeWindowSelector
+                options={windowOptions}
+                selectedWindow={selectedWindow}
+                onWindowChange={onWindowChange}
+              />
+            )}
 
             {/* Team Selector */}
-            {displayTeamOptions && teamOptions && teamOptions.length > 0 && (
+            {teamOptions && teamOptions.length > 0 && (
               <TeamSelector
                 options={teamOptions}
                 selectedTeam={selectedTeam}
@@ -296,15 +286,13 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
             )}
 
             {/* Technician Selector */}
-            {displayTechnicianOptions &&
-              technicianOptions &&
-              technicianOptions.length > 0 && (
-                <TechnicianSelector
-                  options={technicianOptions}
-                  selectedTechnician={selectedTechnician}
-                  onTechnicianChange={onTechnicianChange}
-                />
-              )}
+            {technicianOptions && technicianOptions.length > 0 && (
+              <TechnicianSelector
+                options={technicianOptions}
+                selectedTechnician={selectedTechnician}
+                onTechnicianChange={onTechnicianChange}
+              />
+            )}
           </div>
 
           {/* Selected Appointment Card */}
@@ -316,6 +304,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
             selectedTechnician={selectedTechnician}
             teamOptions={teamOptions || []}
             technicianOptions={technicianOptions || []}
+            windowOptions={windowOptions || []}
             onReserve={onReserve}
             reserveButtonText={reserveButtonText}
             reserveButtonDisabled={reserveButtonDisabled || !schedulableSlot}
@@ -324,9 +313,6 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
             onCancelReservation={onCancelReservation}
             cancelButtonText={cancelButtonText}
             cancelLoading={cancelLoading}
-            displayWindowOptions={displayWindowOptions}
-            displayTeamOptions={displayTeamOptions}
-            displayTechnicianOptions={displayTechnicianOptions}
           />
         </div>
       )}

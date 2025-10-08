@@ -1,7 +1,12 @@
 import React from "react";
 import { Button, Spinner } from "flowbite-react";
 import { Clock, Users, User } from "lucide-react";
-import { SelectedSlot, TeamOption, TechnicianOption } from "./types";
+import {
+  SelectedSlot,
+  TeamOption,
+  TechnicianOption,
+  WindowOptionWithAvailability,
+} from "./types";
 
 interface SelectedAppointmentCardProps {
   selectedSlot: SelectedSlot;
@@ -9,6 +14,7 @@ interface SelectedAppointmentCardProps {
   selectedWindow?: string;
   selectedTeam?: string;
   selectedTechnician?: string;
+  windowOptions?: WindowOptionWithAvailability[];
   teamOptions?: TeamOption[];
   technicianOptions?: TechnicianOption[];
   onReserve?: () => void;
@@ -19,9 +25,6 @@ interface SelectedAppointmentCardProps {
   onCancelReservation?: () => void;
   cancelButtonText?: string;
   cancelLoading?: boolean;
-  displayWindowOptions?: boolean;
-  displayTeamOptions?: boolean;
-  displayTechnicianOptions?: boolean;
 }
 
 export const SelectedAppointmentCard: React.FC<
@@ -32,6 +35,7 @@ export const SelectedAppointmentCard: React.FC<
   selectedWindow,
   selectedTeam,
   selectedTechnician,
+  windowOptions = [],
   teamOptions = [],
   technicianOptions = [],
   onReserve,
@@ -42,9 +46,6 @@ export const SelectedAppointmentCard: React.FC<
   onCancelReservation,
   cancelButtonText = "Cancel Reservation",
   cancelLoading = false,
-  displayWindowOptions = false,
-  displayTeamOptions = false,
-  displayTechnicianOptions = false,
 }) => {
   // Get display names for selected team and technician
   const selectedTeamName = selectedTeam
@@ -69,28 +70,27 @@ export const SelectedAppointmentCard: React.FC<
             {selectedSlot.time_period.charAt(0).toUpperCase() +
               selectedSlot.time_period.slice(1).replace("_", " ")}
           </p>
-          {(displayWindowOptions ||
-            displayTeamOptions ||
-            displayTechnicianOptions) && (
+          {(windowOptions.length > 0 ||
+            teamOptions.length > 0 ||
+            technicianOptions.length > 0) && (
             <div className="mt-2 text-blue-600 dark:text-blue-400">
               <p className="flex items-center gap-1">
-                {displayWindowOptions && (
+                {windowOptions.length > 0 && (
                   <>
                     <Clock className="h-3 w-3" />
                     <span>Window: {selectedWindow || "Any"}</span>
-                    {(displayTeamOptions || displayTechnicianOptions) && (
-                      <span>•</span>
-                    )}
+                    {(teamOptions.length > 0 ||
+                      technicianOptions.length > 0) && <span>•</span>}
                   </>
                 )}
-                {displayTeamOptions && (
+                {teamOptions.length > 0 && (
                   <>
                     <Users className="h-3 w-3" />
                     <span>Team: {selectedTeamName}</span>
-                    {displayTechnicianOptions && <span>•</span>}
+                    {technicianOptions.length > 0 && <span>•</span>}
                   </>
                 )}
-                {displayTechnicianOptions && (
+                {technicianOptions.length > 0 && (
                   <>
                     <User className="h-3 w-3" />
                     <span>Technician: {selectedTechnicianName}</span>

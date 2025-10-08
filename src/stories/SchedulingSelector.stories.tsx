@@ -23,7 +23,25 @@ const meta: Meta<typeof SchedulingSelector> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof SchedulingSelector>;
+
+// Wrapper args interface - accepts WindowOption[] which gets processed by the wrapper
+interface WrapperArgs
+  extends Omit<
+    React.ComponentProps<typeof SchedulingSelector>,
+    | "windowOptions"
+    | "weekData"
+    | "loading"
+    | "onWeekChange"
+    | "selectedSlot"
+    | "onSlotSelect"
+    | "schedulableSlot"
+    | "teamOptions"
+    | "technicianOptions"
+  > {
+  windowOptions?: WindowOption[];
+}
+
+type Story = StoryObj<WrapperArgs>;
 
 // Helper function to process slot selection and compute available options
 interface ProcessSlotSelectionParams {
@@ -275,7 +293,7 @@ const generateMockWeekData = (weekStart: Date): WeekData => {
 };
 
 // Interactive wrapper component
-const SchedulingSelectorWrapper = (args: any) => {
+const SchedulingSelectorWrapper = (args: WrapperArgs) => {
   const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
   const [selectedWindow, setSelectedWindow] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<string>("");
@@ -299,7 +317,7 @@ const SchedulingSelectorWrapper = (args: any) => {
     schedulableSlot,
   } = processSlotSelection({
     selectedSlot,
-    windowOptions: args.displayWindowOptions ? mockWindowOptions : [],
+    windowOptions: args.windowOptions || [],
     selectedWindow,
     selectedTeam,
     selectedTechnician,
@@ -406,9 +424,7 @@ const SchedulingSelectorWrapper = (args: any) => {
 export const Default: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
-    displayWindowOptions: true,
-    displayTeamOptions: true,
-    displayTechnicianOptions: true,
+    windowOptions: mockWindowOptions,
     timezone: "America/New_York",
     showDateJumper: true,
     showTimezoneInfo: true,
@@ -419,9 +435,7 @@ export const Default: Story = {
 export const WithoutPreferences: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
-    displayWindowOptions: false,
-    displayTeamOptions: false,
-    displayTechnicianOptions: false,
+    windowOptions: [],
     timezone: "America/New_York",
     showDateJumper: true,
     showTimezoneInfo: true,
@@ -432,9 +446,7 @@ export const WithoutPreferences: Story = {
 export const WindowsOnly: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
-    displayWindowOptions: true,
-    displayTeamOptions: false,
-    displayTechnicianOptions: false,
+    windowOptions: mockWindowOptions,
     timezone: "America/New_York",
     showDateJumper: true,
     showTimezoneInfo: true,
@@ -445,9 +457,7 @@ export const WindowsOnly: Story = {
 export const CustomLabels: Story = {
   render: (args) => <SchedulingSelectorWrapper {...args} />,
   args: {
-    displayWindowOptions: true,
-    displayTeamOptions: true,
-    displayTechnicianOptions: true,
+    windowOptions: mockWindowOptions,
     timezone: "America/Los_Angeles",
     timezoneDisplay: "PST (UTC-8)",
     showDateJumper: true,
@@ -494,9 +504,7 @@ export const Loading: Story = {
     );
   },
   args: {
-    displayWindowOptions: true,
-    displayTeamOptions: true,
-    displayTechnicianOptions: true,
+    windowOptions: mockWindowOptions,
   },
 };
 
@@ -574,9 +582,6 @@ export const WithReserveLoading: Story = {
         onWindowChange={() => {}}
         onTeamChange={() => {}}
         onTechnicianChange={() => {}}
-        displayWindowOptions={true}
-        displayTeamOptions={true}
-        displayTechnicianOptions={true}
         timezone="America/New_York"
         reserveButtonText="Reserve Appointment"
         reserveLoading={reserveLoading}
@@ -705,9 +710,6 @@ export const WithReservationAndCancel: Story = {
         onWindowChange={() => {}}
         onTeamChange={() => {}}
         onTechnicianChange={() => {}}
-        displayWindowOptions={true}
-        displayTeamOptions={true}
-        displayTechnicianOptions={true}
         timezone="America/New_York"
         reserveButtonText="Reserve Appointment"
         reserveLoading={reserveLoading}

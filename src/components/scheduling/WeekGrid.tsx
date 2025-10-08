@@ -7,10 +7,14 @@ import {
   SelectedSlot,
   TimePeriod,
   TimeSlot,
-  Labels,
+  CustomLabels,
   TimePeriodConfig,
 } from "./types";
 
+/**
+ * WeekGrid - Renders the 7-day calendar grid with time period buttons
+ * Displays loading state, past dates, and unavailable days appropriately
+ */
 interface WeekGridProps {
   weekDates: Date[];
   loading: boolean;
@@ -20,7 +24,7 @@ interface WeekGridProps {
   reservedSlot: SelectedSlot | null;
   onSlotClick: (date: string, timePeriod: TimePeriod, slot?: TimeSlot) => void;
   timePeriods: TimePeriodConfig[];
-  labels: Labels;
+  customLabels: CustomLabels;
 }
 
 export const WeekGrid: React.FC<WeekGridProps> = ({
@@ -32,8 +36,13 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
   reservedSlot,
   onSlotClick,
   timePeriods,
-  labels,
+  customLabels,
 }) => {
+  // Default labels for UI text
+  const labels = {
+    unavailable: customLabels.unavailable || "Unavailable",
+    past: customLabels.past || "Past",
+  };
   // Sort time periods by order (if specified) or maintain definition order
   const sortedTimePeriods = [...timePeriods].sort((a, b) => {
     if (a.order !== undefined && b.order !== undefined) {
@@ -171,11 +180,7 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
                       <div className="rounded-full bg-gray-200 dark:bg-gray-700 p-2 mb-2">
                         <Minus className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                       </div>
-                      <span>
-                        {isPast
-                          ? labels.past || "Past"
-                          : labels.unavailable || "Unavailable"}
-                      </span>
+                      <span>{isPast ? labels.past : labels.unavailable}</span>
                     </div>
                   ) : (
                     <>

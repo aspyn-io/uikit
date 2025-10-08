@@ -537,7 +537,7 @@ export const CustomLabels: Story = {
     timezoneDisplay: "PST (UTC-8)",
     showDateJumper: true,
     showTimezoneInfo: true,
-    labels: {
+    customLabels: {
       unavailable: "Not Available",
       past: "Expired",
     },

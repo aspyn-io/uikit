@@ -1,6 +1,10 @@
 import React from "react";
 import { TimePeriod, TimeSlot } from "./types";
 
+/**
+ * TimeSlotButton - Renders an individual time slot button in the calendar grid
+ * Handles different states: available, selected, reserved, disabled
+ */
 interface TimeSlotButtonProps {
   date: string;
   timePeriod: TimePeriod;

@@ -3,6 +3,10 @@ import { Button, Datepicker } from "flowbite-react";
 import { ChevronLeft, ChevronRight, Calendar, Globe } from "lucide-react";
 import { useOutsideClick } from "./hooks/useOutsideClick";
 
+/**
+ * CalendarHeader - Navigation header for the calendar with week range display
+ * Includes optional date picker and timezone information
+ */
 interface CalendarHeaderProps {
   weekRange: string;
   canNavigatePrev: boolean;
@@ -42,6 +46,8 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
     onDateJump(selectedDate);
     setShowDatepicker(false);
   };
+
+  const canNavigateNext = !isReserved;
 
   return (
     <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
@@ -105,9 +111,9 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
 
       <button
         onClick={onNextWeek}
-        disabled={isReserved}
+        disabled={!canNavigateNext}
         className={`p-2 rounded-lg transition-colors ${
-          isReserved
+          !canNavigateNext
             ? "text-gray-300 cursor-not-allowed dark:text-gray-600"
             : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400"
         }`}

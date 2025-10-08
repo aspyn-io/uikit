@@ -11,5 +11,5 @@ export type {
   WindowOptionWithAvailability,
   TeamOption,
   TechnicianOption,
-  Labels,
+  CustomLabels,
 } from "./types";

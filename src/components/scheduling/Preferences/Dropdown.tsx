@@ -1,14 +1,22 @@
-import React, { useState, useRef, ReactNode } from "react";
+import React, { useState, useRef, ReactNode, useMemo } from "react";
 import { ChevronRight, Check } from "lucide-react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 
+/**
+ * Generic dropdown item interface
+ * Used across all preference dropdowns (time window, team, technician)
+ */
 export interface DropdownItem {
   id: string;
   label: string;
   available?: boolean;
-  metadata?: any; // For additional content like ratings, avatars, etc.
+  metadata?: Record<string, unknown>; // For additional content like ratings, avatars, etc.
 }
 
+/**
+ * Dropdown - Reusable dropdown component for preference selection
+ * Supports custom rendering, availability states, and "Any" option
+ */
 interface DropdownProps {
   label: string;
   icon: React.ElementType;
@@ -33,12 +41,20 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   useOutsideClick(dropdownRef, () => setShowDropdown(false), showDropdown);
 
-  const availableItems = items.map((item) => ({
-    ...item,
-    available: item.available !== false,
-  }));
+  // Normalize available property to default to true if not specified
+  const normalizedItems = useMemo(
+    () =>
+      items.map((item) => ({
+        ...item,
+        available: item.available !== false,
+      })),
+    [items]
+  );
 
-  const selectedLabel = items.find((i) => i.id === selected)?.label ?? anyLabel;
+  const selectedLabel = useMemo(
+    () => items.find((i) => i.id === selected)?.label ?? anyLabel,
+    [items, selected, anyLabel]
+  );
 
   const handleSelect = (id: string) => {
     onSelect(id);
@@ -81,9 +97,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
             </button>
 
             {/* Items */}
-            {availableItems.map((item, index) => {
+            {normalizedItems.map((item, index) => {
               const isSelected = selected === item.id;
-              const isLast = index === availableItems.length - 1;
+              const isLast = index === normalizedItems.length - 1;
 
               return (
                 <button

@@ -8,6 +8,10 @@ import {
   WindowOptionWithAvailability,
 } from "./types";
 
+/**
+ * SelectedAppointmentCard - Displays the currently selected appointment details
+ * Shows date, time period, selected preferences, and action buttons
+ */
 interface SelectedAppointmentCardProps {
   selectedSlot: SelectedSlot;
   formatDate: (date: Date | string, format: string) => string;
@@ -57,6 +61,25 @@ export const SelectedAppointmentCard: React.FC<
       selectedTechnician
     : "Any";
 
+  // Get selected window label
+  const selectedWindowLabel = selectedWindow
+    ? windowOptions.find((window) => window.id === selectedWindow)?.label ||
+      selectedWindow
+    : "Any";
+
+  // Format time period for display
+  const formatTimePeriod = (timePeriod: string): string => {
+    return (
+      timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1).replace("_", " ")
+    );
+  };
+
+  // Check if any preferences are available to display
+  const hasPreferences =
+    windowOptions.length > 0 ||
+    teamOptions.length > 0 ||
+    technicianOptions.length > 0;
+
   return (
     <div className="shadow-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-300 rounded-lg p-6">
       <div className="flex items-center justify-between">
@@ -67,18 +90,15 @@ export const SelectedAppointmentCard: React.FC<
           <p className="text-blue-700 dark:text-blue-400">
             {formatDate(selectedSlot.date, "MMM d, yyyy")}
             {" - "}
-            {selectedSlot.time_period.charAt(0).toUpperCase() +
-              selectedSlot.time_period.slice(1).replace("_", " ")}
+            {formatTimePeriod(selectedSlot.time_period)}
           </p>
-          {(windowOptions.length > 0 ||
-            teamOptions.length > 0 ||
-            technicianOptions.length > 0) && (
+          {hasPreferences && (
             <div className="mt-2 text-blue-600 dark:text-blue-400">
               <p className="flex items-center gap-1">
                 {windowOptions.length > 0 && (
                   <>
                     <Clock className="h-3 w-3" />
-                    <span>Window: {selectedWindow || "Any"}</span>
+                    <span>Window: {selectedWindowLabel}</span>
                     {(teamOptions.length > 0 ||
                       technicianOptions.length > 0) && <span>•</span>}
                   </>

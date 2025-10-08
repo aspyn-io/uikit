@@ -14,12 +14,31 @@ import {
   WindowOptionWithAvailability,
   TeamOption,
   TechnicianOption,
-  Labels,
+  CustomLabels,
   TimePeriod,
   TimeSlot,
   TimePeriodConfig,
+  DayAvailability,
 } from "./types";
 
+/**
+ * SchedulingSelector - A comprehensive appointment scheduling component
+ *
+ * This component provides a week-based calendar view with time period selection,
+ * preference filtering (time windows, teams, technicians), and appointment reservation.
+ *
+ * @example
+ * ```tsx
+ * <SchedulingSelector
+ *   weekData={weekData}
+ *   loading={loading}
+ *   onWeekChange={handleWeekChange}
+ *   selectedSlot={selectedSlot}
+ *   onSlotSelect={setSelectedSlot}
+ *   onReserve={handleReserve}
+ * />
+ * ```
+ */
 interface SchedulingSelectorProps {
   // Week data with availability - controlled externally
   weekData: WeekData | null;
@@ -78,8 +97,8 @@ interface SchedulingSelectorProps {
   minDate?: Date;
   preferencesLoading?: boolean; // Loading state for preferences and appointment card
 
-  // Custom labels
-  labels?: Labels;
+  // Custom labels for UI text (e.g., internationalization)
+  customLabels?: CustomLabels;
 }
 
 export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
@@ -118,7 +137,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   disablePastNavigation = true,
   minDate,
   preferencesLoading = false,
-  labels = {},
+  customLabels = {},
 }) => {
   // Current week being displayed
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
@@ -145,11 +164,14 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     return dates;
   }, [currentWeekStart]);
 
-  // Get availability for a specific date - passed to WeekGrid
-  const getAvailabilityForDate = (dateString: string) => {
-    if (!weekData?.days) return null;
-    return weekData.days.find((day) => day.date === dateString) || null;
-  };
+  // Get availability for a specific date - memoized to prevent unnecessary recalculations
+  const getAvailabilityForDate = useCallback(
+    (dateString: string): DayAvailability | null => {
+      if (!weekData?.days) return null;
+      return weekData.days.find((day) => day.date === dateString) || null;
+    },
+    [weekData?.days]
+  );
 
   // Check if date is in the past - simple utility function
   const isDateInPast = (date: Date): boolean => {
@@ -240,7 +262,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
         openings,
       });
     },
-    [onSlotSelect, reservedSlot, weekData]
+    [onSlotSelect, reservedSlot, getAvailabilityForDate]
   );
 
   return (
@@ -270,7 +292,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
           reservedSlot={reservedSlot || null}
           onSlotClick={handleSlotClick}
           timePeriods={timePeriods}
-          labels={labels}
+          customLabels={customLabels}
         />
       </div>
 

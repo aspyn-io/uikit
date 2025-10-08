@@ -15,6 +15,23 @@ export {
   type AppointmentAvailability,
 } from "./components/AvailabilitySelector";
 
+// Scheduling
+export {
+  SchedulingSelector,
+  type TimePeriod,
+  type TimePeriodConfig,
+  type TimeSlot,
+  type DayAvailability,
+  type WeekData,
+  type SelectedSlot,
+  type SchedulableSlot,
+  type WindowOption,
+  type WindowOptionWithAvailability,
+  type TeamOption,
+  type TechnicianOption,
+  type CustomLabels,
+} from "./components/scheduling";
+
 export { InvoiceDetail } from "./components/InvoiceDetail";
 
 // Form Inputs

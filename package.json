@@ -45,7 +45,7 @@
     "flowbite-react": "^0.12.8",
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react-dom": "^19.2.0",
     "react-phone-number-input": "^3.4.12",
     "react-router-dom": "^7.9.4"
   },
@@ -58,7 +58,7 @@
     "@tailwindcss/postcss": "^4.1.14",
     "@types/node": "^24.7.2",
     "@types/react": "^19.1.15",
-    "@types/react-dom": "^19.1.6",
+    "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.20",
     "date-fns": "^4.1.0",

@@ -894,3 +894,24 @@ export const CustomTimePeriods: Story = {
     },
   },
 };
+
+export const HiddenAppointmentCard: Story = {
+  render: (args: WrapperArgs) => <SchedulingSelectorWrapper {...args} />,
+  args: {
+    timePeriods: defaultTimePeriods,
+    windowOptions: mockWindowOptions,
+    timezone: "America/New_York",
+    showDateJumper: true,
+    showTimezoneInfo: true,
+    disablePastNavigation: true,
+    showSelectedAppointmentCard: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Demonstrates hiding the selected appointment card by setting `showSelectedAppointmentCard={false}`. This is useful when you want to handle the appointment display and reservation actions in a custom way outside of the SchedulingSelector component. The preferences (time window, team, technician) are still shown when a slot is selected.",
+      },
+    },
+  },
+};

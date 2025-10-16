@@ -18,6 +18,8 @@ export {
 // Scheduling
 export {
   SchedulingSelector,
+  SelectedAppointmentCard,
+  useTimezoneFormat,
   type TimePeriod,
   type TimePeriodConfig,
   type TimeSlot,

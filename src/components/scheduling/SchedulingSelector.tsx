@@ -96,6 +96,7 @@ interface SchedulingSelectorProps {
   disablePastNavigation?: boolean;
   minDate?: Date;
   preferencesLoading?: boolean; // Loading state for preferences and appointment card
+  showSelectedAppointmentCard?: boolean; // Allow hiding the selected appointment card
 
   // Custom labels for UI text (e.g., internationalization)
   customLabels?: CustomLabels;
@@ -137,6 +138,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   disablePastNavigation = true,
   minDate,
   preferencesLoading = false,
+  showSelectedAppointmentCard = true,
   customLabels = {},
 }) => {
   // Current week being displayed
@@ -382,26 +384,28 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
               </div>
 
               {/* Selected Appointment Card */}
-              <SelectedAppointmentCard
-                selectedSlot={selectedSlot}
-                formatDate={formatDate}
-                selectedWindow={selectedWindow}
-                selectedTeam={selectedTeam}
-                selectedTechnician={selectedTechnician}
-                teamOptions={teamOptions || []}
-                technicianOptions={technicianOptions || []}
-                windowOptions={windowOptions || []}
-                onReserve={onReserve}
-                reserveButtonText={reserveButtonText}
-                reserveButtonDisabled={
-                  reserveButtonDisabled || !schedulableSlot
-                }
-                reserveLoading={reserveLoading}
-                reservedSlot={reservedSlot}
-                onCancelReservation={onCancelReservation}
-                cancelButtonText={cancelButtonText}
-                cancelLoading={cancelLoading}
-              />
+              {showSelectedAppointmentCard && (
+                <SelectedAppointmentCard
+                  selectedSlot={selectedSlot}
+                  formatDate={formatDate}
+                  selectedWindow={selectedWindow}
+                  selectedTeam={selectedTeam}
+                  selectedTechnician={selectedTechnician}
+                  teamOptions={teamOptions || []}
+                  technicianOptions={technicianOptions || []}
+                  windowOptions={windowOptions || []}
+                  onReserve={onReserve}
+                  reserveButtonText={reserveButtonText}
+                  reserveButtonDisabled={
+                    reserveButtonDisabled || !schedulableSlot
+                  }
+                  reserveLoading={reserveLoading}
+                  reservedSlot={reservedSlot}
+                  onCancelReservation={onCancelReservation}
+                  cancelButtonText={cancelButtonText}
+                  cancelLoading={cancelLoading}
+                />
+              )}
             </>
           )}
         </div>

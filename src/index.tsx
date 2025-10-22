@@ -59,7 +59,10 @@ export {
 export { default as JsonViewer } from "./components/JsonViewer";
 export { default as JsonViewerModal } from "./components/JsonViewerModal";
 export { default as MetadataViewer } from "./components/MetadataViewer";
-export { default as MetadataEditor, type MetadataEditorProps } from "./components/MetadataEditor";
+export {
+  default as MetadataEditor,
+  type MetadataEditorProps,
+} from "./components/MetadataEditor";
 
 // Theme
 export { grayscaleTheme, ThemeProvider } from "./grayscale-theme";

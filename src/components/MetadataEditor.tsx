@@ -15,6 +15,7 @@ export interface MetadataEditorProps {
   onMetadataChange?: (metadata: Record<string, string>) => void;
   showEditButton?: boolean;
   showCopyButton?: boolean;
+  showCopyValueButton?: boolean;
   title?: string;
   className?: string;
 }
@@ -30,6 +31,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
   onMetadataChange,
   showEditButton = true,
   showCopyButton = true,
+  showCopyValueButton = true,
   title = "Metadata",
   className = "",
 }) => {
@@ -198,20 +200,22 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                 {key.replace(/_/g, " ")}
               </h3>
               <div className="group relative">
-                <p className="text-sm text-gray-800 dark:text-gray-200 pr-8 break-words">
+                <p className={`text-sm text-gray-800 dark:text-gray-200 break-words ${showCopyValueButton ? 'pr-8' : ''}`}>
                   {value}
                 </p>
-                <button
-                  onClick={() => handleCopyMetadataValue(key, value)}
-                  className="absolute right-0 top-0 p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
-                  title={`Copy ${key.replace(/_/g, " ")}`}
-                >
-                  {copiedMetadataValues.has(key) ? (
-                    <Check className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
-                  ) : (
-                    <Copy className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
-                  )}
-                </button>
+                {showCopyValueButton && (
+                  <button
+                    onClick={() => handleCopyMetadataValue(key, value)}
+                    className="absolute right-0 top-0 p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+                    title={`Copy ${key.replace(/_/g, " ")}`}
+                  >
+                    {copiedMetadataValues.has(key) ? (
+                      <Check className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           ))}

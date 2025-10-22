@@ -18,6 +18,10 @@ const meta = {
       control: "boolean",
       description: "Show copy button",
     },
+    showCopyValueButton: {
+      control: "boolean",
+      description: "Show copy button for individual values",
+    },
     title: {
       control: "text",
       description: "Section title",
@@ -39,6 +43,7 @@ export const Default: Story = {
     },
     showEditButton: true,
     showCopyButton: true,
+    showCopyValueButton: true,
     title: "Metadata",
   },
 };
@@ -49,6 +54,7 @@ export const Loading: Story = {
     isLoading: true,
     showEditButton: true,
     showCopyButton: true,
+    showCopyValueButton: true,
     title: "Metadata",
   },
 };
@@ -59,6 +65,7 @@ export const Empty: Story = {
     isLoading: false,
     showEditButton: true,
     showCopyButton: true,
+    showCopyValueButton: true,
     title: "Metadata",
   },
 };
@@ -74,6 +81,7 @@ export const ReadOnly: Story = {
     },
     showEditButton: false,
     showCopyButton: true,
+    showCopyValueButton: true,
     title: "Metadata",
   },
 };
@@ -91,6 +99,7 @@ export const WithLongValues: Story = {
     },
     showEditButton: true,
     showCopyButton: true,
+    showCopyValueButton: true,
     title: "Metadata",
   },
 };
@@ -104,6 +113,23 @@ export const CustomTitle: Story = {
     },
     showEditButton: true,
     showCopyButton: true,
+    showCopyValueButton: true,
     title: "Custom Properties",
+  },
+};
+
+export const NoCopyValueButtons: Story = {
+  args: {
+    metadata: {
+      region: "US-West",
+      priority: "high",
+      version: "2.1.0",
+      active_users: "1247",
+      auto_renew: "true",
+    },
+    showEditButton: true,
+    showCopyButton: true,
+    showCopyValueButton: false,
+    title: "Metadata",
   },
 };

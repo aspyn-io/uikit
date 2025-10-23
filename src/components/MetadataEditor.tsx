@@ -52,7 +52,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
         }))
       );
     } else {
-      setEditedMetadata([]);
+      setEditedMetadata([{ key: "", value: "" }]);
     }
     setIsModalOpen(true);
   };
@@ -150,11 +150,91 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
 
   if (!hasMetadata) {
     return (
-      <div className={className}>
-        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-          No metadata available
-        </p>
-      </div>
+      <>
+        <div className={className}>
+          <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2 mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {title}
+            </h2>
+            {showEditButton && (
+              <Button
+                color="gray"
+                size="xs"
+                onClick={handleOpenModal}
+                title="Edit metadata"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+            No metadata available
+          </p>
+        </div>
+
+        <Modal
+          dismissible
+          show={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          size="xl"
+        >
+          <ModalHeader>Edit Metadata</ModalHeader>
+          <ModalBody>
+            <div className="space-y-4">
+              {editedMetadata.map((item, index) => (
+                <div key={index} className="flex gap-2 items-start">
+                  <div className="flex-1">
+                    <TextInput
+                      type="text"
+                      placeholder="Key"
+                      value={item.key}
+                      onChange={(e) =>
+                        handleMetadataKeyChange(index, e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <TextInput
+                      type="text"
+                      placeholder="Value"
+                      value={item.value}
+                      onChange={(e) =>
+                        handleMetadataValueChange(index, e.target.value)
+                      }
+                    />
+                  </div>
+                  <Button
+                    color="gray"
+                    size="sm"
+                    onClick={() => handleRemoveMetadataItem(index)}
+                    className="mt-0.5"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+
+              <Button
+                color="light"
+                onClick={handleAddMetadataItem}
+                className="w-full"
+              >
+                + Add another item
+              </Button>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <div className="flex gap-2 justify-end w-full">
+              <Button color="gray" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveMetadata} disabled={isSaving}>
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
+            </div>
+          </ModalFooter>
+        </Modal>
+      </>
     );
   }
 
@@ -200,7 +280,11 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                 {key.replace(/_/g, " ")}
               </h3>
               <div className="group relative">
-                <p className={`text-sm text-gray-800 dark:text-gray-200 break-words ${showCopyValueButton ? 'pr-8' : ''}`}>
+                <p
+                  className={`text-sm text-gray-800 dark:text-gray-200 break-words ${
+                    showCopyValueButton ? "pr-8" : ""
+                  }`}
+                >
                   {value}
                 </p>
                 {showCopyValueButton && (

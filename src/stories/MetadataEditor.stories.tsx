@@ -70,6 +70,25 @@ export const Empty: Story = {
   },
 };
 
+export const EmptyWithEditDisabled: Story = {
+  args: {
+    metadata: undefined,
+    isLoading: false,
+    showEditButton: false,
+    showCopyButton: true,
+    showCopyValueButton: true,
+    title: "Metadata",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When metadata is empty and edit is disabled, users cannot add metadata.",
+      },
+    },
+  },
+};
+
 export const ReadOnly: Story = {
   args: {
     metadata: {

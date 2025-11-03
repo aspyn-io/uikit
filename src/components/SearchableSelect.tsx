@@ -200,15 +200,18 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   };
 
   // Provide context to children
-  const contextValue: SearchableSelectContextValue = {
-    isOpen,
-    setIsOpen,
-    searchTerm,
-    setSearchTerm,
-    selectedValues,
-    handleSelectionChange,
-    multiple,
-  };
+  const contextValue: SearchableSelectContextValue = React.useMemo(
+    () => ({
+      isOpen,
+      setIsOpen,
+      searchTerm,
+      setSearchTerm,
+      selectedValues,
+      handleSelectionChange,
+      multiple,
+    }),
+    [isOpen, searchTerm, selectedValues, multiple]
+  );
 
   // Single-select display text
   const getSingleDisplayText = () => {
@@ -662,9 +665,6 @@ const Pagination: FC<PaginationProps> = ({
           >
             Previous
           </button>
-          <span className="text-sm text-gray-700 dark:text-gray-400">
-            Page {currentPage} of {totalPages}
-          </span>
           <button
             type="button"
             onClick={onNextPage}

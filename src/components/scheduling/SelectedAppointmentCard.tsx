@@ -88,7 +88,10 @@ export const SelectedAppointmentCard: React.FC<
             Selected Appointment
           </h4>
           <p className="text-blue-700 dark:text-blue-400">
-            {formatDate(selectedSlot.date, "MMM d, yyyy")}
+            {formatDate(
+              selectedSlot.openings?.[0].start_at || new Date(),
+              "MMM d, yyyy"
+            )}
             {" - "}
             {formatTimePeriod(selectedSlot.time_period)}
           </p>

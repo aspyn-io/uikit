@@ -243,7 +243,7 @@ export const AppointmentCard = ({
                 )}
                 {onScheduleReturnService && (
                   <DropdownItem onClick={onScheduleReturnService}>
-                    Schedule a Return Service
+                    Schedule a Reservice
                   </DropdownItem>
                 )}
               </Dropdown>

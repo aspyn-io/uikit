@@ -1,5 +1,5 @@
 import React from "react";
-import { TimePeriod, TimeSlot } from "./types";
+import { TimePeriod } from "./types";
 
 /**
  * TimeSlotButton - Renders an individual time slot button in the calendar grid
@@ -13,8 +13,7 @@ interface TimeSlotButtonProps {
   isSelected: boolean;
   isReserved: boolean;
   hasActiveReservation: boolean;
-  slot?: TimeSlot;
-  onClick: (date: string, timePeriod: TimePeriod, slot?: TimeSlot) => void;
+  onClick: (date: string, timePeriod: TimePeriod) => void;
 }
 
 export const TimeSlotButton: React.FC<TimeSlotButtonProps> = ({
@@ -25,14 +24,13 @@ export const TimeSlotButton: React.FC<TimeSlotButtonProps> = ({
   isSelected,
   isReserved,
   hasActiveReservation,
-  slot,
   onClick,
 }) => {
   const isDisabled = (hasActiveReservation && !isReserved) || !isAvailable;
 
   return (
     <button
-      onClick={() => !isDisabled && onClick(date, timePeriod, slot)}
+      onClick={() => !isDisabled && onClick(date, timePeriod)}
       disabled={isDisabled}
       className={`w-full py-3 px-3 text-sm font-medium rounded-lg transition-colors ${
         isReserved

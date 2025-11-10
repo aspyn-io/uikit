@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { format, addWeeks, startOfWeek, endOfWeek, parseISO } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { CalendarHeader } from "./CalendarHeader";
 import { WeekGrid } from "./WeekGrid";
 import { TimeWindowSelector } from "./Preferences/TimeWindowSelector";
@@ -16,7 +17,6 @@ import {
   TechnicianOption,
   CustomLabels,
   TimePeriod,
-  TimeSlot,
   TimePeriodConfig,
   DayAvailability,
 } from "./types";
@@ -175,14 +175,21 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     [weekData?.days]
   );
 
-  // Check if date is in the past - simple utility function
-  const isDateInPast = (date: Date): boolean => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const checkDate = new Date(date);
-    checkDate.setHours(0, 0, 0, 0);
-    return checkDate < today;
-  };
+  // Check if date is in the past - timezone-aware utility function
+  const isDateInPast = useCallback(
+    (date: Date): boolean => {
+      // Get current date in the specified timezone
+      const nowInTimezone = toZonedTime(new Date(), timezone);
+      nowInTimezone.setHours(0, 0, 0, 0);
+
+      // Convert the check date to the same timezone
+      const checkDateInTimezone = toZonedTime(date, timezone);
+      checkDateInTimezone.setHours(0, 0, 0, 0);
+
+      return checkDateInTimezone < nowInTimezone;
+    },
+    [timezone]
+  );
 
   // Format week range - computed on demand
   const weekRange = (() => {
@@ -249,7 +256,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
 
   // Handle slot selection - memoize to prevent WeekGrid re-renders
   const handleSlotClick = useCallback(
-    (date: string, timePeriod: TimePeriod, slot?: TimeSlot) => {
+    (date: string, timePeriod: TimePeriod) => {
       // Don't allow selection if there's a reservation for a different slot
       if (reservedSlot && reservedSlot.date !== date) return;
 

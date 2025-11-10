@@ -66,7 +66,7 @@ export const EditState: Story = {
     onWorkOrderClick: (id: string) => console.log("Clicked Work Order:", id),
     onRescheduleAppointment: () => console.log("Rescheduled Appointment"),
     onCancelAppointment: () => console.log("Canceled Appointment"),
-    onScheduleReturnService: () => console.log("Schedule Return Service"),
+    onScheduleReturnService: () => console.log("Schedule Reservice"),
     showIcons: true,
     appointmentId: "APT123",
     onCalendarClick: (id: string) =>

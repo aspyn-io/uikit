@@ -6,7 +6,6 @@ import {
   DayAvailability,
   SelectedSlot,
   TimePeriod,
-  TimeSlot,
   CustomLabels,
   TimePeriodConfig,
 } from "./types";
@@ -22,7 +21,7 @@ interface WeekGridProps {
   isDateInPast: (date: Date) => boolean;
   selectedSlot: SelectedSlot | null;
   reservedSlot: SelectedSlot | null;
-  onSlotClick: (date: string, timePeriod: TimePeriod, slot?: TimeSlot) => void;
+  onSlotClick: (date: string, timePeriod: TimePeriod) => void;
   timePeriods: TimePeriodConfig[];
   customLabels: CustomLabels;
 }
@@ -81,18 +80,14 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
 
   // Render helper - kept as function to avoid duplication in JSX
   const renderTimePeriodButton = (
-    date: Date,
     dateString: string,
     timePeriod: TimePeriod,
     label: string
   ) => {
-    const dayData = getAvailabilityForDate(dateString);
     const isAvailable = isTimeSlotAvailable(dateString, timePeriod);
     const isSelected = isSlotSelected(dateString, timePeriod);
     const isReserved = isSlotReserved(dateString, timePeriod);
     const hasActiveReservation = !!reservedSlot;
-
-    const slot = dayData?.slots[timePeriod]?.[0];
 
     return (
       <TimeSlotButton
@@ -104,7 +99,6 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
         isSelected={isSelected}
         isReserved={isReserved}
         hasActiveReservation={hasActiveReservation}
-        slot={slot}
         onClick={onSlotClick}
       />
     );
@@ -186,7 +180,6 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
                     <>
                       {sortedTimePeriods.map((timePeriod) =>
                         renderTimePeriodButton(
-                          date,
                           dateString,
                           timePeriod.id,
                           timePeriod.label

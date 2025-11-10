@@ -55,7 +55,7 @@
     "@storybook/addon-docs": "^9.1.10",
     "@storybook/addon-themes": "^10.0.3",
     "@storybook/react-vite": "^10.0.3",
-    "@tailwindcss/postcss": "^4.1.14",
+    "@tailwindcss/postcss": "^4.1.17",
     "@types/node": "^24.9.1",
     "@types/react": "^19.1.15",
     "@types/react-dom": "^19.2.2",

@@ -43,7 +43,7 @@
     "date-fns-tz": "^3.2.0",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.12.10",
-    "lucide-react": "^0.553.0",
+    "lucide-react": "^0.554.0",
     "react": "^19.1.1",
     "react-dom": "^19.2.0",
     "react-phone-number-input": "^3.4.12",

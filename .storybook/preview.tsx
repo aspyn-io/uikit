@@ -7,11 +7,10 @@ import { ThemeProvider } from "../src/grayscale-theme/ThemeProvider";
 const preview: Preview = {
   parameters: {
     backgrounds: {
-      default: "light",
-      values: [
-        { name: "light", value: "#ffffff" },
-        { name: "dark", value: "#1e1e1e" },
-      ],
+      options: {
+        light: { name: "light", value: "#ffffff" },
+        dark: { name: "dark", value: "#1e1e1e" }
+      }
     },
     controls: {
       matchers: {
@@ -37,6 +36,12 @@ const preview: Preview = {
   ],
 
   tags: ["autodocs"],
+
+  initialGlobals: {
+    backgrounds: {
+      value: "light"
+    }
+  }
 };
 
 export default preview;

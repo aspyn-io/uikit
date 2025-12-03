@@ -1,12 +1,5 @@
 import { FC, useState } from "react";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  TextInput,
-} from "flowbite-react";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, TextInput } from "flowbite-react";
 import { Copy, Check, Edit, Trash2 } from "lucide-react";
 
 export interface MetadataEditorProps {
@@ -39,9 +32,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
   const [editedMetadata, setEditedMetadata] = useState<MetadataItem[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [copiedMetadataJson, setCopiedMetadataJson] = useState(false);
-  const [copiedMetadataValues, setCopiedMetadataValues] = useState<Set<string>>(
-    new Set()
-  );
+  const [copiedMetadataValues, setCopiedMetadataValues] = useState<Set<string>>(new Set());
 
   const handleOpenModal = () => {
     if (metadata) {
@@ -131,9 +122,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
           <div className="h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
           <div className="flex gap-2">
             <div className="h-7 w-7 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-            {showEditButton && (
-              <div className="h-7 w-7 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-            )}
+            {showEditButton && <div className="h-7 w-7 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />}
           </div>
         </div>
         <div className="space-y-4">
@@ -153,31 +142,17 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
       <>
         <div className={className}>
           <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2 mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              {title}
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
             {showEditButton && (
-              <Button
-                color="gray"
-                size="xs"
-                onClick={handleOpenModal}
-                title="Edit metadata"
-              >
+              <Button color="gray" size="xs" onClick={handleOpenModal} title="Edit metadata">
                 <Edit className="h-4 w-4" />
               </Button>
             )}
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            No metadata available
-          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 italic">No metadata available</p>
         </div>
 
-        <Modal
-          dismissible
-          show={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          size="xl"
-        >
+        <Modal dismissible show={isModalOpen} onClose={() => setIsModalOpen(false)} size="xl">
           <ModalHeader>Edit Metadata</ModalHeader>
           <ModalBody>
             <div className="space-y-4">
@@ -188,9 +163,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                       type="text"
                       placeholder="Key"
                       value={item.key}
-                      onChange={(e) =>
-                        handleMetadataKeyChange(index, e.target.value)
-                      }
+                      onChange={(e) => handleMetadataKeyChange(index, e.target.value)}
                     />
                   </div>
                   <div className="flex-1">
@@ -198,27 +171,16 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                       type="text"
                       placeholder="Value"
                       value={item.value}
-                      onChange={(e) =>
-                        handleMetadataValueChange(index, e.target.value)
-                      }
+                      onChange={(e) => handleMetadataValueChange(index, e.target.value)}
                     />
                   </div>
-                  <Button
-                    color="gray"
-                    size="sm"
-                    onClick={() => handleRemoveMetadataItem(index)}
-                    className="mt-0.5"
-                  >
+                  <Button color="gray" size="sm" onClick={() => handleRemoveMetadataItem(index)} className="mt-0.5">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
 
-              <Button
-                color="light"
-                onClick={handleAddMetadataItem}
-                className="w-full"
-              >
+              <Button color="light" onClick={handleAddMetadataItem} className="w-full">
                 + Add another item
               </Button>
             </div>
@@ -242,17 +204,10 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
     <>
       <div className={className}>
         <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2 mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {title}
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
           <div className="flex gap-2">
             {showCopyButton && (
-              <Button
-                color="gray"
-                size="xs"
-                onClick={handleCopyMetadataJson}
-                title="Copy metadata as JSON"
-              >
+              <Button color="gray" size="xs" onClick={handleCopyMetadataJson} title="Copy metadata as JSON">
                 {copiedMetadataJson ? (
                   <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
                 ) : (
@@ -261,19 +216,14 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
               </Button>
             )}
             {showEditButton && (
-              <Button
-                color="gray"
-                size="xs"
-                onClick={handleOpenModal}
-                title="Edit metadata"
-              >
+              <Button color="gray" size="xs" onClick={handleOpenModal} title="Edit metadata">
                 <Edit className="h-4 w-4" />
               </Button>
             )}
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
           {Object.entries(metadata).map(([key, value]) => (
             <div key={key} className="space-y-2">
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 capitalize">
@@ -306,12 +256,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
         </div>
       </div>
 
-      <Modal
-        dismissible
-        show={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        size="xl"
-      >
+      <Modal dismissible show={isModalOpen} onClose={() => setIsModalOpen(false)} size="xl">
         <ModalHeader>Edit Metadata</ModalHeader>
         <ModalBody>
           <div className="space-y-4">
@@ -322,9 +267,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                     type="text"
                     placeholder="Key"
                     value={item.key}
-                    onChange={(e) =>
-                      handleMetadataKeyChange(index, e.target.value)
-                    }
+                    onChange={(e) => handleMetadataKeyChange(index, e.target.value)}
                   />
                 </div>
                 <div className="flex-1">
@@ -332,27 +275,16 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                     type="text"
                     placeholder="Value"
                     value={item.value}
-                    onChange={(e) =>
-                      handleMetadataValueChange(index, e.target.value)
-                    }
+                    onChange={(e) => handleMetadataValueChange(index, e.target.value)}
                   />
                 </div>
-                <Button
-                  color="gray"
-                  size="sm"
-                  onClick={() => handleRemoveMetadataItem(index)}
-                  className="mt-0.5"
-                >
+                <Button color="gray" size="sm" onClick={() => handleRemoveMetadataItem(index)} className="mt-0.5">
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             ))}
 
-            <Button
-              color="light"
-              onClick={handleAddMetadataItem}
-              className="w-full"
-            >
+            <Button color="light" onClick={handleAddMetadataItem} className="w-full">
               + Add another item
             </Button>
           </div>

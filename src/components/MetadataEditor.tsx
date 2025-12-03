@@ -223,7 +223,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
           </div>
         </div>
 
-        <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+        <div className="space-y-4 max-h-[70vh] overflow-y-auto">
           {Object.entries(metadata).map(([key, value]) => (
             <div key={key} className="space-y-2">
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 capitalize">

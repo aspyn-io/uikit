@@ -368,6 +368,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
                     options={windowOptions}
                     selectedWindow={selectedWindow}
                     onWindowChange={onWindowChange}
+                    formatDate={formatDate}
                   />
                 )}
 

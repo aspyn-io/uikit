@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Spinner } from "flowbite-react";
 import { Clock, Users, User } from "lucide-react";
+import { parse } from "date-fns";
 import {
   SelectedSlot,
   TeamOption,
@@ -30,6 +31,35 @@ interface SelectedAppointmentCardProps {
   cancelButtonText?: string;
   cancelLoading?: boolean;
 }
+
+/**
+ * Formats a time string to a display format using the provided formatDate function
+ * Handles both ISO timestamp format and simple time format (HH:mm:ss)
+ */
+const formatTimeInTimezone = (
+  timeString: string,
+  formatDate: (date: Date | string, format: string) => string
+): string => {
+  try {
+    let time: Date;
+
+    // Check if it's an ISO timestamp format
+    if (timeString.includes("T") || timeString.includes("Z")) {
+      // Parse ISO timestamp
+      time = new Date(timeString);
+    } else {
+      // Parse simple time string (HH:mm:ss format)
+      time = parse(timeString, "HH:mm:ss", new Date());
+    }
+
+    // Use the provided formatDate function (which is timezone-aware from useTimezoneFormat hook)
+    return formatDate(time, "h:mm a");
+  } catch (error) {
+    // Fallback to original string if parsing fails
+    console.error("Error formatting time:", error);
+    return timeString;
+  }
+};
 
 export const SelectedAppointmentCard: React.FC<
   SelectedAppointmentCardProps
@@ -61,10 +91,21 @@ export const SelectedAppointmentCard: React.FC<
       selectedTechnician
     : "Any";
 
-  // Get selected window label
+  // Get selected window label with timezone formatting
   const selectedWindowLabel = selectedWindow
-    ? windowOptions.find((window) => window.id === selectedWindow)?.label ||
-      selectedWindow
+    ? (() => {
+        const windowOption = windowOptions.find(
+          (window) => window.id === selectedWindow
+        );
+        if (windowOption) {
+          // Format the time window using the formatDate function (timezone-aware)
+          return `${formatTimeInTimezone(
+            windowOption.start_time,
+            formatDate
+          )} - ${formatTimeInTimezone(windowOption.end_time, formatDate)}`;
+        }
+        return selectedWindow;
+      })()
     : "Any";
 
   // Format time period for display

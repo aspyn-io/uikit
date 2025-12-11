@@ -9,6 +9,7 @@ interface TimeWindowSelectorProps {
   selectedWindow?: string;
   onWindowChange?: (windowId: string) => void;
   formatDate: (date: Date | string, format: string) => string;
+  selectedTimePeriod?: string;
 }
 
 /**
@@ -40,12 +41,35 @@ const formatTimeString = (
   }
 };
 
+/**
+ * Gets a contextual label for "Any time window" based on the selected time period
+ */
+const getAnyWindowLabel = (selectedTimePeriod?: string): string => {
+  if (!selectedTimePeriod) {
+    return "Any time window";
+  }
+
+  const period = selectedTimePeriod.toLowerCase();
+  if (period === "morning") {
+    return "Any morning window";
+  } else if (period === "afternoon") {
+    return "Any afternoon window";
+  } else if (period === "anytime") {
+    return "Any time window";
+  }
+
+  return "Any time window";
+};
+
 export const TimeWindowSelector: React.FC<TimeWindowSelectorProps> = ({
   options,
   selectedWindow,
   onWindowChange,
   formatDate,
+  selectedTimePeriod,
 }) => {
+  const anyLabel = getAnyWindowLabel(selectedTimePeriod);
+
   const dropdownItems: DropdownItem[] = options.map((option) => {
     // Format the time window label using the formatDate function (timezone-aware)
     const formattedLabel = `${formatTimeString(
@@ -67,7 +91,7 @@ export const TimeWindowSelector: React.FC<TimeWindowSelectorProps> = ({
       items={dropdownItems}
       selected={selectedWindow}
       onSelect={(id) => onWindowChange?.(id)}
-      anyLabel="Any time window"
+      anyLabel={anyLabel}
     />
   );
 };

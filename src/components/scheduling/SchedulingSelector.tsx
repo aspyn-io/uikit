@@ -100,6 +100,9 @@ interface SchedulingSelectorProps {
 
   // Custom labels for UI text (e.g., internationalization)
   customLabels?: CustomLabels;
+
+  // Selected time period from calendar (for contextual "Any time window" label)
+  selectedTimePeriod?: string;
 }
 
 export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
@@ -140,6 +143,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   preferencesLoading = false,
   showSelectedAppointmentCard = true,
   customLabels = {},
+  selectedTimePeriod,
 }) => {
   // Current week being displayed
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
@@ -369,6 +373,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
                     selectedWindow={selectedWindow}
                     onWindowChange={onWindowChange}
                     formatDate={formatDate}
+                    selectedTimePeriod={selectedTimePeriod}
                   />
                 )}
 

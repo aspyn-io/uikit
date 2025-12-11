@@ -45,7 +45,11 @@ interface SchedulingSelectorProps {
   loading: boolean;
 
   // Callback when week changes (user clicks prev/next or jumps to date)
-  onWeekChange: (weekStart: string, weekEnd: string) => void;
+  onWeekChange: (
+    weekStart: string,
+    weekEnd: string,
+    skipAutoAdvance?: boolean
+  ) => void;
 
   // Selection state - controlled
   selectedSlot: SelectedSlot | null;
@@ -223,7 +227,8 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     onSlotSelect(null);
     onWeekChange(
       format(newWeekStart, "yyyy-MM-dd"),
-      format(newWeekEnd, "yyyy-MM-dd")
+      format(newWeekEnd, "yyyy-MM-dd"),
+      true // Skip auto-advance for manual navigation
     );
   };
 
@@ -236,7 +241,8 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     onSlotSelect(null);
     onWeekChange(
       format(newWeekStart, "yyyy-MM-dd"),
-      format(newWeekEnd, "yyyy-MM-dd")
+      format(newWeekEnd, "yyyy-MM-dd"),
+      true // Skip auto-advance for manual navigation
     );
   };
 
@@ -252,7 +258,8 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
       onSlotSelect(null);
       onWeekChange(
         format(sunday, "yyyy-MM-dd"),
-        format(newWeekEnd, "yyyy-MM-dd")
+        format(newWeekEnd, "yyyy-MM-dd"),
+        true // Skip auto-advance for manual navigation
       );
     },
     [onWeekChange, onSlotSelect]

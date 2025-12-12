@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { format, addWeeks, startOfWeek, endOfWeek, parseISO } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { format, addWeeks, startOfWeek, endOfWeek } from "date-fns";
+import { toZonedTime, formatInTimeZone } from "date-fns-tz";
 import { CalendarHeader } from "./CalendarHeader";
 import { WeekGrid } from "./WeekGrid";
 import { TimeWindowSelector } from "./Preferences/TimeWindowSelector";
@@ -152,8 +152,10 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   // Current week being displayed
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
     if (weekData?.week_start) {
-      return parseISO(weekData.week_start);
+      // week_start is a simple Y-m-d date string, parse it in the provided timezone
+      return toZonedTime(`${weekData.week_start}T00:00:00`, timezone);
     }
+
     return startOfWeek(new Date(), { weekStartsOn: 0 });
   });
 
@@ -226,8 +228,8 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     setCurrentWeekStart(newWeekStart);
     onSlotSelect(null);
     onWeekChange(
-      format(newWeekStart, "yyyy-MM-dd"),
-      format(newWeekEnd, "yyyy-MM-dd"),
+      formatInTimeZone(newWeekStart, timezone, "yyyy-MM-dd"),
+      formatInTimeZone(newWeekEnd, timezone, "yyyy-MM-dd"),
       true // Skip auto-advance for manual navigation
     );
   };
@@ -240,8 +242,8 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     setCurrentWeekStart(newWeekStart);
     onSlotSelect(null);
     onWeekChange(
-      format(newWeekStart, "yyyy-MM-dd"),
-      format(newWeekEnd, "yyyy-MM-dd"),
+      formatInTimeZone(newWeekStart, timezone, "yyyy-MM-dd"),
+      formatInTimeZone(newWeekEnd, timezone, "yyyy-MM-dd"),
       true // Skip auto-advance for manual navigation
     );
   };
@@ -257,12 +259,12 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
       setCurrentWeekStart(sunday);
       onSlotSelect(null);
       onWeekChange(
-        format(sunday, "yyyy-MM-dd"),
-        format(newWeekEnd, "yyyy-MM-dd"),
+        formatInTimeZone(sunday, timezone, "yyyy-MM-dd"),
+        formatInTimeZone(newWeekEnd, timezone, "yyyy-MM-dd"),
         true // Skip auto-advance for manual navigation
       );
     },
-    [onWeekChange, onSlotSelect]
+    [onWeekChange, onSlotSelect, timezone]
   );
 
   // Handle slot selection - memoize to prevent WeekGrid re-renders

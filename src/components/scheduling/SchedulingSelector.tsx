@@ -200,11 +200,22 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   );
 
   // Format week range - computed on demand
+  // Use weekData dates directly and format without timezone shift
+  // since the API returns date-only strings (YYYY-MM-DD)
   const weekRange = (() => {
+    if (weekData?.week_start && weekData?.week_end) {
+      const startDate = parseISO(weekData.week_start);
+      const endDate = parseISO(weekData.week_end);
+      // Use plain format() to avoid timezone shifting for date-only values
+      const startFormatted = format(startDate, "MMM d, yyyy");
+      const endFormatted = format(endDate, "MMM d, yyyy");
+      return `${startFormatted} - ${endFormatted}`;
+    }
+    // Fallback to weekDates if weekData is not available
     const startDate = weekDates[0];
     const endDate = weekDates[6];
-    const startFormatted = formatDate(startDate, "MMM d, yyyy");
-    const endFormatted = formatDate(endDate, "MMM d, yyyy");
+    const startFormatted = format(startDate, "MMM d, yyyy");
+    const endFormatted = format(endDate, "MMM d, yyyy");
     return `${startFormatted} - ${endFormatted}`;
   })();
 

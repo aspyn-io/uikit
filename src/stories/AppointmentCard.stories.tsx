@@ -119,3 +119,111 @@ export const WithoutIcons: Story = {
       console.log("Calendar clicked for appointment:", id),
   },
 };
+
+// Date Variants - Today
+export const Today: Story = {
+  args: {
+    datetime: new Date(),
+    status: "Scheduled",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};
+
+// Date Variants - Tomorrow
+export const Tomorrow: Story = {
+  args: {
+    datetime: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    status: "Scheduled",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};
+
+// Date Variants - In 5 Days
+export const InFiveDays: Story = {
+  args: {
+    datetime: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+    status: "Scheduled",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};
+
+// Date Variants - In 3 Weeks
+export const InThreeWeeks: Story = {
+  args: {
+    datetime: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),
+    status: "Scheduled",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};
+
+// Date Variants - In 6 Months
+export const InSixMonths: Story = {
+  args: {
+    datetime: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000),
+    status: "Scheduled",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};
+
+// Date Variants - Yesterday
+export const Yesterday: Story = {
+  args: {
+    datetime: new Date(Date.now() - 24 * 60 * 60 * 1000),
+    status: "Completed",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};
+
+// Date Variants - 5 Days Ago
+export const FiveDaysAgo: Story = {
+  args: {
+    datetime: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    status: "Completed",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};
+
+// Date Variants - 3 Months Ago
+export const ThreeMonthsAgo: Story = {
+  args: {
+    datetime: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+    status: "Completed",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};
+
+// Date Variants - 5 Years Ago
+export const FiveYearsAgo: Story = {
+  args: {
+    datetime: new Date(Date.now() - 5 * 365 * 24 * 60 * 60 * 1000),
+    status: "Completed",
+    calendarActive: true,
+    timeActive: true,
+    userActive: true,
+    showIcons: true,
+  },
+};

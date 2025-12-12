@@ -1,11 +1,5 @@
 import { useState, useRef } from "react";
-import {
-  format,
-  isToday,
-  isTomorrow,
-  differenceInDays,
-  isYesterday,
-} from "date-fns";
+import { format, isToday, isTomorrow, formatDistanceToNow } from "date-fns";
 import {
   Badge,
   Button,
@@ -89,22 +83,15 @@ export const AppointmentCard = ({
   const monthName = format(date, "LLL").toUpperCase();
   const dayNumber = format(date, "d");
   const amOrPm = format(date, "a");
-  const daysDifference = differenceInDays(date, new Date());
 
   let daysLabel = "";
-  if (isToday(date)) daysLabel = "Today";
-  else if (isTomorrow(date)) daysLabel = "Tomorrow";
-  else if (daysDifference > 0 && daysDifference < 7)
-    daysLabel = `${daysDifference} days`;
-  else if (isYesterday(date)) daysLabel = "Yesterday";
-  else if (daysDifference < 0)
-    daysLabel = `${Math.abs(daysDifference)} day${
-      Math.abs(daysDifference) > 1 ? "s" : ""
-    } ago`;
-  else
-    daysLabel = `${Math.ceil(daysDifference / 7)} week${
-      daysDifference > 7 ? "s" : ""
-    }`;
+  if (isToday(date)) {
+    daysLabel = "Today";
+  } else if (isTomorrow(date)) {
+    daysLabel = "Tomorrow";
+  } else {
+    daysLabel = formatDistanceToNow(date, { addSuffix: true });
+  }
 
   const toggleExpanded = () => {
     setIsExpanded((prev) => !prev);

@@ -4,6 +4,7 @@ import svgr from "vite-plugin-svgr";
 import dts from "vite-plugin-dts";
 import path from "path";
 import { fileURLToPath } from "url";
+import tailwindcss from "@tailwindcss/vite";
 import flowbiteReact from "flowbite-react/plugin/vite";
 
 // Fix for __dirname in ESM
@@ -13,6 +14,7 @@ const __dirname = path.dirname(__filename);
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     svgr(),
     dts({
       insertTypesEntry: true, // Ensures "types" entry in package.json

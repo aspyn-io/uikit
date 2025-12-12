@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { format, addWeeks, startOfWeek, endOfWeek } from "date-fns";
-import { toZonedTime, formatInTimeZone } from "date-fns-tz";
+import { format, addWeeks, startOfWeek, endOfWeek, parseISO } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { CalendarHeader } from "./CalendarHeader";
 import { WeekGrid } from "./WeekGrid";
 import { TimeWindowSelector } from "./Preferences/TimeWindowSelector";
@@ -152,10 +152,8 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   // Current week being displayed
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
     if (weekData?.week_start) {
-      // week_start is a simple Y-m-d date string, parse it in the provided timezone
-      return toZonedTime(`${weekData.week_start}T00:00:00`, timezone);
+      return parseISO(weekData.week_start);
     }
-
     return startOfWeek(new Date(), { weekStartsOn: 0 });
   });
 
@@ -202,11 +200,22 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   );
 
   // Format week range - computed on demand
+  // Use weekData dates directly and format without timezone shift
+  // since the API returns date-only strings (YYYY-MM-DD)
   const weekRange = (() => {
+    if (weekData?.week_start && weekData?.week_end) {
+      const startDate = parseISO(weekData.week_start);
+      const endDate = parseISO(weekData.week_end);
+      // Use plain format() to avoid timezone shifting for date-only values
+      const startFormatted = format(startDate, "MMM d, yyyy");
+      const endFormatted = format(endDate, "MMM d, yyyy");
+      return `${startFormatted} - ${endFormatted}`;
+    }
+    // Fallback to weekDates if weekData is not available
     const startDate = weekDates[0];
     const endDate = weekDates[6];
-    const startFormatted = formatDate(startDate, "MMM d, yyyy");
-    const endFormatted = formatDate(endDate, "MMM d, yyyy");
+    const startFormatted = format(startDate, "MMM d, yyyy");
+    const endFormatted = format(endDate, "MMM d, yyyy");
     return `${startFormatted} - ${endFormatted}`;
   })();
 
@@ -228,8 +237,8 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     setCurrentWeekStart(newWeekStart);
     onSlotSelect(null);
     onWeekChange(
-      formatInTimeZone(newWeekStart, timezone, "yyyy-MM-dd"),
-      formatInTimeZone(newWeekEnd, timezone, "yyyy-MM-dd"),
+      format(newWeekStart, "yyyy-MM-dd"),
+      format(newWeekEnd, "yyyy-MM-dd"),
       true // Skip auto-advance for manual navigation
     );
   };
@@ -242,8 +251,8 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     setCurrentWeekStart(newWeekStart);
     onSlotSelect(null);
     onWeekChange(
-      formatInTimeZone(newWeekStart, timezone, "yyyy-MM-dd"),
-      formatInTimeZone(newWeekEnd, timezone, "yyyy-MM-dd"),
+      format(newWeekStart, "yyyy-MM-dd"),
+      format(newWeekEnd, "yyyy-MM-dd"),
       true // Skip auto-advance for manual navigation
     );
   };
@@ -259,12 +268,12 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
       setCurrentWeekStart(sunday);
       onSlotSelect(null);
       onWeekChange(
-        formatInTimeZone(sunday, timezone, "yyyy-MM-dd"),
-        formatInTimeZone(newWeekEnd, timezone, "yyyy-MM-dd"),
+        format(sunday, "yyyy-MM-dd"),
+        format(newWeekEnd, "yyyy-MM-dd"),
         true // Skip auto-advance for manual navigation
       );
     },
-    [onWeekChange, onSlotSelect, timezone]
+    [onWeekChange, onSlotSelect]
   );
 
   // Handle slot selection - memoize to prevent WeekGrid re-renders

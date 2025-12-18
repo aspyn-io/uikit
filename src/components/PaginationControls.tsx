@@ -38,7 +38,7 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
     : undefined;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+    <div className="flex flex-row items-center justify-between gap-3 sm:gap-0">
       <div className="flex items-center">
         <span className="text-sm dark:text-white hidden sm:inline">
           Rows per page:

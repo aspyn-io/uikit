@@ -38,9 +38,12 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
     : undefined;
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
       <div className="flex items-center">
-        <span className="text-sm dark:text-white">Rows per page:</span>
+        <span className="text-sm dark:text-white hidden sm:inline">
+          Rows per page:
+        </span>
+        <span className="text-sm dark:text-white sm:hidden">Per page:</span>
         <Select
           value={String(pageSize)}
           onChange={(e) => setPageSize(Number(e.target.value))}
@@ -55,8 +58,14 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
       </div>
 
       {showTotals && (
-        <div className="text-sm text-gray-700 dark:text-gray-400">
+        <div className="text-sm text-gray-700 dark:text-gray-400 hidden sm:block">
           Showing {displayStartIndex}-{displayEndIndex} of {totals}
+        </div>
+      )}
+
+      {showTotals && (
+        <div className="text-xs text-gray-700 dark:text-gray-400 sm:hidden">
+          {displayStartIndex}-{displayEndIndex} of {totals}
         </div>
       )}
 
@@ -66,16 +75,16 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
           disabled={!prevPage}
           className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <ChevronLeft className="mr-1 self-center" />
-          <span>Previous</span>
+          <ChevronLeft className="sm:mr-1 self-center" />
+          <span className="hidden sm:inline">Previous</span>
         </Button>
         <Button
           onClick={handleNextPage}
           disabled={!nextPage}
           className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span>Next</span>
-          <ChevronRight className="ml-1 self-center" />
+          <span className="hidden sm:inline">Next</span>
+          <ChevronRight className="sm:ml-1 self-center" />
         </Button>
       </div>
     </div>

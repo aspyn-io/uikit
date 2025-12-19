@@ -180,7 +180,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
         >
           <ModalHeader>Edit Metadata</ModalHeader>
           <ModalBody>
-            <div className="space-y-4">
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto">
               {editedMetadata.map((item, index) => (
                 <div key={index} className="flex gap-2 items-start">
                   <div className="flex-1">
@@ -314,7 +314,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
       >
         <ModalHeader>Edit Metadata</ModalHeader>
         <ModalBody>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto">
             {editedMetadata.map((item, index) => (
               <div key={index} className="flex gap-2 items-start">
                 <div className="flex-1">

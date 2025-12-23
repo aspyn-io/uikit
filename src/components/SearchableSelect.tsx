@@ -210,7 +210,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
       handleSelectionChange,
       multiple,
     }),
-    [isOpen, searchTerm, selectedValues, multiple]
+    [isOpen, searchTerm, selectedValues, multiple, handleSelectionChange]
   );
 
   // Single-select display text

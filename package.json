@@ -37,7 +37,7 @@
   "dependencies": {
     "@fullcalendar/core": "^6.1.18",
     "@fullcalendar/daygrid": "^6.1.19",
-    "@fullcalendar/interaction": "^6.1.19",
+    "@fullcalendar/interaction": "^6.1.20",
     "@fullcalendar/timegrid": "^6.1.20",
     "date-fns-tz": "^3.2.0",
     "flowbite": "^4.0.1",

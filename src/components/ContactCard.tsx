@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, Badge, Button, Dropdown, DropdownItem } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MoreVertical, Mail, Phone, MapPin } from "lucide-react";
 
 interface ContactCardProps {
@@ -43,6 +43,8 @@ export const ContactCard: React.FC<ContactCardProps> & {
   tags,
   className = "",
 }) => {
+  const navigate = useNavigate();
+
   const getInitials = (name: string) => {
     const [firstName, lastName] = name.split(" ");
     if (!firstName || !lastName) return "N/A";
@@ -80,7 +82,7 @@ export const ContactCard: React.FC<ContactCardProps> & {
         }`}
         onClick={(e) => {
           if (to && !(e.target as HTMLElement).closest(".dropdown")) {
-            window.location.href = to;
+            navigate(to);
           }
         }}
       >

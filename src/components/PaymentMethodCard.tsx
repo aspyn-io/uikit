@@ -55,7 +55,7 @@ export const PaymentMethodCard = ({
       </div>
       {drawer && (
         <div
-          className="mt-4 sm:mt-0 sm:flex-shrink-0"
+          className="mt-4 sm:mt-0 sm:shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
           {drawer}

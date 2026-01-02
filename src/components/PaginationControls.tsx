@@ -11,12 +11,12 @@ type PaginationControlsProps = {
   handleNextPage: () => void;
   /** Callback to handle navigating to the previous page */
   handlePrevPage: () => void;
-  /** 
+  /**
    * URL for the next page (from API response.page.next or Link header)
    * When null or undefined, the next button will be disabled
    */
   next?: string | null;
-  /** 
+  /**
    * URL for the previous page (from API response.page.prev or Link header)
    * When null or undefined, the previous button will be disabled
    */
@@ -27,18 +27,18 @@ type PaginationControlsProps = {
   setPageSize: (size: number) => void;
   /** Available page size options. Defaults to [5, 10, 25, 50] */
   pageSizes?: number[];
-  /** 
+  /**
    * Total number of items in the collection (from API X-Total-Count header or response.page.totalCount)
    * When provided, displays "1-25 of 4,585" format
    * When omitted, only shows navigation buttons
    */
   totalCount?: number;
-  /** 
+  /**
    * Starting index of the current page (1-based)
    * Defaults to 1 if totalCount is provided but startIndex is not
    */
   startIndex?: number;
-  /** 
+  /**
    * Ending index of the current page
    * Defaults to min(pageSize, totalCount) if totalCount is provided but endIndex is not
    */
@@ -47,13 +47,13 @@ type PaginationControlsProps = {
 
 /**
  * Pagination controls component for cursor-based API pagination
- * 
+ *
  * Features:
  * - Page size selector with customizable options
  * - Previous/Next navigation buttons (icon-only)
  * - Optional item count display ("1-25 of 4,585")
  * - Automatic button disable states based on next/prev URLs
- * 
+ *
  * Usage with API pagination:
  * ```tsx
  * <PaginationControls
@@ -68,7 +68,7 @@ type PaginationControlsProps = {
  *   handlePrevPage={() => fetchPrevPage()}
  * />
  * ```
- * 
+ *
  * Without count display (navigation only):
  * ```tsx
  * <PaginationControls
@@ -129,10 +129,11 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
             <div className="text-sm text-gray-600 dark:text-gray-400">
               {totalCount! > 0 ? (
                 <>
-                  {displayStartIndex}-{displayEndIndex} of {totalCount!.toLocaleString()}
+                  {displayStartIndex}-{displayEndIndex} of{" "}
+                  {totalCount!.toLocaleString()}
                 </>
               ) : (
-                'No items'
+                "No items"
               )}
             </div>
           )}

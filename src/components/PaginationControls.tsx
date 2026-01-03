@@ -2,22 +2,84 @@ import { FC } from "react";
 import { Button, Select } from "flowbite-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+/**
+ * Props for the PaginationControls component
+ */
 type PaginationControlsProps = {
+  /** Callback to handle navigating to the next page */
   handleNextPage: () => void;
+  /** Callback to handle navigating to the previous page */
   handlePrevPage: () => void;
-  nextPage: string | null;
-  prevPage: string | null;
+  /**
+   * Identifier for the next page (e.g., URL, cursor, or page number)
+   * When null or undefined, the next button will be disabled
+   */
+  nextPage?: string | null;
+  /**
+   * Identifier for the previous page (e.g., URL, cursor, or page number)
+   * When null or undefined, the previous button will be disabled
+   */
+  prevPage?: string | null;
+  /** Current page size (number of items per page) */
   pageSize: number;
+  /** Callback when page size is changed */
   setPageSize: (size: number) => void;
+  /** Available page size options. Defaults to [5, 10, 25, 50] */
   pageSizes?: number[];
-  /** Total number of items in the collection */
+  /**
+   * Total number of items in the collection
+   * When provided, displays "1-25 of 4,585" format
+   * When omitted, only shows navigation buttons
+   */
   totals?: number;
-  /** Starting index of the current page (1-based). Defaults to 1 if totals is provided */
+  /**
+   * Starting index of the current page (1-based)
+   * Defaults to 1 if totalCount is provided but startIndex is not
+   */
   startIndex?: number;
-  /** Ending index of the current page. Defaults to min(pageSize, totals) if totals is provided */
+  /**
+   * Ending index of the current page
+   * Defaults to min(pageSize, totalCount) if totalCount is provided but endIndex is not
+   */
   endIndex?: number;
 };
 
+/**
+ * Pagination controls component
+ *
+ * Features:
+ * - Page size selector with customizable options
+ * - Previous/Next navigation buttons (icon-only)
+ * - Optional item count display ("1-25 of 4,585")
+ * - Automatic button disable states based on nextPage/prevPage availability
+ *
+ * Usage with item count:
+ * ```tsx
+ * <PaginationControls
+ *   nextPage={nextPageIdentifier}
+ *   prevPage={prevPageIdentifier}
+ *   totals={4585}
+ *   startIndex={1}
+ *   endIndex={25}
+ *   pageSize={pageSize}
+ *   setPageSize={setPageSize}
+ *   handleNextPage={() => fetchNextPage()}
+ *   handlePrevPage={() => fetchPrevPage()}
+ * />
+ * ```
+ *
+ * Without count display (navigation only):
+ * ```tsx
+ * <PaginationControls
+ *   nextPage={nextPageIdentifier}
+ *   prevPage={prevPageIdentifier}
+ *   pageSize={pageSize}
+ *   setPageSize={setPageSize}
+ *   handleNextPage={() => fetchNextPage()}
+ *   handlePrevPage={() => fetchPrevPage()}
+ * />
+ * ```
+ */
 export const PaginationControls: FC<PaginationControlsProps> = ({
   handleNextPage,
   handlePrevPage,
@@ -38,54 +100,63 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
     : undefined;
 
   return (
-    <div className="flex flex-row items-center justify-between gap-3 sm:gap-0">
-      <div className="flex items-center">
-        <span className="text-sm dark:text-white hidden sm:inline">
-          Rows per page:
-        </span>
-        <span className="text-sm dark:text-white sm:hidden">Per page:</span>
-        <Select
-          value={String(pageSize)}
-          onChange={(e) => setPageSize(Number(e.target.value))}
-          className="ml-2 w-20"
-        >
-          {pageSizes.map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </Select>
-      </div>
-
-      {showTotals && (
-        <div className="text-sm text-gray-700 dark:text-gray-400 hidden sm:block">
-          Showing {displayStartIndex}-{displayEndIndex} of {totals}
+    <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-b-lg">
+      <div className="flex items-center justify-between">
+        {/* Left side - Page size selector */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600 dark:text-gray-400">Show</span>
+          <Select
+            value={pageSize}
+            onChange={(e) => setPageSize(Number(e.target.value))}
+            sizing="sm"
+            className="w-20"
+          >
+            {pageSizes.map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </Select>
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            per page
+          </span>
         </div>
-      )}
 
-      {showTotals && (
-        <div className="text-xs text-gray-700 dark:text-gray-400 sm:hidden">
-          {displayStartIndex}-{displayEndIndex} of {totals}
+        {/* Right side - Item count display and navigation buttons */}
+        <div className="flex items-center gap-4">
+          {showTotals && (
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              {totals! > 0 ? (
+                <>
+                  {displayStartIndex}-{displayEndIndex} of{" "}
+                  {totals!.toLocaleString()}
+                </>
+              ) : (
+                "No items"
+              )}
+            </div>
+          )}
+
+          {/* Navigation buttons */}
+          <div className="flex gap-2">
+            <Button
+              color="gray"
+              size="sm"
+              onClick={handlePrevPage}
+              disabled={!prevPage}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              color="gray"
+              size="sm"
+              onClick={handleNextPage}
+              disabled={!nextPage}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-      )}
-
-      <div className="flex items-center space-x-2">
-        <Button
-          onClick={handlePrevPage}
-          disabled={!prevPage}
-          className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <ChevronLeft className="sm:mr-1 self-center" />
-          <span className="hidden sm:inline">Previous</span>
-        </Button>
-        <Button
-          onClick={handleNextPage}
-          disabled={!nextPage}
-          className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <span className="hidden sm:inline">Next</span>
-          <ChevronRight className="sm:ml-1 self-center" />
-        </Button>
       </div>
     </div>
   );

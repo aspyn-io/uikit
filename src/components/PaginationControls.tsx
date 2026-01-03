@@ -60,12 +60,14 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
       <div className="flex items-center space-x-2">
         {showTotals && (
           <div className="text-sm text-gray-700 dark:text-gray-400">
-            {displayStartIndex}-{displayEndIndex} of {totals?.toLocaleString()}
+            {displayStartIndex?.toLocaleString()}-
+            {displayEndIndex?.toLocaleString()} of {totals?.toLocaleString()}
           </div>
         )}
         <Button
           onClick={handlePrevPage}
           disabled={!prevPage}
+          aria-label="Previous page"
           className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="self-center" />
@@ -73,6 +75,7 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
         <Button
           onClick={handleNextPage}
           disabled={!nextPage}
+          aria-label="Next page"
           className="flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronRight className="self-center" />

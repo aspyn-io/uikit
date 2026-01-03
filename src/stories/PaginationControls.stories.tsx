@@ -18,8 +18,8 @@ export const Default: Story = {
   args: {
     handleNextPage: () => {},
     handlePrevPage: () => {},
-    next: "",
-    prev: "",
+    nextPage: "",
+    prevPage: "",
     pageSize: 25,
     setPageSize: () => {},
   },
@@ -29,11 +29,11 @@ export const WithTotals: Story = {
   render: () => {
     const [pageSize, setPageSize] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
-    const totalCount = 4585;
+    const totals = 4585;
     
-    const totalPages = Math.ceil(totalCount / pageSize);
+    const totalPages = Math.ceil(totals / pageSize);
     const startIndex = (currentPage - 1) * pageSize + 1;
-    const endIndex = Math.min(currentPage * pageSize, totalCount);
+    const endIndex = Math.min(currentPage * pageSize, totals);
     
     const hasNext = currentPage < totalPages;
     const hasPrev = currentPage > 1;
@@ -53,9 +53,9 @@ export const WithTotals: Story = {
     
     return (
       <PaginationControls
-        next={hasNext ? "next-page" : null}
-        prev={hasPrev ? "prev-page" : null}
-        totalCount={totalCount}
+        nextPage={hasNext ? "next-page" : null}
+        prevPage={hasPrev ? "prev-page" : null}
+        totals={totals}
         startIndex={startIndex}
         endIndex={endIndex}
         pageSize={pageSize}
@@ -70,12 +70,12 @@ export const WithTotals: Story = {
 export const WithTotalsLastPage: Story = {
   render: () => {
     const [pageSize, setPageSize] = useState(25);
-    const totalCount = 100;
-    const totalPages = Math.ceil(totalCount / pageSize);
+    const totals = 100;
+    const totalPages = Math.ceil(totals / pageSize);
     const [currentPage, setCurrentPage] = useState(totalPages); // Start on last page
     
     const startIndex = (currentPage - 1) * pageSize + 1;
-    const endIndex = Math.min(currentPage * pageSize, totalCount);
+    const endIndex = Math.min(currentPage * pageSize, totals);
     
     const hasNext = currentPage < totalPages;
     const hasPrev = currentPage > 1;
@@ -90,15 +90,15 @@ export const WithTotalsLastPage: Story = {
     
     const handlePageSizeChange = (size: number) => {
       setPageSize(size);
-      const newTotalPages = Math.ceil(totalCount / size);
+      const newTotalPages = Math.ceil(totals / size);
       setCurrentPage(newTotalPages); // Go to last page with new size
     };
     
     return (
       <PaginationControls
-        next={hasNext ? "next-page" : null}
-        prev={hasPrev ? "prev-page" : null}
-        totalCount={totalCount}
+        nextPage={hasNext ? "next-page" : null}
+        prevPage={hasPrev ? "prev-page" : null}
+        totals={totals}
         startIndex={startIndex}
         endIndex={endIndex}
         pageSize={pageSize}

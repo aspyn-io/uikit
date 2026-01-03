@@ -4,7 +4,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 /**
  * Props for the PaginationControls component
- * Works with cursor-based pagination from API responses
  */
 type PaginationControlsProps = {
   /** Callback to handle navigating to the next page */
@@ -12,15 +11,15 @@ type PaginationControlsProps = {
   /** Callback to handle navigating to the previous page */
   handlePrevPage: () => void;
   /**
-   * URL for the next page (from API response.page.next or Link header)
+   * Identifier for the next page (e.g., URL, cursor, or page number)
    * When null or undefined, the next button will be disabled
    */
-  next?: string | null;
+  nextPage?: string | null;
   /**
-   * URL for the previous page (from API response.page.prev or Link header)
+   * Identifier for the previous page (e.g., URL, cursor, or page number)
    * When null or undefined, the previous button will be disabled
    */
-  prev?: string | null;
+  prevPage?: string | null;
   /** Current page size (number of items per page) */
   pageSize: number;
   /** Callback when page size is changed */
@@ -28,11 +27,11 @@ type PaginationControlsProps = {
   /** Available page size options. Defaults to [5, 10, 25, 50] */
   pageSizes?: number[];
   /**
-   * Total number of items in the collection (from API X-Total-Count header or response.page.totalCount)
+   * Total number of items in the collection
    * When provided, displays "1-25 of 4,585" format
    * When omitted, only shows navigation buttons
    */
-  totalCount?: number;
+  totals?: number;
   /**
    * Starting index of the current page (1-based)
    * Defaults to 1 if totalCount is provided but startIndex is not
@@ -46,20 +45,20 @@ type PaginationControlsProps = {
 };
 
 /**
- * Pagination controls component for cursor-based API pagination
+ * Pagination controls component
  *
  * Features:
  * - Page size selector with customizable options
  * - Previous/Next navigation buttons (icon-only)
  * - Optional item count display ("1-25 of 4,585")
- * - Automatic button disable states based on next/prev URLs
+ * - Automatic button disable states based on nextPage/prevPage availability
  *
- * Usage with API pagination:
+ * Usage with item count:
  * ```tsx
  * <PaginationControls
- *   next={response.page.next}
- *   prev={response.page.prev}
- *   totalCount={response.page.totalCount}
+ *   nextPage={nextPageIdentifier}
+ *   prevPage={prevPageIdentifier}
+ *   totals={4585}
  *   startIndex={1}
  *   endIndex={25}
  *   pageSize={pageSize}
@@ -72,8 +71,8 @@ type PaginationControlsProps = {
  * Without count display (navigation only):
  * ```tsx
  * <PaginationControls
- *   next={response.page.next}
- *   prev={response.page.prev}
+ *   nextPage={nextPageIdentifier}
+ *   prevPage={prevPageIdentifier}
  *   pageSize={pageSize}
  *   setPageSize={setPageSize}
  *   handleNextPage={() => fetchNextPage()}
@@ -84,20 +83,20 @@ type PaginationControlsProps = {
 export const PaginationControls: FC<PaginationControlsProps> = ({
   handleNextPage,
   handlePrevPage,
-  next,
-  prev,
+  nextPage,
+  prevPage,
   pageSize = 25,
   setPageSize,
   pageSizes = [5, 10, 25, 50],
-  totalCount,
+  totals,
   startIndex,
   endIndex,
 }) => {
-  // Calculate start and end indices if totalCount is provided but indices are not
-  const showTotals = typeof totalCount === "number";
+  // Calculate start and end indices if totals is provided but indices are not
+  const showTotals = typeof totals === "number";
   const displayStartIndex = showTotals ? startIndex ?? 1 : undefined;
   const displayEndIndex = showTotals
-    ? endIndex ?? Math.min(pageSize, totalCount!)
+    ? endIndex ?? Math.min(pageSize, totals!)
     : undefined;
 
   return (
@@ -127,10 +126,10 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
         <div className="flex items-center gap-4">
           {showTotals && (
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              {totalCount! > 0 ? (
+              {totals! > 0 ? (
                 <>
                   {displayStartIndex}-{displayEndIndex} of{" "}
-                  {totalCount!.toLocaleString()}
+                  {totals!.toLocaleString()}
                 </>
               ) : (
                 "No items"
@@ -144,7 +143,7 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
               color="gray"
               size="sm"
               onClick={handlePrevPage}
-              disabled={!prev}
+              disabled={!prevPage}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -152,7 +151,7 @@ export const PaginationControls: FC<PaginationControlsProps> = ({
               color="gray"
               size="sm"
               onClick={handleNextPage}
-              disabled={!next}
+              disabled={!nextPage}
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

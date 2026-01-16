@@ -1,5 +1,6 @@
 import React, { useState, useRef, ReactNode, useMemo } from "react";
-import { ChevronRight, Check } from "lucide-react";
+import { ChevronRight, Check, Info } from "lucide-react";
+import { Tooltip } from "flowbite-react";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 
 /**
@@ -25,6 +26,7 @@ interface DropdownProps {
   onSelect: (id: string) => void;
   anyLabel?: string;
   renderItem?: (item: DropdownItem, isSelected: boolean) => ReactNode;
+  tooltip?: string;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -35,6 +37,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   onSelect,
   anyLabel = "Any",
   renderItem,
+  tooltip,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -63,11 +66,18 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 p-4">
-      <div className="flex items-center gap-2 mb-3">
-        <Icon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          {label}
-        </label>
+      <div className="flex items-center gap-2 mb-3 justify-between">
+        <div className="flex items-center gap-2">
+          <Icon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {label}
+          </label>
+        </div>
+        {tooltip && (
+          <Tooltip content={tooltip}>
+            <Info className="h-4 w-4 text-gray-400 cursor-help" />
+          </Tooltip>
+        )}
       </div>
       <div className="relative" ref={dropdownRef}>
         <button

@@ -18,7 +18,7 @@ interface TimeWindowSelectorProps {
  */
 const formatTimeString = (
   timeString: string,
-  formatDate: (date: Date | string, format: string) => string
+  formatDate: (date: Date | string, format: string) => string,
 ): string => {
   try {
     let time: Date;
@@ -74,7 +74,7 @@ export const TimeWindowSelector: React.FC<TimeWindowSelectorProps> = ({
     // Format the time window label using the formatDate function (timezone-aware)
     const formattedLabel = `${formatTimeString(
       option.start_time,
-      formatDate
+      formatDate,
     )} - ${formatTimeString(option.end_time, formatDate)}`;
 
     return {
@@ -92,6 +92,7 @@ export const TimeWindowSelector: React.FC<TimeWindowSelectorProps> = ({
       selected={selectedWindow}
       onSelect={(id) => onWindowChange?.(id)}
       anyLabel={anyLabel}
+      tooltip="This is the estimated start time window for the appointment"
     />
   );
 };

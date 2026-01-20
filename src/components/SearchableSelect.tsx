@@ -53,6 +53,8 @@ export interface SearchableSelectProps {
   /** Whether this field is in an error state (affects styling). */
   error?: boolean;
   wrap?: boolean;
+  /** Maximum height for the dropdown (e.g., '240px', '15rem'). When set, enables scrolling. */
+  maxHeight?: string;
 }
 
 interface SearchableSelectContextValue {
@@ -96,6 +98,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   helperText,
   error = false,
   wrap = true,
+  maxHeight,
 }) => {
   // State
   const [isOpen, setIsOpen] = useState(false);
@@ -353,6 +356,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
                 overflow-auto rounded-md border border-gray-200 bg-white shadow-lg
                 dark:border-gray-600 dark:bg-gray-700
               "
+              style={maxHeight ? { maxHeight } : undefined}
             >
               {children}
             </div>

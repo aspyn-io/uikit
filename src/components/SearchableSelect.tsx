@@ -398,16 +398,16 @@ const Search: FC<SearchProps> = ({
   const ctx = useContext(SearchableSelectContext);
   if (!ctx) return null;
 
-  const { searchTerm, setSearchTerm } = ctx;
+  const { searchTerm, setSearchTerm, isOpen } = ctx;
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Auto-focus the input when the dropdown opens
   useEffect(() => {
-    if (inputRef.current) {
+    if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
-  }, []);
+  }, [isOpen]);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

@@ -119,12 +119,12 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
     if (multiple) {
       // Ensure selectedValues is an array when switching to multiple mode
       setSelectedValues((prev) =>
-        prev ? (Array.isArray(prev) ? prev : [prev]) : []
+        prev ? (Array.isArray(prev) ? prev : [prev]) : [],
       );
     } else {
       // Ensure selectedValues is a single object when switching to single mode
       setSelectedValues((prev) =>
-        Array.isArray(prev) ? prev[0] || null : prev
+        Array.isArray(prev) ? prev[0] || null : prev,
       );
     }
   }, [multiple]);
@@ -152,8 +152,8 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
       const current: SearchableOption[] = Array.isArray(selectedValues)
         ? selectedValues
         : selectedValues
-        ? [selectedValues]
-        : [];
+          ? [selectedValues]
+          : [];
 
       const exists = current.some((v) => v.value === newValue.value);
       let updatedValues: SearchableOption[];
@@ -213,7 +213,7 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
       handleSelectionChange,
       multiple,
     }),
-    [isOpen, searchTerm, selectedValues, multiple, handleSelectionChange]
+    [isOpen, searchTerm, selectedValues, multiple, handleSelectionChange],
   );
 
   // Single-select display text
@@ -224,15 +224,15 @@ export const SearchableSelect: FC<SearchableSelectProps> & {
   };
 
   const ensureArray = (
-    value: SearchableOption | SearchableOption[] | null
+    value: SearchableOption | SearchableOption[] | null,
   ): SearchableOption[] =>
     Array.isArray(value) ? value : value ? [value] : [];
 
   const multiSelected: SearchableOption[] = multiple
     ? ensureArray(selectedValues)
     : ensureArray(selectedValues)[0]
-    ? [ensureArray(selectedValues)[0]]
-    : [];
+      ? [ensureArray(selectedValues)[0]]
+      : [];
 
   return (
     <SearchableSelectContext.Provider value={contextValue}>
@@ -399,7 +399,15 @@ const Search: FC<SearchProps> = ({
   if (!ctx) return null;
 
   const { searchTerm, setSearchTerm } = ctx;
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus the input when the dropdown opens
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -444,6 +452,7 @@ const Search: FC<SearchProps> = ({
 
         {/* Input */}
         <input
+          ref={inputRef}
           type="text"
           disabled={disabled}
           className={`
@@ -537,7 +546,7 @@ const Option: FC<OptionProps> = ({
             disabled={disabled}
             className="mr-2"
             onChange={() => handleClick()}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           />
         )}
         {children || label}

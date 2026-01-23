@@ -252,7 +252,7 @@ export const AppointmentCard = ({
         </div>
       </div>
       <div
-        className="transition-max-height duration-300 ease-in-out overflow-hidden"
+        className="transition-max-height duration-300 ease-in-out"
         style={{ maxHeight: `${maxHeight}px` }}
         ref={contentRef}
       >
@@ -290,12 +290,12 @@ export const AppointmentCard = ({
                         order.status === "SCHEDULED"
                           ? "info"
                           : order.status === "COMPLETED"
-                          ? "success"
-                          : order.status === "DEFERRED"
-                          ? "warning"
-                          : order.status === "CANCELLED"
-                          ? "failure"
-                          : "gray"
+                            ? "success"
+                            : order.status === "DEFERRED"
+                              ? "warning"
+                              : order.status === "CANCELLED"
+                                ? "failure"
+                                : "gray"
                       }
                       className="inline-block capitalize"
                     >

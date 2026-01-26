@@ -6,6 +6,11 @@ const meta = {
   component: MetadataEditor,
   tags: ["autodocs"],
   argTypes: {
+    importantFields: {
+      control: "object",
+      description:
+        "Optional ordered list of keys to pin to the top (in the given order)",
+    },
     isLoading: {
       control: "boolean",
       description: "Show loading skeleton",
@@ -150,5 +155,59 @@ export const NoCopyValueButtons: Story = {
     showCopyButton: true,
     showCopyValueButton: false,
     title: "Metadata",
+  },
+};
+
+export const WithImportantFields: Story = {
+  args: {
+    metadata: {
+      region: "US-West",
+      priority: "high",
+      source: "patch",
+      version: "2.1.0",
+      environment: "staging",
+      account_id: "acc_2f8d3c1a",
+      team: "Payments",
+      active_users: "1247",
+      auto_renew: "true",
+    },
+    importantFields: ["source", "environment", "account_id", "priority"],
+    showEditButton: true,
+    showCopyButton: true,
+    showCopyValueButton: true,
+    title: "Metadata",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Pinned keys render first in the exact order provided, in both view mode and the edit modal.",
+      },
+    },
+  },
+};
+
+export const WithImportantFieldsMissingKeys: Story = {
+  args: {
+    metadata: {
+      region: "US-West",
+      priority: "high",
+      source: "patch",
+      version: "2.1.0",
+      environment: "staging",
+    },
+    importantFields: ["source", "environment", "account_id", "team"],
+    showEditButton: true,
+    showCopyButton: true,
+    showCopyValueButton: true,
+    title: "Metadata",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Missing important keys are ignored (only present keys get pinned).",
+      },
+    },
   },
 };

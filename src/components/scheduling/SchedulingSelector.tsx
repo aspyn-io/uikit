@@ -48,7 +48,7 @@ interface SchedulingSelectorProps {
   onWeekChange: (
     weekStart: string,
     weekEnd: string,
-    skipAutoAdvance?: boolean
+    skipAutoAdvance?: boolean,
   ) => void;
 
   // Selection state - controlled
@@ -160,7 +160,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   // Use timezone formatting hook
   const { formatDate, getTimezoneDisplay } = useTimezoneFormat(
     timezone,
-    timezoneDisplay
+    timezoneDisplay,
   );
 
   // Generate week dates (Sunday to Saturday)
@@ -180,23 +180,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
       if (!weekData?.days) return null;
       return weekData.days.find((day) => day.date === dateString) || null;
     },
-    [weekData?.days]
-  );
-
-  // Check if date is in the past - timezone-aware utility function
-  const isDateInPast = useCallback(
-    (date: Date): boolean => {
-      // Get current date in the specified timezone
-      const nowInTimezone = toZonedTime(new Date(), timezone);
-      nowInTimezone.setHours(0, 0, 0, 0);
-
-      // Convert the check date to the same timezone
-      const checkDateInTimezone = toZonedTime(date, timezone);
-      checkDateInTimezone.setHours(0, 0, 0, 0);
-
-      return checkDateInTimezone < nowInTimezone;
-    },
-    [timezone]
+    [weekData?.days],
   );
 
   // Format week range - computed on demand
@@ -239,7 +223,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     onWeekChange(
       format(newWeekStart, "yyyy-MM-dd"),
       format(newWeekEnd, "yyyy-MM-dd"),
-      true // Skip auto-advance for manual navigation
+      true, // Skip auto-advance for manual navigation
     );
   };
 
@@ -253,7 +237,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     onWeekChange(
       format(newWeekStart, "yyyy-MM-dd"),
       format(newWeekEnd, "yyyy-MM-dd"),
-      true // Skip auto-advance for manual navigation
+      true, // Skip auto-advance for manual navigation
     );
   };
 
@@ -270,10 +254,10 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
       onWeekChange(
         format(sunday, "yyyy-MM-dd"),
         format(newWeekEnd, "yyyy-MM-dd"),
-        true // Skip auto-advance for manual navigation
+        true, // Skip auto-advance for manual navigation
       );
     },
-    [onWeekChange, onSlotSelect]
+    [onWeekChange, onSlotSelect],
   );
 
   // Handle slot selection - memoize to prevent WeekGrid re-renders
@@ -293,7 +277,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
         openings,
       });
     },
-    [onSlotSelect, reservedSlot, getAvailabilityForDate]
+    [onSlotSelect, reservedSlot, getAvailabilityForDate],
   );
 
   return (
@@ -318,7 +302,6 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
           weekDates={weekDates}
           loading={loading}
           getAvailabilityForDate={getAvailabilityForDate}
-          isDateInPast={isDateInPast}
           selectedSlot={selectedSlot}
           reservedSlot={reservedSlot || null}
           onSlotClick={handleSlotClick}

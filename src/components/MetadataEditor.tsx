@@ -11,6 +11,7 @@ import { Copy, Check, Edit, Trash2 } from "lucide-react";
 
 export interface MetadataEditorProps {
   metadata: Record<string, string> | null | undefined;
+  importantFields?: readonly string[];
   isLoading?: boolean;
   onMetadataChange?: (metadata: Record<string, string>) => void;
   showEditButton?: boolean;
@@ -27,6 +28,7 @@ interface MetadataItem {
 
 const MetadataEditor: FC<MetadataEditorProps> = ({
   metadata,
+  importantFields = [],
   isLoading = false,
   onMetadataChange,
   showEditButton = true,
@@ -40,16 +42,36 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [copiedMetadataJson, setCopiedMetadataJson] = useState(false);
   const [copiedMetadataValues, setCopiedMetadataValues] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
+
+  const orderedEntries = (input: Record<string, string>) => {
+    if (!importantFields.length) {
+      return Object.entries(input);
+    }
+
+    const remaining = new Map(Object.entries(input));
+    const entries: Array<[string, string]> = [];
+
+    for (const key of importantFields) {
+      const value = remaining.get(key);
+      if (value !== undefined) {
+        entries.push([key, value]);
+        remaining.delete(key);
+      }
+    }
+
+    entries.push(...Array.from(remaining.entries()));
+    return entries;
+  };
 
   const handleOpenModal = () => {
     if (metadata) {
       setEditedMetadata(
-        Object.entries(metadata).map(([key, value]) => ({
+        orderedEntries(metadata).map(([key, value]) => ({
           key,
           value,
-        }))
+        })),
       );
     } else {
       setEditedMetadata([{ key: "", value: "" }]);
@@ -274,7 +296,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
         </div>
 
         <div className="space-y-4">
-          {Object.entries(metadata).map(([key, value]) => (
+          {orderedEntries(metadata).map(([key, value]) => (
             <div key={key} className="space-y-2">
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 capitalize">
                 {key.replace(/_/g, " ")}

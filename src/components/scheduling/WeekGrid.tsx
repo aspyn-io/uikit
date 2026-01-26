@@ -18,7 +18,6 @@ interface WeekGridProps {
   weekDates: Date[];
   loading: boolean;
   getAvailabilityForDate: (dateString: string) => DayAvailability | null;
-  isDateInPast: (date: Date) => boolean;
   selectedSlot: SelectedSlot | null;
   reservedSlot: SelectedSlot | null;
   onSlotClick: (date: string, timePeriod: TimePeriod) => void;
@@ -30,7 +29,6 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
   weekDates,
   loading,
   getAvailabilityForDate,
-  isDateInPast,
   selectedSlot,
   reservedSlot,
   onSlotClick,
@@ -55,7 +53,7 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
   // Simple helper functions - no need to memoize
   const isTimeSlotAvailable = (
     dateString: string,
-    timePeriod: TimePeriod
+    timePeriod: TimePeriod,
   ): boolean => {
     const dayData = getAvailabilityForDate(dateString);
     if (!dayData || !dayData.is_available) return false;
@@ -82,7 +80,7 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
   const renderTimePeriodButton = (
     dateString: string,
     timePeriod: TimePeriod,
-    label: string
+    label: string,
   ) => {
     const isAvailable = isTimeSlotAvailable(dateString, timePeriod);
     const isSelected = isSlotSelected(dateString, timePeriod);
@@ -146,7 +144,7 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
           {weekDates.map((date) => {
             const dateString = format(date, "yyyy-MM-dd");
             const dayData = getAvailabilityForDate(dateString);
-            const isPast = isDateInPast(date);
+
             const isToday =
               format(date, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
 
@@ -158,8 +156,6 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
                     className={`text-lg font-bold py-1 rounded-lg ${
                       isToday
                         ? "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400"
-                        : isPast
-                        ? "text-gray-400 dark:text-gray-600"
                         : "text-gray-900 dark:text-gray-100"
                     }`}
                   >
@@ -169,12 +165,12 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
 
                 {/* Time Period Buttons */}
                 <div className="space-y-2">
-                  {isPast || !dayData?.is_available ? (
+                  {!dayData?.is_available ? (
                     <div className="flex flex-col items-center justify-center py-6 text-sm text-gray-400 dark:text-gray-600">
                       <div className="rounded-full bg-gray-200 dark:bg-gray-700 p-2 mb-2">
                         <Minus className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                       </div>
-                      <span>{isPast ? labels.past : labels.unavailable}</span>
+                      <span>{labels.unavailable}</span>
                     </div>
                   ) : (
                     <>
@@ -182,8 +178,8 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
                         renderTimePeriodButton(
                           dateString,
                           timePeriod.id,
-                          timePeriod.label
-                        )
+                          timePeriod.label,
+                        ),
                       )}
                     </>
                   )}

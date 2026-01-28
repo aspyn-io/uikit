@@ -41,6 +41,7 @@ export interface DayAvailability {
   date: string; // YYYY-MM-DD format
   slots: Record<string, TimeSlot[] | undefined>;
   is_available: boolean;
+  is_synthetic?: boolean; // True if this day's availability is synthetically generated (no real availability data)
 }
 
 /**

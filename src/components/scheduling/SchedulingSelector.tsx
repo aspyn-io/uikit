@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useMemo } from "react";
-import { format, addWeeks, startOfWeek, endOfWeek, parseISO } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { addDays, addWeeks, format, parseISO, startOfWeek } from "date-fns";
 import { CalendarHeader } from "./CalendarHeader";
 import { WeekGrid } from "./WeekGrid";
 import { TimeWindowSelector } from "./Preferences/TimeWindowSelector";
@@ -149,13 +148,33 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   customLabels = {},
   selectedTimePeriod,
 }) => {
+  const parseDateOnly = useCallback((dateString: string): Date => {
+    // Treat YYYY-MM-DD as a calendar date (no timezone shift).
+    // Using local noon avoids DST edge cases around midnight.
+    return parseISO(`${dateString}T12:00:00`);
+  }, []);
+
   // Current week being displayed
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
     if (weekData?.week_start) {
-      return parseISO(weekData.week_start);
+      return parseDateOnly(weekData.week_start);
     }
-    return startOfWeek(new Date(), { weekStartsOn: 0 });
+    const sunday = startOfWeek(new Date(), { weekStartsOn: 0 });
+    sunday.setHours(12, 0, 0, 0);
+    return sunday;
   });
+
+  // Keep internal week state aligned with externally-controlled weekData.
+  // weekData arrives async after fetch; without this the grid can drift.
+  useEffect(() => {
+    if (!weekData?.week_start) return;
+    const next = parseDateOnly(weekData.week_start);
+    const nextISO = format(next, "yyyy-MM-dd");
+    const currentISO = format(currentWeekStart, "yyyy-MM-dd");
+    if (nextISO !== currentISO) {
+      setCurrentWeekStart(next);
+    }
+  }, [weekData?.week_start, currentWeekStart, parseDateOnly]);
 
   // Use timezone formatting hook
   const { formatDate, getTimezoneDisplay } = useTimezoneFormat(
@@ -167,9 +186,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   const weekDates = useMemo(() => {
     const dates = [];
     for (let i = 0; i < 7; i++) {
-      const date = new Date(currentWeekStart);
-      date.setDate(currentWeekStart.getDate() + i);
-      dates.push(date);
+      dates.push(addDays(currentWeekStart, i));
     }
     return dates;
   }, [currentWeekStart]);
@@ -187,10 +204,9 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   // Use weekData dates directly and format without timezone shift
   // since the API returns date-only strings (YYYY-MM-DD)
   const weekRange = (() => {
-    if (weekData?.week_start && weekData?.week_end) {
-      const startDate = parseISO(weekData.week_start);
-      const endDate = parseISO(weekData.week_end);
-      // Use plain format() to avoid timezone shifting for date-only values
+    if (weekData?.week_start) {
+      const startDate = parseDateOnly(weekData.week_start);
+      const endDate = addDays(startDate, 6);
       const startFormatted = format(startDate, "MMM d, yyyy");
       const endFormatted = format(endDate, "MMM d, yyyy");
       return `${startFormatted} - ${endFormatted}`;
@@ -208,16 +224,21 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const prevWeekEnd = (() => {
+    const prevStart = addWeeks(currentWeekStart, -1);
+    const prevEnd = addDays(prevStart, 6);
+    prevEnd.setHours(0, 0, 0, 0);
+    return prevEnd;
+  })();
+
   const canNavigatePrev =
-    !reservedSlot &&
-    (!disablePastNavigation ||
-      endOfWeek(addWeeks(currentWeekStart, -1), { weekStartsOn: 0 }) >= today);
+    !reservedSlot && (!disablePastNavigation || prevWeekEnd >= today);
 
   const handlePrevWeek = () => {
     if (!canNavigatePrev) return;
 
     const newWeekStart = addWeeks(currentWeekStart, -1);
-    const newWeekEnd = endOfWeek(newWeekStart, { weekStartsOn: 0 });
+    const newWeekEnd = addDays(newWeekStart, 6);
     setCurrentWeekStart(newWeekStart);
     onSlotSelect(null);
     onWeekChange(
@@ -231,7 +252,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
     if (reservedSlot) return;
 
     const newWeekStart = addWeeks(currentWeekStart, 1);
-    const newWeekEnd = endOfWeek(newWeekStart, { weekStartsOn: 0 });
+    const newWeekEnd = addDays(newWeekStart, 6);
     setCurrentWeekStart(newWeekStart);
     onSlotSelect(null);
     onWeekChange(
@@ -244,11 +265,9 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
   // Handle date jump - only memoize callbacks that are passed to child components
   const handleDateJump = useCallback(
     (selectedDate: Date) => {
-      const dayOfWeek = selectedDate.getDay();
-      const sunday = new Date(selectedDate);
-      sunday.setDate(selectedDate.getDate() - dayOfWeek);
-
-      const newWeekEnd = endOfWeek(sunday, { weekStartsOn: 0 });
+      const sunday = startOfWeek(selectedDate, { weekStartsOn: 0 });
+      sunday.setHours(12, 0, 0, 0);
+      const newWeekEnd = addDays(sunday, 6);
       setCurrentWeekStart(sunday);
       onSlotSelect(null);
       onWeekChange(
@@ -257,7 +276,7 @@ export const SchedulingSelector: React.FC<SchedulingSelectorProps> = ({
         true, // Skip auto-advance for manual navigation
       );
     },
-    [onWeekChange, onSlotSelect],
+    [addDays, onSlotSelect, onWeekChange, startOfWeek],
   );
 
   // Handle slot selection - memoize to prevent WeekGrid re-renders

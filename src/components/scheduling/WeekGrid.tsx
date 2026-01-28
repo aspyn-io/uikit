@@ -86,6 +86,8 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
     const isSelected = isSlotSelected(dateString, timePeriod);
     const isReserved = isSlotReserved(dateString, timePeriod);
     const hasActiveReservation = !!reservedSlot;
+    const dayData = getAvailabilityForDate(dateString);
+    const isSynthetic = dayData?.is_synthetic || false;
 
     return (
       <TimeSlotButton
@@ -97,6 +99,7 @@ export const WeekGrid: React.FC<WeekGridProps> = ({
         isSelected={isSelected}
         isReserved={isReserved}
         hasActiveReservation={hasActiveReservation}
+        isSynthetic={isSynthetic}
         onClick={onSlotClick}
       />
     );

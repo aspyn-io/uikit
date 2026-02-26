@@ -205,9 +205,10 @@ export const AppointmentCard = ({
               )}
             </Button>
           )}
-          {(onRescheduleAppointment ||
-            onCancelAppointment ||
-            onScheduleReturnService) && (
+          {editable &&
+            (onRescheduleAppointment ||
+              onCancelAppointment ||
+              onScheduleReturnService) && (
             <div
               className="flex justify-end"
               onClick={(e) => e.stopPropagation()}
@@ -303,34 +304,35 @@ export const AppointmentCard = ({
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {(onRescheduleWorkOrder || onCancelWorkOrder) && (
-                      <div
-                        className="flex justify-end"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Dropdown
-                          inline
-                          arrowIcon={false}
-                          label={<MoreVertical size={16} />}
-                          className="overflow-hidden"
+                    {editable &&
+                      (onRescheduleWorkOrder || onCancelWorkOrder) && (
+                        <div
+                          className="flex justify-end"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          {onRescheduleWorkOrder && (
-                            <DropdownItem
-                              onClick={() => onRescheduleWorkOrder(order.id)}
-                            >
-                              Reschedule Work Order
-                            </DropdownItem>
-                          )}
-                          {onCancelWorkOrder && (
-                            <DropdownItem
-                              onClick={() => onCancelWorkOrder(order.id)}
-                            >
-                              Cancel Work Order
-                            </DropdownItem>
-                          )}
-                        </Dropdown>
-                      </div>
-                    )}
+                          <Dropdown
+                            inline
+                            arrowIcon={false}
+                            label={<MoreVertical size={16} />}
+                            className="overflow-hidden"
+                          >
+                            {onRescheduleWorkOrder && (
+                              <DropdownItem
+                                onClick={() => onRescheduleWorkOrder(order.id)}
+                              >
+                                Reschedule Work Order
+                              </DropdownItem>
+                            )}
+                            {onCancelWorkOrder && (
+                              <DropdownItem
+                                onClick={() => onCancelWorkOrder(order.id)}
+                              >
+                                Cancel Work Order
+                              </DropdownItem>
+                            )}
+                          </Dropdown>
+                        </div>
+                      )}
                   </TableCell>
                 </TableRow>
               ))}

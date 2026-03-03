@@ -64,5 +64,34 @@ export {
   type MetadataEditorProps,
 } from "./components/MetadataEditor";
 
+// Chat
+export {
+  ChatView,
+  ChatBubble,
+  ChatDaySeparator,
+  ChatComposeBar,
+  ChatCalendar,
+  groupItemsByDay,
+  formatTime as chatFormatTime,
+  formatDayLabel as chatFormatDayLabel,
+  formatScheduledTime as chatFormatScheduledTime,
+  formatContact as chatFormatContact,
+  formatPhone as chatFormatPhone,
+  isPhoneNumber as chatIsPhoneNumber,
+  truncate as chatTruncate,
+} from "./components/chat";
+export type {
+  ChatItem,
+  ChatChannel,
+  ChatDirection,
+  ChatMessageStatus,
+  ChatSender,
+  ChatDateMarker,
+  ChatPermissions,
+  ChatComposePayload,
+  ChatCallbacks,
+  ChatViewProps,
+} from "./components/chat";
+
 // Theme
 export { grayscaleTheme, ThemeProvider } from "./grayscale-theme";

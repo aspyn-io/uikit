@@ -228,16 +228,18 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             </div>
           )}
 
-          {/* Message body */}
-          <div
-            className={`text-sm leading-relaxed wrap-break-word ${
-              isQueued ? "text-gray-800 dark:text-gray-200" : ""
-            }`}
-          >
-            {isEmail && !item.body
-              ? item.templateName || "Email"
-              : truncate(item.body || "No content", 300)}
-          </div>
+          {/* Message body (skip for emails with subject already displayed) */}
+          {!(isEmail && item.subject) && (
+            <div
+              className={`text-sm leading-relaxed wrap-break-word ${
+                isQueued ? "text-gray-800 dark:text-gray-200" : ""
+              }`}
+            >
+              {isEmail && !item.body
+                ? item.templateName || "Email"
+                : truncate(item.body || "No content", 300)}
+            </div>
+          )}
 
           {/* Bottom row: time, status, attachments */}
           <div

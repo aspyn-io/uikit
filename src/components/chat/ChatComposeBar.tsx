@@ -68,7 +68,12 @@ export const ChatComposeBar: React.FC<ChatComposeBarProps> = ({
       to: currentContact,
       body: body.trim(),
       ...(channel === "email" && subject ? { subject } : {}),
-      ...(showSchedule && scheduledAt ? { schedule: true, scheduledAt } : {}),
+      ...(showSchedule && scheduledAt
+        ? {
+            schedule: true,
+            scheduledAt: new Date(scheduledAt).toISOString(),
+          }
+        : {}),
     };
 
     await onSend(payload);
@@ -118,6 +123,7 @@ export const ChatComposeBar: React.FC<ChatComposeBarProps> = ({
             type="datetime-local"
             value={scheduledAt}
             onChange={(e) => setScheduledAt(e.target.value)}
+            min={new Date().toISOString().slice(0, 16)}
             className="text-xs border border-gray-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           />
           <button

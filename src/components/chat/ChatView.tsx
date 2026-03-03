@@ -10,6 +10,10 @@ import {
   Calendar as CalendarIcon,
   ArrowDown,
   MessageSquareOff,
+  Maximize2,
+  Minimize2,
+  Clock,
+  History,
 } from "lucide-react";
 import type {
   ChatViewProps,
@@ -53,6 +57,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showScrollDown, setShowScrollDown] = useState(false);
   const [sending, setSending] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const prevItemCountRef = useRef(items.length);
   const isFirstRender = useRef(true);
 
@@ -60,6 +65,12 @@ export const ChatView: React.FC<ChatViewProps> = ({
   const dayGroups = useMemo(
     () => groupItemsByDay(items, timezone),
     [items, timezone],
+  );
+
+  // Count queued/scheduled items
+  const queuedCount = useMemo(
+    () => items.filter((item) => item.isQueued).length,
+    [items],
   );
 
   // Scroll to bottom on initial load or when new items are added at the bottom
@@ -233,9 +244,13 @@ export const ChatView: React.FC<ChatViewProps> = ({
   const canSendAnything =
     permissions?.canSendMessage || permissions?.canSendEmail;
 
+  const fullscreenClasses = isFullscreen
+    ? "fixed inset-0 z-50 rounded-none"
+    : "";
+
   return (
     <div
-      className={`flex flex-col bg-white dark:bg-gray-800 overflow-hidden ${className}`}
+      className={`flex flex-col bg-white dark:bg-gray-800 overflow-hidden ${fullscreenClasses} ${className}`}
     >
       {/* Header area */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
@@ -274,13 +289,38 @@ export const ChatView: React.FC<ChatViewProps> = ({
               )}
             </div>
           )}
+
+          {/* Fullscreen toggle */}
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+          >
+            {isFullscreen ? (
+              <Minimize2 className="w-5 h-5" />
+            ) : (
+              <Maximize2 className="w-5 h-5" />
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Scheduled items indicator */}
+      {queuedCount > 0 && (
+        <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800/40 text-amber-700 dark:text-amber-400">
+          <Clock className="w-4 h-4 shrink-0" />
+          <span className="text-xs font-medium">
+            {queuedCount} scheduled communication{queuedCount !== 1 ? "s" : ""}
+          </span>
+        </div>
+      )}
 
       {/* Messages area */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-4 min-h-75 max-h-150 relative"
+        className={`flex-1 overflow-y-auto px-4 py-4 relative ${
+          isFullscreen ? "" : "min-h-75 max-h-[calc(100vh-20rem)]"
+        }`}
       >
         {/* Load more sentinel (at top) */}
         {hasMore && <div ref={loadMoreSentinelRef} className="h-1 w-full" />}
@@ -289,6 +329,18 @@ export const ChatView: React.FC<ChatViewProps> = ({
         {loadingMore && (
           <div className="flex justify-center py-3">
             <Spinner size="sm" />
+          </div>
+        )}
+
+        {/* Beginning of conversation marker */}
+        {!hasMore && !loading && items.length > 0 && (
+          <div className="flex items-center gap-4 mb-4">
+            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600" />
+            <span className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap px-3 py-1.5 rounded-full bg-gray-50 dark:bg-gray-700/50">
+              <History className="w-3.5 h-3.5" />
+              Beginning of conversation
+            </span>
+            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600" />
           </div>
         )}
 

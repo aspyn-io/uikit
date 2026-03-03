@@ -46,9 +46,12 @@ export const ChatCalendar: React.FC<ChatCalendarProps> = ({
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const markerMap = useMemo(() => {
-    const map = new Map<string, number>();
+    const map = new Map<string, { count: number; queuedCount: number }>();
     for (const marker of dateMarkers) {
-      map.set(marker.date, marker.count);
+      map.set(marker.date, {
+        count: marker.count,
+        queuedCount: marker.queuedCount ?? 0,
+      });
     }
     return map;
   }, [dateMarkers]);
@@ -120,10 +123,40 @@ export const ChatCalendar: React.FC<ChatCalendarProps> = ({
       <div className="grid grid-cols-7 gap-0">
         {calendarDays.map((day, index) => {
           const dayStr = format(day, "yyyy-MM-dd");
-          const count = markerMap.get(dayStr) || 0;
+          const marker = markerMap.get(dayStr);
+          const sentCount = marker?.count ?? 0;
+          const qCount = marker?.queuedCount ?? 0;
+          const hasSent = sentCount > 0;
+          const hasQueued = qCount > 0;
+          const hasContent = hasSent || hasQueued;
           const isCurrentMonth = isSameMonth(day, currentMonth);
           const isSelected = selectedDate && isSameDay(day, selectedDate);
           const isDayToday = isToday(day);
+
+          // Determine background and text classes
+          let bgClass = "";
+          let textClass = "";
+
+          if (!isCurrentMonth) {
+            textClass = "text-gray-300 dark:text-gray-600";
+          } else if (isSelected) {
+            bgClass = "bg-blue-500";
+            textClass = "text-white";
+          } else if (hasSent) {
+            bgClass = "bg-blue-50 dark:bg-blue-900/20";
+            textClass = isDayToday
+              ? "font-bold text-blue-700 dark:text-blue-300"
+              : "text-blue-700 dark:text-blue-300";
+          } else if (hasQueued) {
+            bgClass = "bg-amber-50 dark:bg-amber-900/20";
+            textClass = isDayToday
+              ? "font-bold text-amber-700 dark:text-amber-400"
+              : "text-amber-700 dark:text-amber-400";
+          } else if (isDayToday) {
+            textClass = "font-bold text-blue-600 dark:text-blue-400";
+          } else {
+            textClass = "text-gray-700 dark:text-gray-300";
+          }
 
           return (
             <button
@@ -133,21 +166,34 @@ export const ChatCalendar: React.FC<ChatCalendarProps> = ({
               className={`
                 relative w-full aspect-square flex items-center justify-center text-xs rounded-md
                 transition-colors duration-100
-                ${!isCurrentMonth ? "text-gray-300 dark:text-gray-600 cursor-default" : "cursor-pointer"}
+                ${!isCurrentMonth ? "cursor-default" : "cursor-pointer"}
                 ${isCurrentMonth && !isSelected ? "hover:bg-gray-100 dark:hover:bg-gray-700" : ""}
-                ${isSelected ? "bg-blue-500 text-white" : ""}
-                ${isDayToday && !isSelected ? "font-bold text-blue-600 dark:text-blue-400" : ""}
-                ${isCurrentMonth && !isSelected && !isDayToday ? "text-gray-700 dark:text-gray-300" : ""}
+                ${bgClass}
+                ${textClass}
+                ${isDayToday && !isSelected ? "ring-1 ring-blue-400 dark:ring-blue-500" : ""}
               `}
             >
               {format(day, "d")}
-              {/* Dot indicator for dates with communications */}
-              {count > 0 && isCurrentMonth && (
-                <span
-                  className={`absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${
-                    isSelected ? "bg-white" : "bg-blue-500 dark:bg-blue-400"
-                  }`}
-                />
+              {/* Dot indicators for dates with communications */}
+              {hasContent && isCurrentMonth && (
+                <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex gap-px">
+                  {hasSent && (
+                    <span
+                      className={`w-1 h-1 rounded-full ${
+                        isSelected ? "bg-white" : "bg-blue-500 dark:bg-blue-400"
+                      }`}
+                    />
+                  )}
+                  {hasQueued && (
+                    <span
+                      className={`w-1 h-1 rounded-full ${
+                        isSelected
+                          ? "bg-amber-200"
+                          : "bg-amber-500 dark:bg-amber-400"
+                      }`}
+                    />
+                  )}
+                </span>
               )}
             </button>
           );

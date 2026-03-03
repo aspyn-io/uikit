@@ -74,73 +74,72 @@ export const ChatView: React.FC<ChatViewProps> = ({
     [items],
   );
 
-  // Scroll to bottom on initial load or when new items are added at the bottom
+  // Scroll ONLY the inner container so the last real (non-queued) message
+  // is fully visible at the bottom. Uses layout positions (offsetTop chain)
+  // rather than getBoundingClientRect(), so it's independent of page scroll position.
+  const scrollToLastRealMessage = useCallback(
+    (behavior: ScrollBehavior = "smooth") => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+      const realItems = container.querySelectorAll(
+        "[data-chat-item-id]:not([data-chat-queued])",
+      );
+      if (realItems.length > 0) {
+        const lastReal = realItems[realItems.length - 1] as HTMLElement;
+        // Walk the offsetParent chain to get the element's top offset
+        // relative to the scroll container. This is independent of the
+        // viewport position, so it works even while the page is scrolling.
+        let offsetTop = 0;
+        let el: HTMLElement | null = lastReal;
+        while (el && el !== container) {
+          offsetTop += el.offsetTop;
+          el = el.offsetParent as HTMLElement | null;
+        }
+        const target = Math.max(
+          0,
+          offsetTop + lastReal.offsetHeight - container.clientHeight,
+        );
+        if (behavior === "instant") {
+          container.scrollTop = target;
+        } else {
+          container.scrollTo({ top: target, behavior });
+        }
+      } else {
+        container.scrollTo({ top: container.scrollHeight, behavior });
+      }
+    },
+    [],
+  );
+
+  // Scroll to last real message on initial load or when new items are added at the bottom
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     if (isFirstRender.current && items.length > 0) {
-      // Initial render: scroll to bottom
-      container.scrollTop = container.scrollHeight;
+      // Initial render: scroll to last real message (not queued/scheduled)
+      requestAnimationFrame(() => {
+        scrollToLastRealMessage("instant");
+      });
       isFirstRender.current = false;
     } else if (items.length > prevItemCountRef.current) {
       // New items added - check if they're at the bottom (newer)
       const lastPrevItem = prevItemCountRef.current > 0;
       if (lastPrevItem) {
-        // If user is near bottom, auto-scroll
+        // If user is near bottom, auto-scroll to last real message
         const isNearBottom =
           container.scrollHeight -
             container.scrollTop -
             container.clientHeight <
           100;
         if (isNearBottom) {
-          container.scrollTop = container.scrollHeight;
+          scrollToLastRealMessage("instant");
         }
       }
     }
 
     prevItemCountRef.current = items.length;
-  }, [items]);
-
-  // Observe the load-more sentinel (top of scroll area)
-  useEffect(() => {
-    if (!hasMore || loadingMore) return;
-
-    const sentinel = loadMoreSentinelRef.current;
-    const container = scrollContainerRef.current;
-    if (!sentinel || !container) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loadingMore) {
-          handleLoadMore();
-        }
-      },
-      {
-        root: container,
-        threshold: 0.1,
-      },
-    );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [hasMore, loadingMore]);
-
-  // Track scroll position for "scroll to bottom" button
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const isNearBottom =
-        container.scrollHeight - container.scrollTop - container.clientHeight <
-        200;
-      setShowScrollDown(!isNearBottom);
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [items, scrollToLastRealMessage]);
 
   const handleLoadMore = useCallback(async () => {
     if (loadingMore || !hasMore) return;
@@ -164,11 +163,48 @@ export const ChatView: React.FC<ChatViewProps> = ({
     }
   }, [loadingMore, hasMore, callbacks]);
 
+  // Observe the load-more sentinel (top of scroll area)
+  useEffect(() => {
+    if (!hasMore || loadingMore) return;
+
+    const sentinel = loadMoreSentinelRef.current;
+    const container = scrollContainerRef.current;
+    if (!sentinel || !container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore) {
+          handleLoadMore();
+        }
+      },
+      {
+        root: container,
+        threshold: 0.1,
+      },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, handleLoadMore]);
+
+  // Track scroll position for "scroll to bottom" button
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const isNearBottom =
+        container.scrollHeight - container.scrollTop - container.clientHeight <
+        200;
+      setShowScrollDown(!isNearBottom);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleScrollToBottom = () => {
-    scrollContainerRef.current?.scrollTo({
-      top: scrollContainerRef.current.scrollHeight,
-      behavior: "smooth",
-    });
+    scrollToLastRealMessage("smooth");
   };
 
   const handleScrollToQueued = useCallback(() => {
@@ -204,12 +240,9 @@ export const ChatView: React.FC<ChatViewProps> = ({
       setSending(true);
       try {
         await callbacks.onSend(payload);
-        // Scroll to bottom after sending
+        // Scroll to last real message after sending
         setTimeout(() => {
-          scrollContainerRef.current?.scrollTo({
-            top: scrollContainerRef.current.scrollHeight,
-            behavior: "smooth",
-          });
+          scrollToLastRealMessage("smooth");
         }, 100);
       } finally {
         setSending(false);
@@ -263,7 +296,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
           }
         }, 50);
       } else {
-        // Client-side scroll: find the day separator matching this date
+        // Client-side scroll: find the day separator matching this date, or nearest
         const container = scrollContainerRef.current;
         if (container) {
           const dayKey = date.toISOString().slice(0, 10);
@@ -272,6 +305,23 @@ export const ChatView: React.FC<ChatViewProps> = ({
           );
           if (separator) {
             separator.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else {
+            // Find nearest day group (prefer next day >= selected, or last before)
+            const allDayEls = Array.from(
+              container.querySelectorAll("[data-day-date]"),
+            ).map((el) => ({
+              el,
+              date: el.getAttribute("data-day-date")!,
+            }));
+            const nearest =
+              allDayEls.find((d) => d.date >= dayKey) ||
+              allDayEls[allDayEls.length - 1];
+            if (nearest) {
+              nearest.el.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }
           }
         }
       }
@@ -446,6 +496,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 {dayItems.map((item) => (
                   <div
                     key={`${item.id}-${item.isQueued ? "q" : "s"}`}
+                    data-chat-item-id={item.id}
                     data-chat-queued={item.isQueued || undefined}
                   >
                     <ChatBubble

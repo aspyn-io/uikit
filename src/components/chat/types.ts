@@ -76,8 +76,10 @@ export interface ChatItem {
 export interface ChatDateMarker {
   /** ISO date string (YYYY-MM-DD) */
   date: string;
-  /** Total number of communications on that date */
+  /** Number of sent/delivered communications on that date */
   count: number;
+  /** Number of queued/scheduled communications on that date */
+  queuedCount?: number;
 }
 
 /** Permissions/mode configuration */

@@ -7,7 +7,7 @@ const noopAsync = async (..._args: unknown[]) => {};
 const noopLoadMore = async () => [] as ChatItem[];
 const noopSend = async () => {};
 const noopItem = async (_item: ChatItem) => {};
-const noopDate = async (_date: Date) => [] as ChatItem[];
+const noopNavigateToDate = async (_date: Date) => {};
 
 // --- Mock data generators ---
 
@@ -254,7 +254,7 @@ export const Default: Story = {
       onSendQueuedNow: noopItem,
       onResend: noopItem,
       onFetchDates: async () => dateMarkers,
-      onNavigateToDate: noopDate,
+      onNavigateToDate: noopNavigateToDate,
     },
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -278,7 +278,7 @@ export const ReadOnly: Story = {
       onLoadMore: noopLoadMore,
       onItemClick: () => {},
       onFetchDates: async () => dateMarkers,
-      onNavigateToDate: noopDate,
+      onNavigateToDate: noopNavigateToDate,
     },
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -461,6 +461,23 @@ export const MultipleContacts: Story = {
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
         Multiple Contact Methods
+      </h3>
+    ),
+  },
+};
+
+export const NavigatingToDate: Story = {
+  args: {
+    items: [],
+    hasMore: false,
+    loading: false,
+    navigatingToDate: true,
+    callbacks: {
+      onLoadMore: noopLoadMore,
+    },
+    headerContent: (
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        Navigating to Date...
       </h3>
     ),
   },

@@ -43,7 +43,9 @@ export const ChatCalendar: React.FC<ChatCalendarProps> = ({
   onMonthChange,
   loading = false,
 }) => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(
+    selectedDate ? startOfMonth(selectedDate) : new Date(),
+  );
 
   const markerMap = useMemo(() => {
     const map = new Map<string, { count: number; queuedCount: number }>();
@@ -120,7 +122,7 @@ export const ChatCalendar: React.FC<ChatCalendarProps> = ({
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-0">
+      <div className="grid grid-cols-7 gap-0.5">
         {calendarDays.map((day, index) => {
           const dayStr = format(day, "yyyy-MM-dd");
           const marker = markerMap.get(dayStr);

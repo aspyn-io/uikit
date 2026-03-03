@@ -19,6 +19,7 @@ export type {
 
 export {
   groupItemsByDay,
+  getDayKey,
   formatTime,
   formatDayLabel,
   formatScheduledTime,

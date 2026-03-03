@@ -15,6 +15,7 @@ import {
   Clock,
   History,
 } from "lucide-react";
+import { format, parseISO } from "date-fns";
 import type {
   ChatViewProps,
   ChatItem,
@@ -25,7 +26,7 @@ import { ChatBubble } from "./ChatBubble";
 import { ChatDaySeparator } from "./ChatDaySeparator";
 import { ChatComposeBar } from "./ChatComposeBar";
 import { ChatCalendar } from "./ChatCalendar";
-import { groupItemsByDay } from "./utils";
+import { groupItemsByDay, getDayKey } from "./utils";
 
 /**
  * ChatView - A chat-style view for displaying communications.
@@ -57,11 +58,49 @@ export const ChatView: React.FC<ChatViewProps> = ({
   const [calendarLoading, setCalendarLoading] = useState(false);
   const [dateMarkers, setDateMarkers] = useState<ChatDateMarker[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  // The month currently visible in the calendar popup (null when closed).
+  const [calendarMonth, setCalendarMonth] = useState<Date | null>(null);
   const [showScrollDown, setShowScrollDown] = useState(false);
   const [sending, setSending] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const prevItemCountRef = useRef(items.length);
   const isFirstRender = useRef(true);
+  // Keep a stable ref to the latest callbacks so the marker-fetch effect
+  // never uses a stale closure.
+  const callbacksRef = useRef(callbacks);
+  callbacksRef.current = callbacks;
+
+  // ── Reactive calendar-marker fetching ──────────────────────────────
+  // Whenever the calendar is open *and* the visible month changes, fetch
+  // date markers through the parent-supplied callback.  Uses a single
+  // useEffect so there is exactly one code-path for fetching, with
+  // automatic cancellation when the month changes again before the
+  // previous fetch resolves.
+  useEffect(() => {
+    if (!showCalendar || !calendarMonth) return;
+
+    const onFetchDates = callbacksRef.current.onFetchDates;
+    if (!onFetchDates) return;
+
+    let cancelled = false;
+    setCalendarLoading(true);
+
+    onFetchDates(calendarMonth)
+      .then((markers) => {
+        if (!cancelled) setDateMarkers(markers);
+      })
+      .catch(() => {
+        // Errors are already handled inside onFetchDates (fallback).
+        // Swallow here so React doesn't see an unhandled rejection.
+      })
+      .finally(() => {
+        if (!cancelled) setCalendarLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [showCalendar, calendarMonth]);
 
   // Group items by day
   const dayGroups = useMemo(
@@ -244,18 +283,13 @@ export const ChatView: React.FC<ChatViewProps> = ({
   }, []);
 
   const handleDayLabelClick = useCallback(
-    async (date: Date) => {
+    (date: Date) => {
       setSelectedDate(date);
+      // Open the calendar to the clicked date's month — the useEffect
+      // will automatically fetch markers for that month.
+      const month = new Date(date.getFullYear(), date.getMonth(), 1);
+      setCalendarMonth(month);
       setShowCalendar(true);
-      if (callbacks.onFetchDates) {
-        setCalendarLoading(true);
-        try {
-          const markers = await callbacks.onFetchDates(date);
-          setDateMarkers(markers);
-        } finally {
-          setCalendarLoading(false);
-        }
-      }
       callbacks.onDayLabelClick?.(date);
     },
     [callbacks],
@@ -278,106 +312,76 @@ export const ChatView: React.FC<ChatViewProps> = ({
     [callbacks],
   );
 
-  const handleCalendarToggle = useCallback(async () => {
+  const handleCalendarToggle = useCallback(() => {
     if (showCalendar) {
       setShowCalendar(false);
+      setCalendarMonth(null);
       return;
     }
+    // Compute the initial month for the calendar popup.
+    // If a date was previously selected, open to that month; otherwise
+    // open to the current month.
+    const initialMonth = selectedDate
+      ? new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
+      : new Date();
+    setCalendarMonth(initialMonth);
     setShowCalendar(true);
-    if (callbacks.onFetchDates) {
-      setCalendarLoading(true);
-      try {
-        const markers = await callbacks.onFetchDates(new Date());
-        setDateMarkers(markers);
-      } finally {
-        setCalendarLoading(false);
-      }
-    }
-  }, [showCalendar, callbacks]);
+  }, [showCalendar, selectedDate]);
 
-  const handleMonthChange = useCallback(
-    async (month: Date) => {
-      if (callbacks.onFetchDates) {
-        setCalendarLoading(true);
-        try {
-          const markers = await callbacks.onFetchDates(month);
-          setDateMarkers(markers);
-        } finally {
-          setCalendarLoading(false);
-        }
-      }
-    },
-    [callbacks],
-  );
+  // Called by ChatCalendar when the user navigates to a different month.
+  // Sets state only — the useEffect above reacts to the change and fetches.
+  const handleMonthChange = useCallback((month: Date) => {
+    setCalendarMonth(month);
+  }, []);
 
   const handleDateSelect = useCallback(
     async (date: Date) => {
       setSelectedDate(date);
       setShowCalendar(false);
+      setCalendarMonth(null);
+      // The calendar date is a browser-local Date representing the visual day
+      // the user clicked.  format() uses the local representation, so this
+      // always gives the correct "yyyy-MM-dd" string without timezone conversion.
+      const dayKey = format(date, "yyyy-MM-dd");
+
+      const scrollToDay = (
+        container: HTMLElement,
+        behavior: ScrollBehavior,
+      ) => {
+        const el = container.querySelector(
+          `[data-day-date="${dayKey}"]`,
+        ) as HTMLElement | null;
+        const fallback = (() => {
+          const all = Array.from(
+            container.querySelectorAll("[data-day-date]"),
+          ).map((e) => ({
+            el: e as HTMLElement,
+            d: e.getAttribute("data-day-date")!,
+          }));
+          return (
+            (all.find((x) => x.d >= dayKey) ?? all[all.length - 1])?.el ?? null
+          );
+        })();
+        const target = el ?? fallback;
+        if (target) {
+          // Scroll so the day label sits ~8px below the container top
+          const offset = target.offsetTop - 8;
+          container.scrollTo({ top: Math.max(0, offset), behavior });
+        }
+      };
+
       if (callbacks.onNavigateToDate) {
-        // The parent will set navigatingToDate=true, replace items, then
-        // set it back to false. After items update we scroll to the day.
         await callbacks.onNavigateToDate(date);
         // After items are replaced, scroll to the target day
         requestAnimationFrame(() => {
           const container = scrollContainerRef.current;
           if (!container) return;
-          const dayKey = date.toISOString().slice(0, 10);
-          // Wait a tick for React to render the new items
-          setTimeout(() => {
-            const separator = container.querySelector(
-              `[data-day-date="${dayKey}"]`,
-            );
-            if (separator) {
-              separator.scrollIntoView({ behavior: "instant", block: "start" });
-            } else {
-              // Find nearest day group
-              const allDayEls = Array.from(
-                container.querySelectorAll("[data-day-date]"),
-              ).map((el) => ({
-                el,
-                date: el.getAttribute("data-day-date")!,
-              }));
-              const nearest =
-                allDayEls.find((d) => d.date >= dayKey) ||
-                allDayEls[allDayEls.length - 1];
-              if (nearest) {
-                nearest.el.scrollIntoView({
-                  behavior: "instant",
-                  block: "start",
-                });
-              }
-            }
-          }, 50);
+          setTimeout(() => scrollToDay(container, "instant"), 50);
         });
       } else {
-        // Client-side scroll: find the day separator matching this date, or nearest
         const container = scrollContainerRef.current;
         if (container) {
-          const dayKey = date.toISOString().slice(0, 10);
-          const separator = container.querySelector(
-            `[data-day-date="${dayKey}"]`,
-          );
-          if (separator) {
-            separator.scrollIntoView({ behavior: "smooth", block: "start" });
-          } else {
-            // Find nearest day group (prefer next day >= selected, or last before)
-            const allDayEls = Array.from(
-              container.querySelectorAll("[data-day-date]"),
-            ).map((el) => ({
-              el,
-              date: el.getAttribute("data-day-date")!,
-            }));
-            const nearest =
-              allDayEls.find((d) => d.date >= dayKey) ||
-              allDayEls[allDayEls.length - 1];
-            if (nearest) {
-              nearest.el.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }
-          }
+          scrollToDay(container, "smooth");
         }
       }
     },
@@ -416,7 +420,10 @@ export const ChatView: React.FC<ChatViewProps> = ({
               <>
                 <div
                   className="fixed inset-0 z-40"
-                  onClick={() => setShowCalendar(false)}
+                  onClick={() => {
+                    setShowCalendar(false);
+                    setCalendarMonth(null);
+                  }}
                 />
                 <div className="absolute right-0 top-full mt-1 z-50">
                   <ChatCalendar
@@ -536,14 +543,15 @@ export const ChatView: React.FC<ChatViewProps> = ({
           </div>
         ) : (
           dayGroups.map(([dayLabel, dayItems]) => {
-            const dayDate = dayItems[0]?.timestamp
-              ? new Date(dayItems[0].timestamp)
-              : new Date();
+            // Use the same timezone-aware getDayKey used by groupItemsByDay so
+            // that data-day-date attributes match what handleDateSelect looks up.
+            const dayKey = dayItems[0]?.timestamp
+              ? getDayKey(dayItems[0].timestamp, timezone)
+              : format(new Date(), "yyyy-MM-dd");
+            // Build a browser-local Date for the calendar from the day key
+            const dayDate = parseISO(dayKey + "T12:00:00");
             return (
-              <div
-                key={dayLabel}
-                data-day-date={dayDate.toISOString().slice(0, 10)}
-              >
+              <div key={dayKey} data-day-date={dayKey}>
                 <ChatDaySeparator
                   label={dayLabel}
                   onClick={() => handleDayLabelClick(dayDate)}

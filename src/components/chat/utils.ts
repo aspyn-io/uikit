@@ -1,21 +1,19 @@
-import {
-  format,
-  isToday,
-  isYesterday,
-  isSameDay,
-  parseISO,
-  startOfDay,
-} from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { format, isToday, isYesterday, parseISO } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import type { ChatItem } from "./types";
 
 /**
- * Convert an ISO string to a Date in the given timezone.
+ * Get the "yyyy-MM-dd" day key for an ISO timestamp in the given timezone.
+ * Uses formatInTimeZone to avoid the toZonedTime + startOfDay + format
+ * pitfall that produces wrong dates when the browser timezone differs from
+ * the target timezone.
  */
-export function toTz(isoString: string, timezone?: string): Date {
+export function getDayKey(isoString: string, timezone?: string): string {
   const date = parseISO(isoString);
-  if (!timezone) return date;
-  return toZonedTime(date, timezone);
+  if (timezone) {
+    return formatInTimeZone(date, timezone, "yyyy-MM-dd");
+  }
+  return format(date, "yyyy-MM-dd");
 }
 
 /**
@@ -23,7 +21,17 @@ export function toTz(isoString: string, timezone?: string): Date {
  * Returns "Today", "Yesterday", or "Mon, Jan 1, 2024"
  */
 export function formatDayLabel(isoString: string, timezone?: string): string {
-  const date = toTz(isoString, timezone);
+  if (timezone) {
+    const date = parseISO(isoString);
+    const dateStr = formatInTimeZone(date, timezone, "yyyy-MM-dd");
+    const todayStr = formatInTimeZone(new Date(), timezone, "yyyy-MM-dd");
+    if (dateStr === todayStr) return "Today";
+    const yesterday = new Date(Date.now() - 86_400_000);
+    const yesterdayStr = formatInTimeZone(yesterday, timezone, "yyyy-MM-dd");
+    if (dateStr === yesterdayStr) return "Yesterday";
+    return formatInTimeZone(date, timezone, "EEE, MMM d, yyyy");
+  }
+  const date = parseISO(isoString);
   if (isToday(date)) return "Today";
   if (isYesterday(date)) return "Yesterday";
   return format(date, "EEE, MMM d, yyyy");
@@ -34,7 +42,10 @@ export function formatDayLabel(isoString: string, timezone?: string): string {
  * Returns "2:30 PM"
  */
 export function formatTime(isoString: string, timezone?: string): string {
-  const date = toTz(isoString, timezone);
+  const date = parseISO(isoString);
+  if (timezone) {
+    return formatInTimeZone(date, timezone, "h:mm a");
+  }
   return format(date, "h:mm a");
 }
 
@@ -46,7 +57,15 @@ export function formatScheduledTime(
   isoString: string,
   timezone?: string,
 ): string {
-  const date = toTz(isoString, timezone);
+  const date = parseISO(isoString);
+  if (timezone) {
+    const todayStr = formatInTimeZone(new Date(), timezone, "yyyy-MM-dd");
+    const dateStr = formatInTimeZone(date, timezone, "yyyy-MM-dd");
+    if (dateStr === todayStr) {
+      return `Scheduled for today at ${formatInTimeZone(date, timezone, "h:mm a")}`;
+    }
+    return `Scheduled for ${formatInTimeZone(date, timezone, "MMM d")} at ${formatInTimeZone(date, timezone, "h:mm a")}`;
+  }
   if (isToday(date)) return `Scheduled for today at ${format(date, "h:mm a")}`;
   return `Scheduled for ${format(date, "MMM d")} at ${format(date, "h:mm a")}`;
 }
@@ -67,8 +86,7 @@ export function groupItemsByDay(
   );
 
   for (const item of sorted) {
-    const date = toTz(item.timestamp, timezone);
-    const dayKey = format(startOfDay(date), "yyyy-MM-dd");
+    const dayKey = getDayKey(item.timestamp, timezone);
 
     if (!groups.has(dayKey)) {
       groups.set(dayKey, []);
@@ -77,7 +95,7 @@ export function groupItemsByDay(
   }
 
   // Convert to array of [label, items] tuples
-  return Array.from(groups.entries()).map(([dayKey, dayItems]) => {
+  return Array.from(groups.entries()).map(([, dayItems]) => {
     const label = formatDayLabel(dayItems[0].timestamp, timezone);
     return [label, dayItems];
   });
@@ -91,7 +109,7 @@ export function isSameDayItems(
   b: ChatItem,
   timezone?: string,
 ): boolean {
-  return isSameDay(toTz(a.timestamp, timezone), toTz(b.timestamp, timezone));
+  return getDayKey(a.timestamp, timezone) === getDayKey(b.timestamp, timezone);
 }
 
 /**

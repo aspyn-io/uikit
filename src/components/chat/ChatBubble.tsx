@@ -115,16 +115,27 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         onClick={onItemClick ? handleClick : undefined}
       >
         {/* Sender info line */}
-        {isOutbound && item.sender && (
-          <div className="flex items-center justify-end gap-1 mb-1 px-1">
-            {item.sender.isSystem ? (
-              <Bot className="w-3 h-3 text-gray-400" />
+        {isOutbound && (
+          <div className="flex items-center justify-end gap-1.5 mb-1 px-1">
+            {item.sender ? (
+              <>
+                {item.sender.isSystem ? (
+                  <Bot className="w-3 h-3 text-gray-400" />
+                ) : (
+                  <User className="w-3 h-3 text-gray-400" />
+                )}
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                  {item.sender.name}
+                </span>
+              </>
             ) : (
-              <User className="w-3 h-3 text-gray-400" />
+              <>
+                <User className="w-3 h-3 text-gray-400" />
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                  Sent by User
+                </span>
+              </>
             )}
-            <span className="text-xs text-gray-400 dark:text-gray-500">
-              {item.sender.name}
-            </span>
           </div>
         )}
 

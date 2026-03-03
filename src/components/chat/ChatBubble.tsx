@@ -156,9 +156,12 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           {isQueued && item.scheduledAt && (
             <div className="flex items-center gap-1 mb-1.5">
               <CalendarClock className="w-3.5 h-3.5 text-yellow-600 dark:text-yellow-400" />
-              <span className="text-xs font-medium text-yellow-700 dark:text-yellow-400">
+              <span className="text-xs font-medium text-yellow-700 dark:text-yellow-400 flex-1">
                 {formatScheduledTime(item.scheduledAt, timezone)}
               </span>
+              {onItemClick && (
+                <ExternalLink className="w-3 h-3 text-yellow-600 dark:text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+              )}
             </div>
           )}
 
@@ -294,15 +297,11 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             {/* Status icon */}
             {isOutbound && !isQueued && statusIcon(item.status)}
 
-            {/* Click hint */}
-            {onItemClick && (
+            {/* Click hint - only for non-queued items (queued items show it on the scheduled line) */}
+            {onItemClick && !isQueued && (
               <ExternalLink
                 className={`w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity ${
-                  isQueued
-                    ? "text-yellow-600 dark:text-yellow-400"
-                    : isOutbound
-                      ? "text-blue-200"
-                      : "text-gray-400"
+                  isOutbound ? "text-blue-200" : "text-gray-400"
                 }`}
               />
             )}

@@ -256,14 +256,24 @@ export const ChatView: React.FC<ChatViewProps> = ({
       setShowCalendar(false);
       if (callbacks.onNavigateToDate) {
         await callbacks.onNavigateToDate(date);
-        // The parent will update items, and we should scroll to those items
-        // We'll scroll to top since navigated items are loaded
         setTimeout(() => {
           const container = scrollContainerRef.current;
           if (container) {
             container.scrollTop = 0;
           }
         }, 50);
+      } else {
+        // Client-side scroll: find the day separator matching this date
+        const container = scrollContainerRef.current;
+        if (container) {
+          const dayKey = date.toISOString().slice(0, 10);
+          const separator = container.querySelector(
+            `[data-day-date="${dayKey}"]`,
+          );
+          if (separator) {
+            separator.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }
       }
     },
     [callbacks],
@@ -278,45 +288,43 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
   return (
     <div
-      className={`flex flex-col bg-white dark:bg-gray-800 overflow-hidden ${fullscreenClasses} ${className}`}
+      className={`flex flex-col bg-white dark:bg-gray-800 overflow-hidden ${fullscreenClasses} ${isFullscreen ? "" : className}`}
     >
       {/* Header area */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
         <div className="flex-1">{headerContent}</div>
         <div className="flex items-center gap-2">
           {/* Calendar toggle */}
-          {callbacks.onFetchDates && (
-            <div className="relative">
-              <button
-                onClick={handleCalendarToggle}
-                className={`p-2 rounded-lg transition-colors ${
-                  showCalendar
-                    ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-                title="Navigate to date"
-              >
-                <CalendarIcon className="w-5 h-5" />
-              </button>
-              {showCalendar && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setShowCalendar(false)}
+          <div className="relative">
+            <button
+              onClick={handleCalendarToggle}
+              className={`p-2 rounded-lg transition-colors ${
+                showCalendar
+                  ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              }`}
+              title="Navigate to date"
+            >
+              <CalendarIcon className="w-5 h-5" />
+            </button>
+            {showCalendar && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowCalendar(false)}
+                />
+                <div className="absolute right-0 top-full mt-1 z-50">
+                  <ChatCalendar
+                    dateMarkers={dateMarkers}
+                    selectedDate={selectedDate}
+                    onDateSelect={handleDateSelect}
+                    onMonthChange={handleMonthChange}
+                    loading={calendarLoading}
                   />
-                  <div className="absolute right-0 top-full mt-1 z-50">
-                    <ChatCalendar
-                      dateMarkers={dateMarkers}
-                      selectedDate={selectedDate}
-                      onDateSelect={handleDateSelect}
-                      onMonthChange={handleMonthChange}
-                      loading={calendarLoading}
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Fullscreen toggle */}
           <button
@@ -427,7 +435,10 @@ export const ChatView: React.FC<ChatViewProps> = ({
               ? new Date(dayItems[0].timestamp)
               : new Date();
             return (
-              <div key={dayLabel}>
+              <div
+                key={dayLabel}
+                data-day-date={dayDate.toISOString().slice(0, 10)}
+              >
                 <ChatDaySeparator
                   label={dayLabel}
                   onClick={() => handleDayLabelClick(dayDate)}

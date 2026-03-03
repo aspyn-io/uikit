@@ -211,6 +211,9 @@ const meta: Meta<typeof ChatView> = {
   parameters: {
     layout: "padded",
   },
+  args: {
+    className: "border border-gray-200 dark:border-gray-700 rounded-lg",
+  },
   decorators: [
     (Story) => (
       <div style={{ maxWidth: 700, margin: "0 auto" }}>

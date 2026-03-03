@@ -130,8 +130,12 @@ export interface ChatCallbacks {
   onResend?: (item: ChatItem) => Promise<void>;
   /** Called to fetch dates that have communications (for calendar) */
   onFetchDates?: (month: Date) => Promise<ChatDateMarker[]>;
-  /** Called when user navigates to a specific date via calendar */
-  onNavigateToDate?: (date: Date) => Promise<ChatItem[]>;
+  /**
+   * Called when user navigates to a specific date via calendar.
+   * The consumer should replace items with the page containing this date
+   * and return the new items array.
+   */
+  onNavigateToDate?: (date: Date) => Promise<void>;
   /** Called when a day separator label is clicked (e.g., to show calendar) */
   onDayLabelClick?: (date: Date) => void;
 }
@@ -142,10 +146,12 @@ export interface ChatViewProps {
   items: ChatItem[];
   /** Whether more (older) items are available to load */
   hasMore: boolean;
-  /** Whether items are currently loading */
+  /** Whether items are currently loading (initial load) */
   loading?: boolean;
   /** Whether a refresh is in progress */
   refreshing?: boolean;
+  /** Whether items are loading due to calendar date navigation */
+  navigatingToDate?: boolean;
   /** Available contacts for sending (phone numbers and emails) */
   contacts?: {
     phoneNumbers: string[];

@@ -39,6 +39,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
   hasMore,
   loading = false,
   refreshing = false,
+  navigatingToDate = false,
   contacts,
   permissions,
   timezone,
@@ -314,13 +315,41 @@ export const ChatView: React.FC<ChatViewProps> = ({
       setSelectedDate(date);
       setShowCalendar(false);
       if (callbacks.onNavigateToDate) {
+        // The parent will set navigatingToDate=true, replace items, then
+        // set it back to false. After items update we scroll to the day.
         await callbacks.onNavigateToDate(date);
-        setTimeout(() => {
+        // After items are replaced, scroll to the target day
+        requestAnimationFrame(() => {
           const container = scrollContainerRef.current;
-          if (container) {
-            container.scrollTop = 0;
-          }
-        }, 50);
+          if (!container) return;
+          const dayKey = date.toISOString().slice(0, 10);
+          // Wait a tick for React to render the new items
+          setTimeout(() => {
+            const separator = container.querySelector(
+              `[data-day-date="${dayKey}"]`,
+            );
+            if (separator) {
+              separator.scrollIntoView({ behavior: "instant", block: "start" });
+            } else {
+              // Find nearest day group
+              const allDayEls = Array.from(
+                container.querySelectorAll("[data-day-date]"),
+              ).map((el) => ({
+                el,
+                date: el.getAttribute("data-day-date")!,
+              }));
+              const nearest =
+                allDayEls.find((d) => d.date >= dayKey) ||
+                allDayEls[allDayEls.length - 1];
+              if (nearest) {
+                nearest.el.scrollIntoView({
+                  behavior: "instant",
+                  block: "start",
+                });
+              }
+            }
+          }, 50);
+        });
       } else {
         // Client-side scroll: find the day separator matching this date, or nearest
         const container = scrollContainerRef.current;
@@ -461,7 +490,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
         )}
 
         {/* Beginning of conversation marker */}
-        {!hasMore && !loading && items.length > 0 && (
+        {!hasMore && !loading && !navigatingToDate && items.length > 0 && (
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600" />
             <span className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap px-3 py-1.5 rounded-full bg-gray-50 dark:bg-gray-700/50">
@@ -473,7 +502,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
         )}
 
         {/* Main content */}
-        {loading ? (
+        {loading || navigatingToDate ? (
           <div className="space-y-4 py-4 animate-pulse">
             {[...Array(6)].map((_, i) => (
               <div

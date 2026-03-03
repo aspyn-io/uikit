@@ -164,13 +164,13 @@ export const ChatCalendar: React.FC<ChatCalendarProps> = ({
               onClick={() => onDateSelect(day)}
               disabled={!isCurrentMonth}
               className={`
-                relative w-full aspect-square flex items-center justify-center text-xs rounded-md
+                relative w-full h-8 flex items-center justify-center text-xs rounded-md
                 transition-colors duration-100
                 ${!isCurrentMonth ? "cursor-default" : "cursor-pointer"}
                 ${isCurrentMonth && !isSelected ? "hover:bg-gray-100 dark:hover:bg-gray-700" : ""}
                 ${bgClass}
                 ${textClass}
-                ${isDayToday && !isSelected ? "ring-1 ring-blue-400 dark:ring-blue-500" : ""}
+                ${isDayToday && !isSelected ? "ring-1 ring-inset ring-blue-400 dark:ring-blue-500" : ""}
               `}
             >
               {format(day, "d")}

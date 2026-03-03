@@ -130,6 +130,8 @@ export interface ChatCallbacks {
   onFetchDates?: (month: Date) => Promise<ChatDateMarker[]>;
   /** Called when user navigates to a specific date via calendar */
   onNavigateToDate?: (date: Date) => Promise<ChatItem[]>;
+  /** Called when a day separator label is clicked (e.g., to show calendar) */
+  onDayLabelClick?: (date: Date) => void;
 }
 
 /** Props for the main ChatView component */
@@ -159,4 +161,10 @@ export interface ChatViewProps {
   emptyMessage?: string;
   /** Optional header content to render above the chat */
   headerContent?: React.ReactNode;
+  /** Custom date picker renderer for the compose bar schedule input */
+  renderDatePicker?: (props: {
+    value: string;
+    onChange: (value: string) => void;
+    minDate?: Date;
+  }) => React.ReactNode;
 }

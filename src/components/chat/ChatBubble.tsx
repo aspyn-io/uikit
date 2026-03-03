@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Mail,
   MessageSquare,
@@ -62,6 +62,10 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   const isOutbound = item.direction === "outbound";
   const isEmail = item.channel === "email";
   const isQueued = item.isQueued;
+  const [confirmAction, setConfirmAction] = useState<
+    "cancel" | "sendNow" | null
+  >(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const handleClick = () => {
     onItemClick?.(item);
@@ -69,12 +73,32 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
   const handleCancelQueued = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onCancelQueued?.(item);
+    setConfirmAction("cancel");
   };
 
   const handleSendNow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onSendQueuedNow?.(item);
+    setConfirmAction("sendNow");
+  };
+
+  const handleConfirm = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActionLoading(true);
+    try {
+      if (confirmAction === "cancel") {
+        await onCancelQueued?.(item);
+      } else if (confirmAction === "sendNow") {
+        await onSendQueuedNow?.(item);
+      }
+    } finally {
+      setActionLoading(false);
+      setConfirmAction(null);
+    }
+  };
+
+  const handleDismissConfirm = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setConfirmAction(null);
   };
 
   const handleResend = (e: React.MouseEvent) => {
@@ -252,18 +276,20 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               </span>
             )}
 
-            {/* Timestamp */}
-            <span
-              className={`text-[10px] ${
-                isQueued
-                  ? "text-yellow-600 dark:text-yellow-400"
-                  : isOutbound
-                    ? "text-blue-200"
-                    : "text-gray-400 dark:text-gray-500"
-              }`}
-            >
-              {formatTime(item.timestamp, timezone)}
-            </span>
+            {/* Timestamp - hide for scheduled items since time is already in the scheduled badge */}
+            {!(isQueued && item.scheduledAt) && (
+              <span
+                className={`text-[10px] ${
+                  isQueued
+                    ? "text-yellow-600 dark:text-yellow-400"
+                    : isOutbound
+                      ? "text-blue-200"
+                      : "text-gray-400 dark:text-gray-500"
+                }`}
+              >
+                {formatTime(item.timestamp, timezone)}
+              </span>
+            )}
 
             {/* Status icon */}
             {isOutbound && !isQueued && statusIcon(item.status)}
@@ -295,21 +321,51 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           {/* Queued item actions */}
           {isQueued && (
             <div className="flex items-center gap-2 mt-2 pt-2 border-t border-dashed border-yellow-300 dark:border-yellow-600">
-              {permissions?.canCancelQueued && onCancelQueued && (
-                <button
-                  onClick={handleCancelQueued}
-                  className="text-xs text-red-600 dark:text-red-400 hover:underline"
-                >
-                  Cancel
-                </button>
-              )}
-              {onSendQueuedNow && (
-                <button
-                  onClick={handleSendNow}
-                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
-                >
-                  Send Now
-                </button>
+              {confirmAction ? (
+                <>
+                  <span className="text-xs text-yellow-700 dark:text-yellow-400">
+                    {confirmAction === "cancel"
+                      ? "Cancel this communication?"
+                      : "Send this communication now?"}
+                  </span>
+                  <button
+                    onClick={handleConfirm}
+                    disabled={actionLoading}
+                    className={`text-xs font-medium hover:underline ${
+                      confirmAction === "cancel"
+                        ? "text-red-600 dark:text-red-400"
+                        : "text-blue-600 dark:text-blue-400"
+                    }`}
+                  >
+                    {actionLoading ? "..." : "Yes"}
+                  </button>
+                  <button
+                    onClick={handleDismissConfirm}
+                    disabled={actionLoading}
+                    className="text-xs text-gray-500 dark:text-gray-400 hover:underline"
+                  >
+                    No
+                  </button>
+                </>
+              ) : (
+                <>
+                  {permissions?.canCancelQueued && onCancelQueued && (
+                    <button
+                      onClick={handleCancelQueued}
+                      className="text-xs text-red-600 dark:text-red-400 hover:underline"
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  {onSendQueuedNow && (
+                    <button
+                      onClick={handleSendNow}
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      Send Now
+                    </button>
+                  )}
+                </>
               )}
             </div>
           )}

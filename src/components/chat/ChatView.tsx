@@ -46,6 +46,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
   className = "",
   emptyMessage = "No communications yet",
   headerContent,
+  renderDatePicker,
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const loadMoreSentinelRef = useRef<HTMLDivElement>(null);
@@ -169,6 +170,33 @@ export const ChatView: React.FC<ChatViewProps> = ({
       behavior: "smooth",
     });
   };
+
+  const handleScrollToQueued = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const firstQueued = container.querySelector("[data-chat-queued]");
+    if (firstQueued) {
+      firstQueued.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, []);
+
+  const handleDayLabelClick = useCallback(
+    async (date: Date) => {
+      setSelectedDate(date);
+      setShowCalendar(true);
+      if (callbacks.onFetchDates) {
+        setCalendarLoading(true);
+        try {
+          const markers = await callbacks.onFetchDates(date);
+          setDateMarkers(markers);
+        } finally {
+          setCalendarLoading(false);
+        }
+      }
+      callbacks.onDayLabelClick?.(date);
+    },
+    [callbacks],
+  );
 
   const handleSend = useCallback(
     async (payload: ChatComposePayload) => {
@@ -305,21 +333,25 @@ export const ChatView: React.FC<ChatViewProps> = ({
         </div>
       </div>
 
-      {/* Scheduled items indicator */}
+      {/* Scheduled items indicator - clickable to scroll to first queued */}
       {queuedCount > 0 && (
-        <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800/40 text-amber-700 dark:text-amber-400">
+        <button
+          onClick={handleScrollToQueued}
+          className="flex items-center gap-2 px-4 py-2 w-full bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800/40 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors cursor-pointer text-left"
+        >
           <Clock className="w-4 h-4 shrink-0" />
           <span className="text-xs font-medium">
-            {queuedCount} scheduled communication{queuedCount !== 1 ? "s" : ""}
+            {queuedCount} scheduled communication{queuedCount !== 1 ? "s" : ""}{" "}
+            — click to view
           </span>
-        </div>
+        </button>
       )}
 
       {/* Messages area */}
       <div
         ref={scrollContainerRef}
-        className={`flex-1 overflow-y-auto px-4 py-4 relative ${
-          isFullscreen ? "" : "min-h-75 max-h-[calc(100vh-20rem)]"
+        className={`flex-1 overflow-y-auto px-4 py-4 relative min-h-0 ${
+          isFullscreen ? "" : "min-h-48"
         }`}
       >
         {/* Load more sentinel (at top) */}
@@ -327,8 +359,20 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
         {/* Loading more indicator */}
         {loadingMore && (
-          <div className="flex justify-center py-3">
-            <Spinner size="sm" />
+          <div className="space-y-3 py-3 animate-pulse">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={`flex ${i % 2 === 0 ? "justify-start" : "justify-end"}`}
+              >
+                <div
+                  className={`rounded-2xl p-3 ${i % 2 === 0 ? "bg-gray-100 dark:bg-gray-700/50" : "bg-blue-50 dark:bg-blue-900/20"}`}
+                >
+                  <div className="h-2.5 w-32 rounded bg-gray-200 dark:bg-gray-600" />
+                  <div className="h-2.5 w-20 rounded bg-gray-200 dark:bg-gray-600 mt-1.5" />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -346,11 +390,31 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
         {/* Main content */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <Spinner size="xl" />
-            <span className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-              Loading communications...
-            </span>
+          <div className="space-y-4 py-4 animate-pulse">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className={`flex ${i % 2 === 0 ? "justify-start" : "justify-end"}`}
+              >
+                <div className="space-y-1.5">
+                  <div
+                    className={`h-2.5 w-16 rounded ${i % 2 === 0 ? "bg-gray-200 dark:bg-gray-700" : "bg-gray-200 dark:bg-gray-700 ml-auto"}`}
+                  />
+                  <div
+                    className={`rounded-2xl p-4 space-y-2 ${i % 2 === 0 ? "bg-gray-100 dark:bg-gray-700/50" : "bg-blue-50 dark:bg-blue-900/20"}`}
+                  >
+                    <div
+                      className={`h-2.5 rounded ${i % 2 === 0 ? "bg-gray-200 dark:bg-gray-600" : "bg-blue-100 dark:bg-blue-800/40"}`}
+                      style={{ width: `${140 + ((i * 37) % 100)}px` }}
+                    />
+                    <div
+                      className={`h-2.5 rounded ${i % 2 === 0 ? "bg-gray-200 dark:bg-gray-600" : "bg-blue-100 dark:bg-blue-800/40"}`}
+                      style={{ width: `${80 + ((i * 53) % 120)}px` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-gray-500">
@@ -358,23 +422,35 @@ export const ChatView: React.FC<ChatViewProps> = ({
             <span className="text-sm">{emptyMessage}</span>
           </div>
         ) : (
-          dayGroups.map(([dayLabel, dayItems]) => (
-            <div key={dayLabel}>
-              <ChatDaySeparator label={dayLabel} />
-              {dayItems.map((item) => (
-                <ChatBubble
-                  key={`${item.id}-${item.isQueued ? "q" : "s"}`}
-                  item={item}
-                  timezone={timezone}
-                  permissions={permissions}
-                  onItemClick={callbacks.onItemClick}
-                  onCancelQueued={callbacks.onCancelQueued}
-                  onSendQueuedNow={callbacks.onSendQueuedNow}
-                  onResend={callbacks.onResend}
+          dayGroups.map(([dayLabel, dayItems]) => {
+            const dayDate = dayItems[0]?.timestamp
+              ? new Date(dayItems[0].timestamp)
+              : new Date();
+            return (
+              <div key={dayLabel}>
+                <ChatDaySeparator
+                  label={dayLabel}
+                  onClick={() => handleDayLabelClick(dayDate)}
                 />
-              ))}
-            </div>
-          ))
+                {dayItems.map((item) => (
+                  <div
+                    key={`${item.id}-${item.isQueued ? "q" : "s"}`}
+                    data-chat-queued={item.isQueued || undefined}
+                  >
+                    <ChatBubble
+                      item={item}
+                      timezone={timezone}
+                      permissions={permissions}
+                      onItemClick={callbacks.onItemClick}
+                      onCancelQueued={callbacks.onCancelQueued}
+                      onSendQueuedNow={callbacks.onSendQueuedNow}
+                      onResend={callbacks.onResend}
+                    />
+                  </div>
+                ))}
+              </div>
+            );
+          })
         )}
 
         {/* Refreshing overlay */}
@@ -406,6 +482,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
           permissions={permissions}
           onSend={handleSend}
           sending={sending}
+          renderDatePicker={renderDatePicker}
         />
       )}
     </div>

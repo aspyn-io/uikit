@@ -23,6 +23,12 @@ interface ChatComposeBarProps {
   onSend: (payload: ChatComposePayload) => Promise<void>;
   /** Whether sending is in progress */
   sending?: boolean;
+  /** Custom date picker renderer. If not provided, uses native datetime-local. */
+  renderDatePicker?: (props: {
+    value: string;
+    onChange: (value: string) => void;
+    minDate?: Date;
+  }) => React.ReactNode;
 }
 
 /**
@@ -34,6 +40,7 @@ export const ChatComposeBar: React.FC<ChatComposeBarProps> = ({
   permissions,
   onSend,
   sending = false,
+  renderDatePicker,
 }) => {
   const [body, setBody] = useState("");
   const [subject, setSubject] = useState("");
@@ -119,13 +126,21 @@ export const ChatComposeBar: React.FC<ChatComposeBarProps> = ({
           <span className="text-xs text-gray-600 dark:text-gray-400">
             Schedule for:
           </span>
-          <input
-            type="datetime-local"
-            value={scheduledAt}
-            onChange={(e) => setScheduledAt(e.target.value)}
-            min={new Date().toISOString().slice(0, 16)}
-            className="text-xs border border-gray-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-          />
+          {renderDatePicker ? (
+            renderDatePicker({
+              value: scheduledAt,
+              onChange: (val: string) => setScheduledAt(val),
+              minDate: new Date(),
+            })
+          ) : (
+            <input
+              type="datetime-local"
+              value={scheduledAt}
+              onChange={(e) => setScheduledAt(e.target.value)}
+              min={new Date().toISOString().slice(0, 16)}
+              className="text-xs border border-gray-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          )}
           <button
             onClick={() => {
               setShowSchedule(false);

@@ -74,38 +74,33 @@ export const ChatView: React.FC<ChatViewProps> = ({
     [items],
   );
 
-  // Scroll ONLY the inner container so the last real (non-queued) message
-  // is fully visible at the bottom. Uses layout positions (offsetTop chain)
-  // rather than getBoundingClientRect(), so it's independent of page scroll position.
+  // Scroll ONLY the inner container so the last real (non-queued) message is
+  // fully visible at the bottom.
+  //
+  // Strategy: find the first queued item via data attribute and scroll so its
+  // top aligns exactly with the container's bottom edge. This guarantees the
+  // last real message is fully visible regardless of its rendered height.
+  // If no queued items exist, scroll to the absolute bottom.
   const scrollToLastRealMessage = useCallback(
     (behavior: ScrollBehavior = "smooth") => {
       const container = scrollContainerRef.current;
       if (!container) return;
-      const realItems = container.querySelectorAll(
-        "[data-chat-item-id]:not([data-chat-queued])",
-      );
-      if (realItems.length > 0) {
-        const lastReal = realItems[realItems.length - 1] as HTMLElement;
-        // Walk the offsetParent chain to get the element's top offset
-        // relative to the scroll container. This is independent of the
-        // viewport position, so it works even while the page is scrolling.
-        let offsetTop = 0;
-        let el: HTMLElement | null = lastReal;
-        while (el && el !== container) {
-          offsetTop += el.offsetTop;
-          el = el.offsetParent as HTMLElement | null;
-        }
-        const target = Math.max(
-          0,
-          offsetTop + lastReal.offsetHeight - container.clientHeight,
-        );
-        if (behavior === "instant") {
-          container.scrollTop = target;
-        } else {
-          container.scrollTo({ top: target, behavior });
-        }
+      const firstQueued = container.querySelector(
+        "[data-chat-queued]",
+      ) as HTMLElement | null;
+      // Use the day-group ancestor so the date separator for future/queued
+      // items is also hidden (it renders above the first queued bubble).
+      const anchor = firstQueued
+        ? ((firstQueued.closest("[data-day-date]") as HTMLElement | null) ??
+          firstQueued)
+        : null;
+      const target = anchor
+        ? Math.max(0, anchor.offsetTop - container.clientHeight)
+        : Math.max(0, container.scrollHeight - container.clientHeight);
+      if (behavior === "instant") {
+        container.scrollTop = target;
       } else {
-        container.scrollTo({ top: container.scrollHeight, behavior });
+        container.scrollTo({ top: target, behavior });
       }
     },
     [],
@@ -117,11 +112,29 @@ export const ChatView: React.FC<ChatViewProps> = ({
     if (!container) return;
 
     if (isFirstRender.current && items.length > 0) {
-      // Initial render: scroll to last real message (not queued/scheduled)
-      requestAnimationFrame(() => {
-        scrollToLastRealMessage("instant");
-      });
       isFirstRender.current = false;
+
+      // Use ResizeObserver to wait until the container actually has a rendered
+      // height before scrolling — the same code path as the "Scroll to bottom"
+      // button, which is known to work correctly.
+      const doScroll = () => scrollToLastRealMessage("instant");
+
+      if (container.clientHeight > 0) {
+        // Container already laid out (e.g. re-mount); scroll immediately.
+        requestAnimationFrame(doScroll);
+      } else {
+        // Container height is 0 — layout hasn't resolved yet (common on first
+        // mount when the parent is still expanding). Wait for it.
+        const ro = new ResizeObserver(() => {
+          if (container.clientHeight > 0) {
+            ro.disconnect();
+            requestAnimationFrame(doScroll);
+          }
+        });
+        ro.observe(container);
+        // Cleanup in case the component unmounts before height resolves
+        return () => ro.disconnect();
+      }
     } else if (items.length > prevItemCountRef.current) {
       // New items added - check if they're at the bottom (newer)
       const lastPrevItem = prevItemCountRef.current > 0;
@@ -187,16 +200,29 @@ export const ChatView: React.FC<ChatViewProps> = ({
     return () => observer.disconnect();
   }, [hasMore, loadingMore, handleLoadMore]);
 
-  // Track scroll position for "scroll to bottom" button
+  // Track scroll position for "scroll to bottom" button.
+  // Hide once the last real message's bottom is within the visible area.
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
-      const isNearBottom =
-        container.scrollHeight - container.scrollTop - container.clientHeight <
-        200;
-      setShowScrollDown(!isNearBottom);
+      const firstQueued = container.querySelector(
+        "[data-chat-queued]",
+      ) as HTMLElement | null;
+      if (firstQueued) {
+        // Use day-group ancestor so the date separator is included
+        const anchor =
+          (firstQueued.closest("[data-day-date]") as HTMLElement | null) ??
+          firstQueued;
+        const anchorTop = anchor.offsetTop;
+        const visibleBottom = container.scrollTop + container.clientHeight;
+        setShowScrollDown(anchorTop > visibleBottom + 50);
+      } else {
+        const distFromBottom =
+          container.scrollHeight - container.scrollTop - container.clientHeight;
+        setShowScrollDown(distFromBottom > 100);
+      }
     };
 
     container.addEventListener("scroll", handleScroll);

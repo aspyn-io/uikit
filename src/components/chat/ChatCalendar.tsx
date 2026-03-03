@@ -9,8 +9,6 @@ import {
   startOfMonth,
   endOfMonth,
   startOfWeek,
-  endOfWeek,
-  addDays,
   addMonths,
   subMonths,
   isSameDay,
@@ -70,18 +68,31 @@ export const ChatCalendar: React.FC<ChatCalendarProps> = ({
     onMonthChange?.(next);
   }, [currentMonth, onMonthChange]);
 
-  // Build calendar grid
+  // Build calendar grid using Date constructor arithmetic to avoid DST edge cases.
+  // The while-loop + addDays approach can produce duplicate rows when DST
+  // springs forward (e.g. America/Denver in March).
   const calendarDays = useMemo(() => {
     const monthStart = startOfMonth(currentMonth);
+    const gridStart = startOfWeek(monthStart);
     const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart);
-    const endDate = endOfWeek(monthEnd);
+    const y = gridStart.getFullYear();
+    const m = gridStart.getMonth();
+    const d = gridStart.getDate();
 
     const days: Date[] = [];
-    let day = startDate;
-    while (day <= endDate) {
-      days.push(day);
-      day = addDays(day, 1);
+    for (let i = 0; i < 42; i++) {
+      days.push(new Date(y, m, d + i));
+    }
+
+    // Trim trailing week(s) that contain no days from the target month
+    const monthNum = monthStart.getMonth();
+    while (days.length > 7) {
+      const lastWeek = days.slice(-7);
+      if (lastWeek.every((day) => day.getMonth() !== monthNum)) {
+        days.splice(-7);
+      } else {
+        break;
+      }
     }
     return days;
   }, [currentMonth]);

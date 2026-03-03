@@ -301,15 +301,58 @@ export const ChatView: React.FC<ChatViewProps> = ({
       setSending(true);
       try {
         await callbacks.onSend(payload);
-        // Scroll to last real message after sending
-        setTimeout(() => {
-          scrollToLastRealMessage("smooth");
-        }, 100);
+
+        if (payload.schedule && payload.scheduledAt) {
+          // For scheduled sends, scroll to the newly added scheduled item
+          const targetTime = new Date(payload.scheduledAt).getTime();
+          const scrollToScheduled = () => {
+            const container = scrollContainerRef.current;
+            if (!container) return;
+            const queuedEls = Array.from(
+              container.querySelectorAll("[data-chat-queued]"),
+            );
+            if (queuedEls.length === 0) return;
+            // Find the queued element closest to the scheduled time
+            let bestEl = queuedEls[0];
+            let bestDiff = Infinity;
+            for (const el of queuedEls) {
+              const tsAttr = el.getAttribute("data-chat-scheduled-at");
+              if (tsAttr) {
+                const diff = Math.abs(new Date(tsAttr).getTime() - targetTime);
+                if (diff < bestDiff) {
+                  bestDiff = diff;
+                  bestEl = el;
+                }
+              }
+            }
+            bestEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          };
+          // Wait for DOM update after state change
+          setTimeout(scrollToScheduled, 300);
+          setTimeout(scrollToScheduled, 800);
+        } else {
+          // For immediate sends, show at bottom instantly (no top-to-bottom animation)
+          setTimeout(() => {
+            scrollToLastRealMessage("instant");
+          }, 100);
+        }
       } finally {
         setSending(false);
       }
     },
-    [callbacks],
+    [callbacks, scrollToLastRealMessage],
+  );
+
+  const handleResend = useCallback(
+    async (item: ChatItem) => {
+      if (!callbacks.onResend) return;
+      await callbacks.onResend(item);
+      // Scroll to last real message after resend so the newly-sent item is visible
+      setTimeout(() => {
+        scrollToLastRealMessage("smooth");
+      }, 300);
+    },
+    [callbacks, scrollToLastRealMessage],
   );
 
   const handleCalendarToggle = useCallback(() => {
@@ -561,6 +604,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
                     key={`${item.id}-${item.isQueued ? "q" : "s"}`}
                     data-chat-item-id={item.id}
                     data-chat-queued={item.isQueued || undefined}
+                    data-chat-scheduled-at={
+                      item.isQueued && item.scheduledAt
+                        ? item.scheduledAt
+                        : undefined
+                    }
                   >
                     <ChatBubble
                       item={item}
@@ -569,7 +617,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       onItemClick={callbacks.onItemClick}
                       onCancelQueued={callbacks.onCancelQueued}
                       onSendQueuedNow={callbacks.onSendQueuedNow}
-                      onResend={callbacks.onResend}
+                      onResend={callbacks.onResend ? handleResend : undefined}
                     />
                   </div>
                 ))}

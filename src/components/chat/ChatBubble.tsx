@@ -36,15 +36,35 @@ interface ChatBubbleProps {
 const statusIcon = (status: string) => {
   switch (status) {
     case "sent":
-      return <Check className="w-3 h-3 text-gray-400" />;
+      return (
+        <Tooltip content="Sent">
+          <Check className="w-3.5 h-3.5 text-blue-200" />
+        </Tooltip>
+      );
     case "delivered":
-      return <CheckCheck className="w-3 h-3 text-blue-500" />;
+      return (
+        <Tooltip content="Delivered / Opened">
+          <CheckCheck className="w-3.5 h-3.5 text-white" />
+        </Tooltip>
+      );
     case "failed":
-      return <XCircle className="w-3 h-3 text-red-500" />;
+      return (
+        <Tooltip content="Failed to deliver">
+          <AlertCircle className="w-3.5 h-3.5 text-red-300" />
+        </Tooltip>
+      );
     case "processing":
-      return <RotateCw className="w-3 h-3 text-yellow-500 animate-spin" />;
+      return (
+        <Tooltip content="Processing">
+          <RotateCw className="w-3.5 h-3.5 text-yellow-300 animate-spin" />
+        </Tooltip>
+      );
     case "skipped":
-      return <XCircle className="w-3 h-3 text-gray-400" />;
+      return (
+        <Tooltip content="Skipped">
+          <XCircle className="w-3.5 h-3.5 text-blue-200/70" />
+        </Tooltip>
+      );
     default:
       return null;
   }
@@ -63,7 +83,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   const isEmail = item.channel === "email";
   const isQueued = item.isQueued;
   const [confirmAction, setConfirmAction] = useState<
-    "cancel" | "sendNow" | null
+    "cancel" | "sendNow" | "resend" | null
   >(null);
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -89,6 +109,8 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         await onCancelQueued?.(item);
       } else if (confirmAction === "sendNow") {
         await onSendQueuedNow?.(item);
+      } else if (confirmAction === "resend") {
+        await onResend?.(item);
       }
     } finally {
       setActionLoading(false);
@@ -101,9 +123,9 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
     setConfirmAction(null);
   };
 
-  const handleResend = (e: React.MouseEvent) => {
+  const handleResendClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onResend?.(item);
+    setConfirmAction("resend");
   };
 
   return (
@@ -387,13 +409,60 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             item.status === "failed" &&
             permissions?.canResend &&
             onResend && (
-              <div className="flex items-center gap-2 mt-2 pt-2 border-t border-red-200 dark:border-red-800">
-                <button
-                  onClick={handleResend}
-                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
-                >
-                  Resend
-                </button>
+              <div
+                className={`flex items-center gap-2 mt-2 pt-2 border-t ${
+                  isOutbound
+                    ? "border-blue-300/40 dark:border-blue-400/30"
+                    : "border-red-200 dark:border-red-800"
+                }`}
+              >
+                {confirmAction === "resend" ? (
+                  <>
+                    <span
+                      className={`text-xs ${
+                        isOutbound
+                          ? "text-white/90"
+                          : "text-red-700 dark:text-red-400"
+                      }`}
+                    >
+                      Resend this communication?
+                    </span>
+                    <button
+                      onClick={handleConfirm}
+                      disabled={actionLoading}
+                      className={`text-xs font-bold hover:underline ${
+                        isOutbound
+                          ? "text-white"
+                          : "text-blue-600 dark:text-blue-400"
+                      }`}
+                    >
+                      {actionLoading ? "..." : "Yes"}
+                    </button>
+                    <button
+                      onClick={handleDismissConfirm}
+                      disabled={actionLoading}
+                      className={`text-xs hover:underline ${
+                        isOutbound
+                          ? "text-blue-200 hover:text-white"
+                          : "text-gray-500 dark:text-gray-400"
+                      }`}
+                    >
+                      No
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={handleResendClick}
+                    className={`flex items-center gap-1.5 text-xs font-medium border rounded px-2 py-1 transition-colors ${
+                      isOutbound
+                        ? "bg-white/15 border-white/40 text-white hover:bg-white/25"
+                        : "bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40"
+                    }`}
+                  >
+                    <RotateCw className="w-3 h-3" />
+                    Resend
+                  </button>
+                )}
               </div>
             )}
         </div>

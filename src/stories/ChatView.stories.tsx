@@ -2,8 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ChatView } from "../components/chat/ChatView";
 import type { ChatItem, ChatViewProps } from "../components/chat/types";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-const noopAsync = async (..._args: unknown[]) => {};
 const noopLoadMore = async () => [] as ChatItem[];
 const noopSend = async () => {};
 const noopItem = async (_item: ChatItem) => {};

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Mail,
   MessageSquare,
-  Clock,
   AlertCircle,
   Paperclip,
   Bot,
@@ -14,7 +13,7 @@ import {
   XCircle,
   RotateCw,
 } from "lucide-react";
-import { Badge, Tooltip } from "flowbite-react";
+import { Tooltip } from "flowbite-react";
 import type { ChatItem, ChatPermissions } from "./types";
 import {
   formatTime,
@@ -250,8 +249,8 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             </div>
           )}
 
-          {/* Message body (skip for emails with subject already displayed) */}
-          {!(isEmail && item.subject) && (
+          {/* Message body (skip for emails with subject or template name already displayed) */}
+          {!(isEmail && (item.subject || item.templateName)) && (
             <div
               className={`text-sm leading-relaxed wrap-break-word ${
                 isQueued ? "text-gray-800 dark:text-gray-200" : ""

@@ -170,7 +170,7 @@ export const ChatComposeBar: React.FC<ChatComposeBarProps> = ({
               }`}
             >
               <MessageSquare className="w-3 h-3" />
-              SMS
+              Message
             </button>
           )}
           {permissions?.canSendEmail && (

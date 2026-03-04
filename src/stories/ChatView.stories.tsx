@@ -379,7 +379,7 @@ export const MessagesOnly: Story = {
     },
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-        SMS Conversation
+        Message Conversation
       </h3>
     ),
   },

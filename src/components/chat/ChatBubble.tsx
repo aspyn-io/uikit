@@ -251,7 +251,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           )}
 
           {/* Message body (skip for emails with subject already displayed) */}
-          {!(isEmail && item.subject) && (
+          {!(isEmail && (item.subject || item.templateName)) && (
             <div
               className={`text-sm leading-relaxed wrap-break-word ${
                 isQueued ? "text-gray-800 dark:text-gray-200" : ""

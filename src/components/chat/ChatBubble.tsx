@@ -250,7 +250,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             </div>
           )}
 
-          {/* Message body (skip for emails with subject already displayed) */}
+          {/* Message body (skip for emails with subject or template name already displayed) */}
           {!(isEmail && (item.subject || item.templateName)) && (
             <div
               className={`text-sm leading-relaxed wrap-break-word ${

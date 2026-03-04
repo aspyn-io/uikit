@@ -307,6 +307,8 @@ export const WithFailedMessages: Story = {
       onItemClick: () => {},
       onSend: noopSend,
       onResend: noopItem,
+      onFetchDates: async () => dateMarkers,
+      onNavigateToDate: noopNavigateToDate,
     },
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -376,6 +378,8 @@ export const MessagesOnly: Story = {
       onLoadMore: noopLoadMore,
       onItemClick: () => {},
       onSend: noopSend,
+      onFetchDates: async () => dateMarkers,
+      onNavigateToDate: noopNavigateToDate,
     },
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -403,8 +407,11 @@ export const QueuedOnly: Story = {
     callbacks: {
       onLoadMore: noopLoadMore,
       onItemClick: () => {},
+      onSend: noopSend,
       onCancelQueued: noopItem,
       onSendQueuedNow: noopItem,
+      onFetchDates: async () => dateMarkers,
+      onNavigateToDate: noopNavigateToDate,
     },
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -457,6 +464,8 @@ export const MultipleContacts: Story = {
       onLoadMore: noopLoadMore,
       onItemClick: () => {},
       onSend: noopSend,
+      onFetchDates: async () => dateMarkers,
+      onNavigateToDate: noopNavigateToDate,
     },
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -466,18 +475,41 @@ export const MultipleContacts: Story = {
   },
 };
 
-export const NavigatingToDate: Story = {
+export const WithCustomDatePicker: Story = {
   args: {
-    items: [],
+    items: mockItems,
     hasMore: false,
     loading: false,
-    navigatingToDate: true,
+    contacts: {
+      phoneNumbers: ["+11234567890"],
+      emails: ["customer@example.com"],
+    },
+    permissions: {
+      canSendMessage: true,
+      canSendEmail: true,
+      canScheduleMessage: true,
+      canScheduleEmail: true,
+    },
+    timezone: "America/New_York",
     callbacks: {
       onLoadMore: noopLoadMore,
+      onItemClick: () => {},
+      onSend: noopSend,
+      onFetchDates: async () => dateMarkers,
+      onNavigateToDate: noopNavigateToDate,
     },
+    renderDatePicker: ({ value, onChange, minDate }) => (
+      <input
+        type="datetime-local"
+        value={value}
+        min={minDate ? minDate.toISOString().slice(0, 16) : undefined}
+        onChange={(e) => onChange(e.target.value)}
+        className="block w-full rounded-lg border border-blue-400 bg-blue-50 px-3 py-2 text-sm text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-blue-600 dark:bg-blue-950 dark:text-blue-100"
+      />
+    ),
     headerContent: (
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-        Navigating to Date...
+        Custom Date Picker
       </h3>
     ),
   },

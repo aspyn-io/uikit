@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   Send,
   CalendarClock,
@@ -51,13 +51,32 @@ export const ChatComposeBar: React.FC<ChatComposeBarProps> = ({
   const [showContactPicker, setShowContactPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const canSend =
-    (channel === "message" && permissions?.canSendMessage) ||
-    (channel === "email" && permissions?.canSendEmail);
+  // If permissions are not provided, default to allowing both channels.
+  const canSendMessage = permissions?.canSendMessage ?? true;
+  const canSendEmail = permissions?.canSendEmail ?? true;
+
+  const canSendAny = canSendMessage || canSendEmail;
+  const canSendCurrent =
+    (channel === "message" && canSendMessage) ||
+    (channel === "email" && canSendEmail);
 
   const canSchedule =
-    (channel === "message" && permissions?.canScheduleMessage) ||
-    (channel === "email" && permissions?.canScheduleEmail);
+    (channel === "message" && Boolean(permissions?.canScheduleMessage)) ||
+    (channel === "email" && Boolean(permissions?.canScheduleEmail));
+
+  // If the selected channel becomes unavailable (e.g. caller disables messages),
+  // automatically switch to an available channel so the user can still compose.
+  useEffect(() => {
+    if (!canSendAny) return;
+    if (canSendCurrent) return;
+
+    if (canSendMessage) {
+      setChannel("message");
+    } else if (canSendEmail) {
+      setChannel("email");
+    }
+    setSelectedContact("");
+  }, [canSendAny, canSendCurrent, canSendMessage, canSendEmail]);
 
   // Auto-select first contact when channel changes
   const availableContacts =
@@ -115,7 +134,7 @@ export const ChatComposeBar: React.FC<ChatComposeBarProps> = ({
     }
   };
 
-  if (!canSend) return null;
+  if (!canSendAny) return null;
 
   return (
     <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3">

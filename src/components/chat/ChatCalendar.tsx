@@ -2,7 +2,6 @@ import React, { useState, useMemo, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Calendar as CalendarIcon,
 } from "lucide-react";
 import {
   format,

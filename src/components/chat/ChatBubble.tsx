@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Mail,
   MessageSquare,
-  Clock,
   AlertCircle,
   Paperclip,
   Bot,
@@ -14,7 +13,7 @@ import {
   XCircle,
   RotateCw,
 } from "lucide-react";
-import { Badge, Tooltip } from "flowbite-react";
+import { Tooltip } from "flowbite-react";
 import type { ChatItem, ChatPermissions } from "./types";
 import {
   formatTime,

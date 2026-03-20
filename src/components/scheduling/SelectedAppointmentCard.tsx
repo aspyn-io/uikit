@@ -38,7 +38,7 @@ interface SelectedAppointmentCardProps {
  */
 const formatTimeInTimezone = (
   timeString: string,
-  formatDate: (date: Date | string, format: string) => string
+  formatDate: (date: Date | string, format: string) => string,
 ): string => {
   try {
     let time: Date;
@@ -81,6 +81,9 @@ export const SelectedAppointmentCard: React.FC<
   cancelButtonText = "Cancel Reservation",
   cancelLoading = false,
 }) => {
+  const selectedDate =
+    selectedSlot.openings?.[0]?.start_at || selectedSlot.date || new Date();
+
   // Get display names for selected team and technician
   const selectedTeamName = selectedTeam
     ? teamOptions.find((team) => team.id === selectedTeam)?.name || selectedTeam
@@ -95,13 +98,13 @@ export const SelectedAppointmentCard: React.FC<
   const selectedWindowLabel = selectedWindow
     ? (() => {
         const windowOption = windowOptions.find(
-          (window) => window.id === selectedWindow
+          (window) => window.id === selectedWindow,
         );
         if (windowOption) {
           // Format the time window using the formatDate function (timezone-aware)
           return `${formatTimeInTimezone(
             windowOption.start_time,
-            formatDate
+            formatDate,
           )} - ${formatTimeInTimezone(windowOption.end_time, formatDate)}`;
         }
         return selectedWindow;
@@ -129,10 +132,7 @@ export const SelectedAppointmentCard: React.FC<
             Selected Appointment
           </h4>
           <p className="text-blue-700 dark:text-blue-400">
-            {formatDate(
-              selectedSlot.openings?.[0].start_at || new Date(),
-              "MMM d, yyyy"
-            )}
+            {formatDate(selectedDate, "MMM d, yyyy")}
             {" - "}
             {formatTimePeriod(selectedSlot.time_period)}
           </p>

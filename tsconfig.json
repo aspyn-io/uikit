@@ -8,10 +8,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src", ".storybook", "@types"],
   "exclude": ["node_modules"]

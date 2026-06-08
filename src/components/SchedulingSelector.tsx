@@ -34,5 +34,6 @@ export type {
   WindowOption,
   TeamOption,
   TechnicianOption,
-  Labels,
+  CustomLabels,
+  CustomLabels as Labels,
 } from "./scheduling/types";

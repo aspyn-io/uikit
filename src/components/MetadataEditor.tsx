@@ -183,7 +183,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                 color="gray"
                 size="xs"
                 onClick={handleOpenModal}
-                title={`Edit ${title} metadata`}
+                title={`Edit ${title}`}
               >
                 <Edit className="h-4 w-4" />
               </Button>

@@ -334,7 +334,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
         onClose={() => setIsModalOpen(false)}
         size="xl"
       >
-        <ModalHeader>Edit Metadata</ModalHeader>
+        <ModalHeader>Edit {title}</ModalHeader>
         <ModalBody>
           <div className="space-y-4 max-h-[60vh] overflow-y-auto">
             {editedMetadata.map((item, index) => (

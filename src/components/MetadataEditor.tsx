@@ -183,7 +183,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                 color="gray"
                 size="xs"
                 onClick={handleOpenModal}
-                title="Edit metadata"
+                title={`Edit ${title}`}
               >
                 <Edit className="h-4 w-4" />
               </Button>
@@ -200,7 +200,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
           onClose={() => setIsModalOpen(false)}
           size="xl"
         >
-          <ModalHeader>Edit Metadata</ModalHeader>
+          <ModalHeader>Edit {title}</ModalHeader>
           <ModalBody>
             <div className="space-y-4 max-h-[60vh] overflow-y-auto">
               {editedMetadata.map((item, index) => (
@@ -287,7 +287,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
                 color="gray"
                 size="xs"
                 onClick={handleOpenModal}
-                title="Edit metadata"
+                title={`Edit ${title}`}
               >
                 <Edit className="h-4 w-4" />
               </Button>
@@ -334,7 +334,7 @@ const MetadataEditor: FC<MetadataEditorProps> = ({
         onClose={() => setIsModalOpen(false)}
         size="xl"
       >
-        <ModalHeader>Edit Metadata</ModalHeader>
+        <ModalHeader>Edit {title}</ModalHeader>
         <ModalBody>
           <div className="space-y-4 max-h-[60vh] overflow-y-auto">
             {editedMetadata.map((item, index) => (

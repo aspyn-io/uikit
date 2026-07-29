@@ -46,11 +46,11 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-phone-number-input": "^3.4.17",
-    "react-router-dom": "^7.18.2"
+    "react-router": "^8.3.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.2.1",
-    "@eslint/js": "^9.39.4",
+    "@eslint/js": "^9.39.5",
     "@storybook/addon-docs": "^10.5.5",
     "@storybook/addon-themes": "^10.5.5",
     "@storybook/react-vite": "^10.5.5",
@@ -60,7 +60,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "date-fns": "^4.4.0",
-    "eslint": "^9.39.4",
+    "eslint": "^9.39.5",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
@@ -89,7 +89,8 @@
     ]
   },
   "overrides": {
-    "storybook": "$storybook"
+    "storybook": "$storybook",
+    "minimatch": "^10.2.5"
   },
   "allowScripts": {
     "esbuild@0.27.1": true

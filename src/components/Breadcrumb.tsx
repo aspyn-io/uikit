@@ -3,7 +3,7 @@ import {
   Breadcrumb as FlowbiteBreadcrumb,
   BreadcrumbItem as FlowbiteBreadcrumbItem,
 } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import type { ReactNode, AnchorHTMLAttributes } from "react";
 
 // Derive types for Breadcrumb and BreadcrumbItem

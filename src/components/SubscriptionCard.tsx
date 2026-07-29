@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { Badge, Dropdown, DropdownItem } from "flowbite-react";
 import { CreditCard, MoreVertical } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import { ReactNode } from "react";
 
@@ -44,8 +44,8 @@ export const SubscriptionCard = ({
     billingType.toLowerCase() === "monthly"
       ? "/mo"
       : billingType.toLowerCase() === "yearly"
-      ? "/yr"
-      : "";
+        ? "/yr"
+        : "";
 
   const CardContent = (
     <div className="border rounded-lg shadow-md bg-white dark:bg-gray-800 dark:border-gray-700 p-6 flex items-center justify-between cursor-pointer">

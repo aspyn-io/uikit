@@ -2,7 +2,7 @@ import * as React from "react";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { SubscriptionCard } from "../components/SubscriptionCard";
 import { Receipt } from "lucide-react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router";
 
 const meta: Meta<typeof SubscriptionCard> = {
   title: "Cards/SubscriptionCard",

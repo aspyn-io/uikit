@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, Badge, Button, Dropdown, DropdownItem } from "flowbite-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { MoreVertical, Mail, Phone, MapPin } from "lucide-react";
 
 interface ContactCardProps {

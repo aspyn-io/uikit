@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import Breadcrumb from "../components/Breadcrumb";
 
 const meta: Meta<typeof Breadcrumb> = {
